@@ -1,0 +1,47 @@
+{% set id = field.id|default(field.handle) %}
+{% set label = field.label %}
+{% set required = field.required|default(false) %}
+{% set description = field.desc %}
+{% set name = field.handle %}
+{% set limit = field.limit %}
+{% set maxSize = field.maxSize %}
+{% set allowedExtensions = field.allowedExtensions %}
+{% set errors = submission.getErrors(field.handle) %}
+
+{% set wrapperClass = (orientation == 'horizontal' ? 'row mb-3' : 'mb-3') %}
+{% set labelWrapperClass = orientation == 'horizontal' ? 'col-sm-2' : '' %}
+{% set labelClass = orientation == 'horizontal' ?  'col-form-label fw-medium' :  'form-label fw-medium' %}
+{% set inputWrapperClass = orientation == 'horizontal' ? 'col-sm-10' : '' %}
+
+<div class="{{ wrapperClass }}">
+    <label for="{{ id }}" class="{{ labelClass }} {{ labelWrapperClass }}">
+        {{ label }}{{ required ? '<span class="text-danger">*</span>' }}
+    </label>
+
+    <div class="{{ inputWrapperClass }}">
+        <input
+                class="form-control {{ errors ? 'is-invalid' : '' }}"
+                type="file"
+                name="{{ name }}{% if limit and limit > 1 %}[]{% endif %}"
+                id="{{ id }}"
+                {% if allowedExtensions|length %}accept="{{ allowedExtensions|map(ext => '.' ~ ext)|join(',') }}"{% endif %}
+                {% if limit and limit > 1 %}multiple{% endif %}
+                {% if required %}required{% endif %}
+                {% if maxSize %}data-max-size="{{ maxSize }}"{% endif %}
+        >
+        {% if maxSize %}
+            <div class="form-text text-muted">Max file size: {{ maxSize }} KB</div>
+        {% endif %}
+        {% if limit and limit > 1 %}
+            <div class="form-text text-muted">Max number of files: {{ limit }}</div>
+        {% endif %}
+        {% if description %}
+            <div class='form-text'>{{ description }}</div>
+        {% endif %}
+        {% if errors %}
+            <div class="invalid-feedback">
+                {{ errors[0] }}
+            </div>
+        {% endif %}
+    </div>
+</div>

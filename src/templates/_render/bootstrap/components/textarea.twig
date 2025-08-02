@@ -1,0 +1,36 @@
+{% set id = field.id|default(field.handle) %}
+{% set label = field.label %}
+{% set name = field.handle %}
+{% set required = field.required|default(false) %}
+{% set placeholder = field.placeholder|default('') %}
+{% set description = field.desc %}
+{% set rows = field.rows %}
+{% set minlength = field.minlength %}
+{% set maxlength = field.maxlength %}
+{% set errors = submission.getErrors(field.handle) %}
+{% set value = attribute(submission, field.handle) ?? field.defaultValue ?? null %}
+
+{% set wrapperClass = (orientation == 'horizontal' ? ' row g-2 align-items-center mb-3' : 'mb-3') %}
+{% set labelWrapperClass = orientation == 'horizontal' ? 'col-sm-2' : '' %}
+{% set labelClass = orientation == 'horizontal' ? 'fw-medium col-form-label' :  'fw-medium form-label' %}
+{% set inputWrapperClass = orientation == 'horizontal' ? 'col-sm-10' : '' %}
+
+<div class="{{ wrapperClass }}">
+    <div class="{{ labelWrapperClass }}">
+        <label for="{{ id }}" class="{{ labelClass }}">{{ label }}{{  required ? '<span class="text-danger">*</span>' }}</label>
+    </div>
+    <div class="{{ inputWrapperClass }}">
+        <textarea class="form-control {{ errors ? 'is-invalid' : '' }}" id="{{ id }}"
+                  minlength="{{ minlength }}"{% if maxlength > 0 %} maxlength="{{ maxlength }}"{% endif %}
+                  name="{{ name }}"
+                  placeholder="{{ placeholder }}" {{ required ? 'required' }} rows="{{ rows }}">{{ value }}</textarea>
+        {% if description %}
+            <div class="form-text">{{ description }}</div>
+        {% endif %}
+        {% if errors %}
+            <div class="invalid-feedback">
+                {{ errors[0] }}
+            </div>
+        {% endif %}
+    </div>
+</div>

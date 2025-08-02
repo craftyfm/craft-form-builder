@@ -1,0 +1,132 @@
+{% extends "form-builder/settings/_layouts/base" %}
+{% import "_includes/forms" as forms %}
+
+{% set title = "Form Builder Settings" %}
+{% set settings = craft.app.plugins.getPlugin('form-builder').settings %}
+{% set volumes = craft.app.volumes.allVolumes %}
+{% set currentPage = 'general' %}
+{% block content %}
+    {{ actionInput('form-builder/settings/save') }}
+        <div class="fb-settings-container">
+            <!-- File Upload Settings -->
+            <div class="fb-settings-section">
+                <h2>{{ "File Upload Settings"|t('form-builder') }}</h2>
+                <p class="light">{{ "Configure how file uploads are handled in your forms."|t('form-builder') }}</p>
+
+                {{ forms.selectField({
+                    label: "Upload Volume"|t('form-builder'),
+                    instructions: "Choose the volume where uploaded files will be stored. If no volume is selected, file upload fields will be disabled."|t('form-builder'),
+                    id: 'uploadVolumeId',
+                    name: 'settings[uploadVolumeId]',
+                    value: settings.uploadVolumeId,
+                    options: [{ label: 'None'|t('form-builder'), value: '' }] | merge(
+                        volumes | map(volume => {
+                            label: volume.name,
+                            value: volume.id
+                        })
+                    ),
+                    warning: volumes|length == 0 ? "No volumes are available. Create a volume first to enable file uploads."|t('form-builder') : null
+                }) }}
+            </div>
+
+            <!-- Rate Limiting Settings -->
+            <div class="fb-settings-section">
+                <h2>{{ "Rate Limiting"|t('form-builder') }}</h2>
+                <p class="light">{{ "Prevent spam by limiting the number of form submissions per IP address."|t('form-builder') }}</p>
+
+                {{ forms.lightswitchField({
+                    label: "Enable Rate Limiting"|t('form-builder'),
+                    instructions: "Enable to limit the number of form submissions per IP address within a specified time window."|t('form-builder'),
+                    id: 'enableRateLimit',
+                    name: 'settings[enableRateLimit]',
+                    on: settings.enableRateLimit,
+                    toggle: 'rate-limit-settings'
+                }) }}
+
+                <div id="rate-limit-settings" class="nested-fields" {{ not settings.enableRateLimit ? 'style="display: none;"' }}>
+                    <div class="flex-fields">
+                        {{ forms.textField({
+                            label: "Max Submissions per IP"|t('form-builder'),
+                            instructions: "Maximum number of submissions allowed from a single IP address."|t('form-builder'),
+                            id: 'maxAttemptsPerIp',
+                            name: 'settings[maxAttemptsPerIp]',
+                            value: settings.maxAttemptsPerIp,
+                            type: 'number',
+                            min: 1,
+                            size: 10
+                        }) }}
+
+                        {{ forms.textField({
+                            label: "Time Window (minutes)"|t('form-builder'),
+                            instructions: "Time window in minutes for rate limiting. Submissions are counted within this period."|t('form-builder'),
+                            id: 'rateLimitTimeWindow',
+                            name: 'settings[rateLimitTimeWindow]',
+                            value: settings.rateLimitTimeWindow,
+                            type: 'number',
+                            min: 1,
+                            size: 10
+                        }) }}
+                    </div>
+
+                    {{ forms.textareaField({
+                        label: "Rate Limit Error Message"|t('form-builder'),
+                        instructions: "Message shown to users when they exceed the submission limit."|t('form-builder'),
+                        id: 'rateLimitMessage',
+                        name: 'settings[rateLimitMessage]',
+                        value: settings.rateLimitMessage,
+                        rows: 3
+                    }) }}
+                </div>
+            </div>
+        </div>
+{% endblock %}
+
+{% css %}
+.fb-settings-container {
+    max-width: 800px;
+}
+
+.fb-settings-section {
+    margin-bottom: 40px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #e3e5e8;
+}
+
+.fb-settings-section:last-child {
+    border-bottom: none;
+}
+
+.fb-settings-section h2 {
+    margin-bottom: 5px;
+    color: #29323d;
+}
+
+.fb-settings-section > p.light {
+    margin-bottom: 20px;
+    font-size: 13px;
+}
+
+.nested-fields {
+    margin-top: 20px;
+    padding-left: 20px;
+    border-left: 3px solid #e3e5e8;
+}
+
+.flex-fields {
+    display: flex;
+    gap: 20px;
+}
+
+.flex-fields > .field {
+    flex: 1;
+}
+{% endcss %}
+
+{% js %}
+const rateLimitSettings = document.getElementById('rate-limit-settings');
+// Handle rate limiting toggle
+document.getElementById('enableRateLimit').addEventListener('click', function() {
+    const isChecked = this.getAttribute('aria-checked');
+    rateLimitSettings.style.display = isChecked === 'true' ? 'block' : 'none';
+});
+{% endjs %}

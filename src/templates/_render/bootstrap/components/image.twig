@@ -1,0 +1,27 @@
+{% set src = field.src %}
+{% set alt = field.alt %}
+{% set width = field.width %}
+{% set height = field.height %}
+{% set align = field.align %}
+
+{% set wrapperClass = 'mb-3 text-' ~ align %}
+{% set imageClass = 'img-fluid' %}
+
+{% set style = '' %}
+{% if width %}
+    {% set style = style ~ 'width:' ~ width ~ 'px;' %}
+{% endif %}
+{% if height %}
+    {% set style = style ~ 'height:' ~ height ~ 'px;' %}
+{% endif %}
+
+<div class="{{ wrapperClass }}">
+    <img
+            src="{{ src }}"
+            alt="{{ alt ?? '' }}"
+            {% if width %} width="{{ width }}"{% endif %}
+            {% if height %} height="{{ height }}"{% endif %}
+            style="{{ style }}"
+            class="{{ imageClass }}"
+    >
+</div>

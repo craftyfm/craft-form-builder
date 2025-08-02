@@ -1,0 +1,9 @@
+$font-size-base: 1rem;
+// Import Bootstrap source
+@import "bootstrap/scss/bootstrap";
+
+html {
+  @media (max-width: 575.98px) {
+    font-size: 90%;
+  }
+}

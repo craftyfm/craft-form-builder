@@ -1,0 +1,18 @@
+{% set style = '' %}
+{% if width %}
+    {% set style = style ~ 'width:' ~ width ~ 'px;' %}
+{% endif %}
+{% if height %}
+    {% set style = style ~ 'height:' ~ height ~ 'px;' %}
+{% endif %}
+
+<div class="flex justify-{{ field.align }} items-start ">
+    <img
+            {% if width %} width="{{ width }}"{% endif %}
+            {% if height %} height="{{ height }}"{% endif %}
+            src="{{ field.src }}"
+            alt="{{ field.alt }}"
+            style="{{ style }}"
+            class="object-fill"
+    />
+</div>

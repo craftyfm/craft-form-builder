@@ -1,0 +1,77 @@
+{% set components = [
+    { type: 'text', name: 'Text', icon: 'cfb:iconify-[mdi--form-textbox]' },
+    { type: 'phone', name: 'Phone', icon: 'cfb:iconify-[mdi--phone]' },
+    { type: 'number', name: 'Number', icon: 'cfb:iconify-[mdi--numbers]' },
+    { type: 'email', name: 'Email', icon: 'cfb:iconify-[mdi--email]' },
+    { type: 'url', name: 'URL', icon: 'cfb:iconify-[mdi--link]' },
+    { type: 'textarea', name: 'Textarea', icon: 'cfb:iconify-[mdi--text]' },
+    { type: 'select', name: 'Select Dropdown', icon: 'cfb:iconify-[mdi--arrow-down-drop-circle]' },
+    { type: 'radio', name: 'Radio', icon: 'cfb:iconify-[mdi--radiobox-marked]' },
+    { type: 'checkbox', name: 'Checkbox', icon: 'cfb:iconify-[mdi--checkbox-marked]' },
+    { type: 'checkboxes', name: 'Checkboxes', icon: 'cfb:iconify-[mdi--format-list-checkbox]' },
+    { type: 'submitButton', name: 'Submit Button', icon: 'cfb:iconify-[mdi--button-cursor]' },
+] %}
+
+{% if settings.uploadVolumeId is not null %}
+    {% set components = components|merge([
+        { type: 'fileUpload', name: 'File Upload', icon: 'cfb:iconify-[mdi--upload-box]' }
+    ]) %}
+{% endif %}
+
+{% if settings.captchas.hcaptcha.enabled %}
+    {% set components = components|merge([
+        { type: 'hcaptcha', name: 'hCaptcha', icon: 'cfb:iconify-[mdi--shield-check]' }
+    ]) %}
+{% endif %}
+
+{% if settings.captchas.recaptcha.enabled %}
+    {% set components = components|merge([
+        { type: 'recaptcha', name: 'reCAPTCHA', icon: 'cfb:iconify-[mdi--security]' }
+    ]) %}
+{% endif %}
+
+{% set components = components|merge([
+    { type: 'title', name: 'Title', icon: 'cfb:iconify-[mdi--format-title]' },
+    { type: 'image', name: 'Image', icon: 'cfb:iconify-[mdi--image-area]' },
+    { type: 'paragraph', name: 'Paragraph', icon: 'cfb:iconify-[mdi--format-paragraph]' },
+    { type: 'html', name: 'HTML', icon: 'cfb:iconify-[mdi--code-tags]' }
+]) %}
+
+<div class="cfb:w-64 cfb:bg-white cfb:border-r cfb:border-gray-200 cfb:p-4">
+{#    <!-- Add Search Bar -->#}
+{#    <div class="cfb:mb-4">#}
+{#        <div class="cfb:relative">#}
+{#            <input#}
+{#                    type="text"#}
+{#                    id="componentSearch"#}
+{#                    placeholder="Search components..."#}
+{#                    class="cfb:w-full cfb:px-3 cfb:py-2 cfb:pl-9 cfb:border cfb:border-gray-200 cfb:rounded-lg cfb:text-sm focus:cfb:outline-none focus:cfb:ring-2 focus:cfb:ring-blue-500 cfb:bg-gray-50"#}
+{#            >#}
+{#            <svg#}
+{#                    class="cfb:absolute cfb:left-3 cfb:top-2.5 cfb:h-4 cfb:w-4 cfb:text-gray-400"#}
+{#                    xmlns="http://www.w3.org/2000/svg"#}
+{#                    fill="none"#}
+{#                    viewBox="0 0 24 24"#}
+{#                    stroke="currentColor"#}
+{#            >#}
+{#                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"#}
+{#                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>#}
+{#            </svg>#}
+{#        </div>#}
+{#    </div>#}
+
+    <!-- Component List - Add cfb:overflow-y-auto to make it scrollable -->
+    <!-- Update the Component List in the sidebar -->
+    <div class="cfb:space-y-3 cfb:pb-10 cfb:h-full">
+        {% for c in components %}
+            <div class="form-element component-item cfb:flex cfb:items-center cfb:gap-3 cfb:p-3 cfb:rounded-lg cfb:cursor-move
+                cfb:hover:bg-gray-100 cfb:hover:border-gray-200 cfb:hover:shadow-md cfb:transition-all"
+                 draggable="true" data-type="{{ c.type }}" data-name="{{ c.name }}">
+                <span class="{{ c.icon }}"></span>
+                <span class="cfb:font-medium cfb:text-gray-700">{{ c.name }}</span>
+            </div>
+        {% endfor %}
+
+    </div>
+
+</div>

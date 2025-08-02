@@ -1,0 +1,74 @@
+{% extends "form-builder/settings/_layouts/base" %}
+{% do view.registerAssetBundle('craft\\web\\assets\\admintable\\AdminTableAsset') -%}
+{% set title = "Submission Statuses" %}
+
+{% block actionButton %}
+    {% if craft.app.config.general.allowAdminChanges %}
+        <a href="{{ url('form-builder/settings/statuses/new') }}" class="btn submit add icon">New Status</a>
+    {% endif %}
+{% endblock %}
+
+
+{% block content %}
+
+    <div id="status-admin-table"></div>
+    <script>
+        var tableData = {{ statuses|json_encode|raw }}
+        {% if craft.app.config.general.allowAdminChanges %}
+            var deleteAction = "{{ actionUrl('form-builder/submission-status/delete')  }}";
+        {% else %}
+            var deleteAction = null;
+        {% endif %}
+    </script>
+
+
+
+{% endblock %}
+
+{% js %}
+
+const columns = [
+    {
+        name: 'title',
+        title: 'Name',
+        callback: function(value) {
+            if (value) {
+                return `<a href="${value.url}">${value.html}</a>`;
+            }
+
+            return '';
+        }
+    },
+    {
+        name: 'handle',
+        title: 'Handle'
+    },
+    {
+        name: 'description',
+        title: 'Description'
+    },
+    {
+        name: 'isDefault',
+        title: 'Default',
+        callback: function(value) {
+            console.log(value);
+            if (value) {
+                return `Yes`;
+            }
+
+            return 'No';
+        }
+    },
+];
+
+new Craft.VueAdminTable({
+    columns: columns,
+    container: '#status-admin-table',
+    tableData: tableData,
+    deleteAction:deleteAction,
+    deleteFailMessage: 'Failed to delete status.',
+    deleteSuccessMessage: 'Status deleted.',
+    emptyMessage: 'No statuses exist yet.',
+});
+
+{% endjs %}

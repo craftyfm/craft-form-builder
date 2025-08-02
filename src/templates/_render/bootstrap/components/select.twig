@@ -1,0 +1,39 @@
+{% set id = field.id|default(field.handle) %}
+{% set label = field.label %}
+{% set required = field.required|default(false) %}
+{% set description = field.desc %}
+{% set errors = submission.getErrors(field.handle) %}
+{% set value = attribute(submission, field.handle) ?? field.defaultValue ?? null %}
+
+{% set wrapperClass = (orientation == 'horizontal' ? ' row g-2 align-items-center mb-3' : 'mb-3') %}
+{% set labelWrapperClass = orientation == 'horizontal' ? 'col-sm-2' : '' %}
+{% set labelClass = orientation == 'horizontal' ? ' col-form-label fw-medium' :  ' form-label fw-medium' %}
+{% set selectWrapperClass = (orientation == 'horizontal' ? 'col-sm-10' : '')  %}
+{% set inputWrapperClass = 'form-select ' %}
+{% set hintClass = 'form-text' %}
+
+<div class="{{ wrapperClass }}">
+    <div class="{{ labelWrapperClass }}">
+        <label for="{{ id }}" class="{{ labelClass }}">{{ label }}{{ required ? '<span class="text-danger">*</span>' }}</label>
+    </div>
+   <div class="{{ selectWrapperClass }}">
+       <select  class="{{ inputWrapperClass }} {{ errors ? 'is-invalid' : '' }}"
+                name="{{ field.handle }}"
+                id="{{ id }}" {{ required ? 'required' }}>
+           {% if field.placeholder %}
+               <option value="">{{ field.placeholder }}</option>
+           {% endif %}
+           {% for option in field.options %}
+               <option value="{{ option.value }}" {{ value == option.value ? 'selected' }} >{{ option.name }}</option>
+           {% endfor %}
+       </select>
+       {% if description %}
+           <div  class="{{hintClass}}">{{ description }}</div>
+       {% endif %}
+       {% if errors %}
+           <div class="invalid-feedback">
+               {{ errors[0] }}
+           </div>
+       {% endif %}
+   </div>
+</div>

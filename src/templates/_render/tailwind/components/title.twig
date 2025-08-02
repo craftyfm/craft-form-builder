@@ -1,0 +1,9 @@
+{% set text = field.text %}
+{% set level = field.level %}
+{% set align = field.align %}
+
+<div>
+    <{{ level }} class="text-{{ align }}">
+        {{ text }}
+    </{{ level }}>
+</div>

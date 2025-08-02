@@ -1,0 +1,44 @@
+{% import "_includes/forms" as forms %}
+<div class="cfb-tab-content cfb-tab-integrations cfb:flex cfb:gap-6 cfb:hidden cfb:h-full">
+    <!-- Left Sidebar: Integration Tabs -->
+    <div class="cfb:w-1/8 cfb:border-r cfb:pr-4 cfb:h-full">
+        <ul class="cfb:space-y-2">
+            {% for integration in form.integrations %}
+                <li>
+                    <button class="cfb:w-full cfb:text-left cfb:font-bold cfb:px-3 cfb:py-2 cfb:rounded cfb:hover:bg-gray-100 cfb:focus:bg-gray-200" data-integration="{{ integration.handle }}">
+                        {{ integration.name }}
+                    </button>
+                </li>
+            {% endfor %}
+
+        </ul>
+    </div>
+
+    <!-- Right Content: Integration Settings -->
+    <div class="cfb:w-7/8">
+        {% for integration in form.integrations %}
+            <!-- Webhook Settings -->
+            <div class="integration-settings {{ not loop.first ? 'cfb:hidden'}}" id="integration-{{ integration.handle }}">
+                <h3 class="cfb:text-lg cfb:font-semibold cfb:mb-2">{{ integration.name }} Settings</h3>
+                {% namespace 'integrations[' ~ integration.handle ~ ']' %}
+                <div class="cfb:mb-5 cfb:border-b cfb:pb-4">
+                    <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2" for="enabled">Enabled</label>
+                    <div class="input ltr ">
+                        <button type="button" class="lightswitch {{ integration.enabled ? 'on' }}" role="switch"
+                                aria-checked="{{ integration.enabled }}">
+                            <div class="lightswitch-container" >
+                                <div class="handle"></div>
+                            </div>
+                            <input type="hidden" name="enabled" value="{{ integration.enabled ? '1' }}">    </button>
+                    </div>
+                </div>
+
+                <div class="">
+                    {{ integration.getFormSettingsHtml()|raw }}
+                </div>
+                {% endnamespace %}
+            </div>
+
+        {% endfor %}
+    </div>
+</div>

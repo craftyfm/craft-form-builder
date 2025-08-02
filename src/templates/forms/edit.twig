@@ -1,0 +1,47 @@
+{% extends "_layouts/cp" %}
+{% set title = form.name %}
+{% css %}
+.content-pane {
+    padding: 0;
+}
+{% endcss %}
+{% set settings = craft.app.plugins.getPlugin('form-builder').settings %}
+{% set selectedSubnavItem = 'forms' %}
+{% block actionButton %}
+    <div class="cfb:flex cfb:gap-3">
+
+        <button  id="main-settings-btn" type="button" class="btn" aria-label="Setting"> <span class="cfb:iconify-[mdi--settings]"></span></button>
+        <button  id="preview-btn"  type="button" class="preview-btn btn" aria-label="Preview"><span class="label">Preview</span></button>
+        <button id='save-form' class="btn submit icon">{{ 'Save' }}</button>
+    </div>
+{% endblock %}
+{% block content %}
+
+    {{ csrfInput({
+        id: 'csrf-input',
+    }) }}
+    <div class="cfb:h-[80vh] cfb:flex cfb:flex-col">
+        <!-- Main Content -->
+        <div class="cfb:bg-gray-100 cfb:overflow-hidden cfb:h-full">
+            <div class="cfb:flex cfb:overflow-hidden cfb:h-full">
+                <!-- Left Sidebar - Components -->
+                <div class="cfb:overflow-y-auto cfb:overflow-x-hidden cfb:h-full cfb:min-w-[180px] cfb:bg-white cfb:border-r cfb:border-gray-200">
+                    {% include 'form-builder/_builder/components-bar' %}
+                </div>
+
+                <!-- Middle - Form Builder -->
+                <div class="cfb:flex-1 cfb:overflow-y-auto cfb:px-4 cfb:py-6 cfb:h-full">
+                    {% include 'form-builder/_builder/builder-bar' %}
+                </div>
+
+                <!-- Right Sidebar - Settings -->
+                <div class="cfb:overflow-y-auto cfb:hide-scrollbar cfb:h-full cfb:min-w-[180px] cfb:bg-white cfb:border-l cfb:border-gray-200">
+                    {% include 'form-builder/_builder/settings-bar' %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'form-builder/_builder/main-settings-modal' %}
+    {% include 'form-builder/_builder/preview' %}
+    {% include 'form-builder/_builder/icon-picker' %}
+{% endblock %}

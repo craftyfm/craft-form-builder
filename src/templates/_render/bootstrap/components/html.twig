@@ -1,0 +1,9 @@
+{% set html = field.html %}
+{% switch framework %}
+    {% default %}
+        {% set wrapperClass = 'mb-3' %}
+{% endswitch %}
+
+<div class="{{ wrapperClass }}">
+    {{ html|raw }}
+</div>

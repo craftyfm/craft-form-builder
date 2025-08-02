@@ -1,0 +1,49 @@
+{% import "_includes/forms" as forms %}
+
+{{ forms.autosuggestField({
+    label: 'Host',
+    name: 'host',
+    value: integration.host,
+    instructions: 'Your FileMaker Server host, e.g., https://example.com',
+    error: integration.getErrors('host'),
+    placeholder: "https://example.com",
+    suggestEnvVars: true,
+}) }}
+
+{{ forms.autosuggestField({
+    label: 'Database',
+    name: 'database',
+    value: integration.database,
+    instructions: 'Name of the FileMaker database.',
+    error: integration.getErrors('database'),
+    placeholder: "database",
+    suggestEnvVars: true,
+}) }}
+
+{{ forms.autosuggestField({
+    label: 'Layout',
+    name: 'layout',
+    value: integration.layout,
+    instructions: 'Layout to push the data into.',
+    error: integration.getErrors('layout'),
+    placeholder: "layout",
+    suggestEnvVars: true,
+}) }}
+
+{{ forms.autosuggestField({
+    label: 'Username',
+    name: 'username',
+    value: integration.username,
+    error: integration.getErrors('username'),
+    placeholder: "layout",
+    suggestEnvVars: true,
+}) }}
+
+{{ forms.autosuggestField({
+    label: 'Password',
+    name: 'password',
+    value: integration.password,
+    error: integration.getErrors('password'),
+    placeholder: "layout",
+    suggestEnvVars: true,
+}) }}

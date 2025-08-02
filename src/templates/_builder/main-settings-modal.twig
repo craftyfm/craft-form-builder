@@ -1,0 +1,57 @@
+{% set tabs = [
+    { label: 'General', icon: 'cfb:iconify-[mdi--cog]', tab: 'general', active: true },
+    { label: 'Layout & Style', icon: 'cfb:iconify-[mdi--palette]', tab: 'layout' },
+    { label: 'Submit Behavior', icon: 'cfb:iconify-[mdi--check-circle]', tab: 'behavior' },
+    { label: 'Admin Email', icon: 'cfb:iconify-[mdi--email]', tab: 'admin-email' },
+    { label: 'Integrations', icon: 'cfb:iconify-[mdi--circle]', tab: 'integrations' },
+] %}
+
+<div id="main-settings-modal" class="cfb:fixed cfb:inset-0 cfb:bg-gray-50 cfb:bg-opacity-10 cfb:flex cfb:items-center cfb:justify-center cfb:z-50 cfb:hidden cfb:overflow-hidden">
+    <div class="cfb:flex cfb:flex-col cfb:bg-white cfb:rounded-lg cfb:overflow-hidden cfb:shadow-xl cfb:w-[90vw] cfb:mx-4 cfb:h-[95vh]">
+        <!-- Modal Header -->
+        <div class="cfb:flex cfb:items-center cfb:justify-between cfb:p-6 cfb:border-b cfb:border-gray-200">
+            <h4>Settings</h4>
+        </div>
+        
+        <!-- Tab Navigation -->
+        <div class="cfb:flex cfb:border-b cfb:border-gray-200">
+            {% for tab in tabs %}
+                <button
+                        type="button"
+                        class="cfb:flex cfb:items-center cfb:px-6 cfb:py-3 cfb:text-sm cfb:font-medium cfb-settings-tab
+                             {{ tab.active|default(false) ? 'cfb:text-blue-600 cfb:border-b-2 cfb:border-blue-600 cfb:bg-blue-50 cfb-settings-tab-active' : 'cfb:text-gray-500 cfb:hover:text-gray-700 cfb:hover:bg-gray-50' }}"
+                        data-tab="{{ tab.tab }}"
+                >
+                    <span class="{{ tab.icon }} cfb:mr-2"></span>
+                    {{ tab.label }}
+                </button>
+            {% endfor %}
+        </div>
+
+        <form id="main-settings-form" class="cfb:flex-1 cfb:flex cfb:flex-col cfb:overflow-y-hidden">
+            <!-- Modal Body -->
+            <div class="cfb:p-6 cfb:flex cfb:flex-1 cfb:gap-4 cfb:flex-col cfb:overflow-y-auto">
+                
+                <!-- General Tab Content -->
+                {% include 'form-builder/_builder/settings/general' %}
+                <!-- General Tab Content -->
+                {% include 'form-builder/_builder/settings/layouts' %}
+                <!-- Submit Behavior Tab Content -->
+                {% include 'form-builder/_builder/settings/behavior' %}
+                {% include 'form-builder/_builder/settings/admin-email' %}
+                {% include 'form-builder/_builder/settings/integrations' %}
+
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="cfb:flex cfb:items-center cfb:justify-end cfb:gap-3 cfb:p-6 cfb:border-t cfb:border-gray-200">
+                <button type="button" class="cfb:px-4 cfb:py-2 cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:bg-gray-100 cfb:border cfb:border-gray-300 cfb:rounded-lg cfb:hover:bg-gray-200 cfb:transition-colors cfb-close-main-settings-modal">
+                    Cancel
+                </button>
+                <button type="submit" class="cfb:px-4 cfb:py-2 cfb:text-sm cfb:font-semibold cfb:text-white cfb:bg-blue-600 cfb:rounded-lg cfb:hover:bg-blue-700 cfb:transition-colors">
+                    Save Settings
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
