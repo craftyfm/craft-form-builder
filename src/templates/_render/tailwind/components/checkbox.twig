@@ -1,7 +1,6 @@
 {% set id = field.id|default(field.handle) %}
 {% set errors = submission.getErrors(field.handle) %}
-{% set value = attribute(submission, field.handle) ?? field.defaultValue ?? null %}
-
+{% set value = attribute(submission, field.handle).value ?? field.defaultValue ?? null %}
 <div class="flex {{ orientation == 'horizontal' ? 'flex-row' : 'flex-col'}}">
     <div class="mb-2 font-light flex-1">
         <div class="flex justify-between items-center">

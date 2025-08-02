@@ -18,7 +18,7 @@
     </div>
 {% endif %}
 <form id="{{ form.uid }}" method="POST" enctype="multipart/form-data" accept-charset="UTF-8"
-      class="{{ form.settings.class }} {{ hasErrors ? 'was-validated' : '' }}" novalidate>
+      class="{{ form.settings.class }} " >
     <input type="hidden" name="action" value="form-builder/submissions/submit">
     <input type="hidden" name="formId" value="{{ form.id }}">
     {{ csrfInput() }}

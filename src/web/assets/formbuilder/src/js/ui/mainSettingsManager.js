@@ -37,14 +37,12 @@ export class MainSettingsManager {
         });
         
         // Initialize action on submit radio button functionality
-        const actionRadios = document.querySelectorAll('input[name="actionOnSubmit"]');
+        const actionRadios = document.querySelectorAll('input[name="settings\\[actionOnSubmit\\]"]');;
         const successMessageField = document.querySelector('.cfb-success-message-field');
         const redirectUrlField = document.querySelector('.cfb-redirect-url-field');
-        
         actionRadios.forEach(radio => {
             radio.addEventListener('change', (e) => {
                 const selectedAction = e.target.value;
-                
                 if (selectedAction === 'message') {
                     successMessageField.style.display = 'block';
                     redirectUrlField.style.display = 'none';

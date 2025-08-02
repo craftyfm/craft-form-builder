@@ -10,6 +10,7 @@
 {% set labelWrapperClass = orientation == 'horizontal' ? 'col-sm-2' : '' %}
 {% set labelClass = orientation == 'horizontal' ?  'col-form-label fw-medium' :  'form-label fw-medium' %}
 {% set inputWrapperClass = orientation == 'horizontal' ? 'col-sm-10' : '' %}
+
 <div class="{{ wrapperClass }}">
     {% if label %}
         <label class="{{ labelClass }} {{ labelWrapperClass }}" for="{{ id }}">
@@ -19,8 +20,8 @@
 
     {% endif %}
 
-    <div class="{{ inputWrapperClass }} ">
-        <div class="form-check">
+    <div class="form-check {{ inputWrapperClass }} ">
+        <div class="">
             <input type="hidden" name="{{ name }}" value="0">
             <input
                     class="form-check-input {{ errors ? 'is-invalid' : '' }}"
@@ -36,7 +37,13 @@
                     {{ checkboxLabel }}
                 </label>
             {% endif %}
+            {% if errors %}
+                <div class="invalid-feedback">
+                    {{ errors[0] }}
+                </div>
+            {% endif %}
         </div>
+
         {% if description %}
             <div class="form-text">{{ description }}</div>
         {% endif %}

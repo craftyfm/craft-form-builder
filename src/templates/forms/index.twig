@@ -248,10 +248,10 @@ document.addEventListener('DOMContentLoaded', function() {
     function generateHandle(name) {
         return name
             .toLowerCase()
-            .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
-            .replace(/\s+/g, '-') // Replace spaces with hyphens
-            .replace(/-+/g, '-') // Replace multiple hyphens with single
-            .replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
+            .trim()
+            .replace(/[^a-z0-9\s]/g, '') // remove non-alphanumeric (except space)
+            .replace(/\s+(.)/g, (_, char) => char.toUpperCase()) // capitalize letters after spaces
+            .replace(/\s/g, ''); // remove any remaining spaces
     }
 
     // Auto-generate handle from name

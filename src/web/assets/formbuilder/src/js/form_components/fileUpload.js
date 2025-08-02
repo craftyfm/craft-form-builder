@@ -21,7 +21,7 @@ const config = {
     },
 };
 const validate = (field) => {
-    return true;
+    return !(!field.handle || !field.label);
 }
 const render = (field, layout) => `
     <div class="cfb:flex ${layout === 'horizontal' ? 'cfb:flex-row' : 'cfb:flex-col'}">

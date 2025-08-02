@@ -47,6 +47,11 @@ class Number extends BaseInput
     {
         $rules = parent::submissionValueRules();
         $rules[] = [['value'], 'number'];
+        if ($this->required) {
+            $rules[] = [['value'], 'number', 'min' => 0.001,
+                'tooSmall' => 'Value must be greater than 0.'];
+        }
+
         return $rules;
     }
 
