@@ -59,6 +59,8 @@ new Craft.VueAdminTable({
     container: '#submissions-admin-table',
     tableDataEndpoint: `/actions/form-builder/submissions/table-data?formId=${currentFormId}`,
     deleteAction: deleteAction ? deleteAction : null,
+    deleteFailMessage: 'Failed to delete submission.',
+    deleteSuccessMessage: 'Submission deleted.',
 
 });
 {% endjs %}

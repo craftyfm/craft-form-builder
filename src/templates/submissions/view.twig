@@ -40,8 +40,8 @@
                 </div>
             </div>
 
-            <button type="button" id="widgetManagerBtn" class="btn settings icon" title="{{ 'Settings'|t('app') }}"
-                    aria-label="{{ 'Settings'|t('app') }}" aria-expanded="false"></button>
+{#            <button type="button" id="widgetManagerBtn" class="btn settings icon" title="{{ 'Settings'|t('app') }}"#}
+{#                    aria-label="{{ 'Settings'|t('app') }}" aria-expanded="false"></button>#}
         </div>
     {% endif %}
 {% endblock %}
@@ -173,15 +173,20 @@
             </div>
 
         {% elseif formField.type == 'fileUpload' %}
+            {% set value = field.getValue() %}
             <div class="field">
                 <div class="heading">
                     <label class="">{{ formField.label }}</label>
                 </div>
-                <ul>
-                    {% for asset in field.getValue() %}
-                        <li><a href="{{ asset.getCpEditUrl() }}" target="_blank">{{ asset.filename }}</a></li>
-                    {% endfor %}
-                </ul>
+                {% if value %}
+                    <ul>
+                        {% for asset in value %}
+                            <li><a href="{{ asset.getCpEditUrl() }}" target="_blank">{{ asset.filename }}</a></li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div>No file uploaded</div>
+                {% endif %}
 
             </div>
 
