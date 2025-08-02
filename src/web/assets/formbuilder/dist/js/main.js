@@ -103,7 +103,7 @@ var J=Object.defineProperty;var K=(e,t,n)=>t in e?J(e,t,{enumerable:!0,configura
                 <button type="button" class="icon-picker--remove-btn btn" tabindex="0">Remove</button>
                 <input type="hidden" name="name" value="">
             </div>
-        </div>`),a("Property",n)+a("Validation",p(e))+a("Advanced",f(e))},ce=(e,t)=>{m(["label","handle","desc","placeholder"],e),h(e),d(),t.formState.settings.icons!==""&&t.iconPicker.init("setting-icon",t.formState.settings.icons),x(e)},se={config:Z,validate:ee,render:te,renderSettings:ne,initSettings:ce},ie={defaultData:{handle:"",label:"",placeholder:"Enter your message...",desc:"",rows:4,required:!1,minLength:0,maxLength:0}},ae=e=>!(!e.handle||!e.label),re=(e,t)=>`
+        </div>`),a("Property",n)+a("Validation",p(e))+a("Advanced",f(e))},ce=(e,t)=>{m(["label","handle","desc","placeholder"],e),h(e),d(),t.formState.settings.icons!==""&&t.iconPicker.init("setting-icon",t.formState.settings.icons),x(e)},se={config:Z,validate:ee,render:te,renderSettings:ne,initSettings:ce},ie={defaultData:{handle:"",label:"",placeholder:"Enter your message...",desc:"",rows:4,required:!1,minlength:0,maxlength:0}},ae=e=>!(!e.handle||!e.label),re=(e,t)=>`
      <div class="cfb:flex ${t==="horizontal"?"cfb:flex-row":"cfb:flex-col"}">
         ${v(e)}
         <div class="${t==="horizontal"?"cfb:w-3/4":""}">
@@ -128,13 +128,13 @@ var J=Object.defineProperty;var K=(e,t,n)=>t in e?J(e,t,{enumerable:!0,configura
         ${p(e)}
         <div>
             <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">Min Length</label>
-            <input type="number" id="setting-minlength" value="${e.minLength}" min="0" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md">
+            <input type="number" id="setting-minlength" value="${e.minlength}" min="0" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md">
         </div>
         <div>
             <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">Max Length</label>
-            <input type="number" id="setting-maxlength" value="${e.maxLength}" min="0" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md">
+            <input type="number" id="setting-maxlength" value="${e.maxlength}" min="0" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md">
         </div>
-    `;return a("Property",t)+a("Validation",n)+a("Advanced",f(e))},oe=e=>{var t,n,s;m(["label","handle","desc","placeholder"],e),(t=document.getElementById("setting-rows"))==null||t.addEventListener("input",c=>e("rows",parseInt(c.target.value,10))),h(e),(n=document.getElementById("setting-minlength"))==null||n.addEventListener("input",c=>e("minLength",parseInt(c.target.value,10))),(s=document.getElementById("setting-maxlength"))==null||s.addEventListener("input",c=>e("maxLength",parseInt(c.target.value,10))),d(),x(e)},be={config:ie,validate:ae,render:re,renderSettings:le,initSettings:oe},de={defaultData:{handle:"",label:"",desc:"",placeholder:"Choose an option...",options:[{name:"Option 1",value:"Option 1",isDefault:!1},{name:"Option 2",value:"Option 2",isDefault:!1}],required:!1}},fe=e=>!(!e.handle||!e.label),me=(e,t)=>{const n=e.options.map(s=>`<option value="${s.value}">${s.name}</option>`).join("");return`
+    `;return a("Property",t)+a("Validation",n)+a("Advanced",f(e))},oe=e=>{var t,n,s;m(["label","handle","desc","placeholder"],e),(t=document.getElementById("setting-rows"))==null||t.addEventListener("input",c=>e("rows",parseInt(c.target.value,10))),h(e),(n=document.getElementById("setting-minlength"))==null||n.addEventListener("input",c=>e("minlength",parseInt(c.target.value,10))),(s=document.getElementById("setting-maxlength"))==null||s.addEventListener("input",c=>e("maxlength",parseInt(c.target.value,10))),d(),x(e)},be={config:ie,validate:ae,render:re,renderSettings:le,initSettings:oe},de={defaultData:{handle:"",label:"",desc:"",placeholder:"Choose an option...",options:[{name:"Option 1",value:"Option 1",isDefault:!1},{name:"Option 2",value:"Option 2",isDefault:!1}],required:!1}},fe=e=>!(!e.handle||!e.label),me=(e,t)=>{const n=e.options.map(s=>`<option value="${s.value}">${s.name}</option>`).join("");return`
          <div class="cfb:flex ${t==="horizontal"?"cfb:flex-row":"cfb:flex-col"}">
             <div class="${t==="horizontal"?"cfb:w-3/4":""}">
                 ${v(e)}

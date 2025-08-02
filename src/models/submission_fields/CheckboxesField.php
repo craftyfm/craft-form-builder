@@ -21,7 +21,7 @@ class CheckboxesField extends BaseField
 
     public function getValue(): array
     {
-        return $this->_values;
+        return $this->_values ?? [];
     }
 
     public function setDraftValues($value): void

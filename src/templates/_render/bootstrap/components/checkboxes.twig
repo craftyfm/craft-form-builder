@@ -4,7 +4,7 @@
 {% set description = field.desc %}
 {% set name = field.handle %}
 {% set errors = submission.getErrors(field.handle) %}
-{% set value = attribute(submission, field.handle).values ?? field.defaultValue ?? null %}
+{% set value = attribute(submission, field.handle).value ?? field.defaultValue ?? null %}
 
 {% set wrapperClass = (orientation == 'horizontal' ? 'row mb-3' : 'mb-3') %}
 {% set labelWrapperClass = orientation == 'horizontal' ? 'col-sm-2' : '' %}

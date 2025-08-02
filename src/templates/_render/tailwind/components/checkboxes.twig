@@ -1,6 +1,6 @@
 {% set id = field.id|default(field.handle) %}
 {% set errors = submission.getErrors(field.handle) %}
-
+{% set value = attribute(submission, field.handle).value ?? field.defaultValue ?? null %}
 
 <div class="flex {{ orientation == 'horizontal' ? 'flex-row' : 'flex-col'}}">
     <div class="mb-2 font-light flex-1">
@@ -15,7 +15,10 @@
         {% for option in field.options %}
             <div class="flex items-center gap-2 ">
                 <input type="checkbox" id="{{ id }}" name="{{ field.handle }}[]"
-                       value="{{ option.value }}" class="border-gray-300 rounded">
+                       value="{{ option.value }}" class="border-gray-300 rounded"
+                       {% if loop.index == 0 and required %}required{% endif %}
+                        {% if option.value in value %} checked {% endif %}
+                >
                 <label for="{{ id }}" class="text-sm text-gray-700">{{ option.name }}</label>
             </div>
         {% endfor %}

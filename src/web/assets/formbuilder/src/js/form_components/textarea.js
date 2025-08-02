@@ -18,8 +18,8 @@ const config = {
         desc:'',
         rows: 4,
         required: false,
-        minLength: 0,
-        maxLength: 0,
+        minlength: 0,
+        maxlength: 0,
     },
 };
 const validate = (field) => {
@@ -55,11 +55,11 @@ const renderSettings = (field) => {
         ${renderCommonValidationSettings(field)}
         <div>
             <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">Min Length</label>
-            <input type="number" id="setting-minlength" value="${field.minLength}" min="0" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md">
+            <input type="number" id="setting-minlength" value="${field.minlength}" min="0" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md">
         </div>
         <div>
             <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">Max Length</label>
-            <input type="number" id="setting-maxlength" value="${field.maxLength}" min="0" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md">
+            <input type="number" id="setting-maxlength" value="${field.maxlength}" min="0" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md">
         </div>
     `;
 
@@ -71,8 +71,8 @@ const initSettings = (updateFieldData,) => {
     settingsInputListeners(['label', 'handle', 'desc', 'placeholder'], updateFieldData);
     document.getElementById('setting-rows')?.addEventListener('input', (e) => updateFieldData('rows', parseInt(e.target.value, 10)));
     initCommonValidationSettings(updateFieldData);
-    document.getElementById('setting-minlength')?.addEventListener('input', (e) => updateFieldData('minLength', parseInt(e.target.value, 10)));
-    document.getElementById('setting-maxlength')?.addEventListener('input', (e) => updateFieldData('maxLength', parseInt(e.target.value, 10)));
+    document.getElementById('setting-minlength')?.addEventListener('input', (e) => updateFieldData('minlength', parseInt(e.target.value, 10)));
+    document.getElementById('setting-maxlength')?.addEventListener('input', (e) => updateFieldData('maxlength', parseInt(e.target.value, 10)));
     initSettingGroupButton();
     autoGenerateHandleFromLabel(updateFieldData);
 };

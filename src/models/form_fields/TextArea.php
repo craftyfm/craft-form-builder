@@ -18,8 +18,8 @@ class TextArea extends BaseInput
     {
         $this->placeholder = $config['placeholder'] ?? '';
         $this->rows = intval($config['rows'] ?? $this->rows);
-        $this->minlength = intval($config['minlength'] ?? $this->rows);
-        $this->maxlength = intval($config['maxlength'] ?? $this->rows);
+        $this->minlength = intval($config['minlength'] ?? 0 );
+        $this->maxlength = intval($config['maxlength'] ?? 0 );
         parent::__construct($form, $config);
     }
 

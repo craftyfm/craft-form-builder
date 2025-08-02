@@ -16,18 +16,30 @@ class FileUpload extends BaseInput
     {
         $this->limit = $config['limit'] ?? 1;
         $this->maxSize = $config['maxSize'] ?? 0;
-        if (isset($config['allowedExtensions'])) {
-            if (is_array($config['allowedExtensions'])) {
-                $this->allowedExtensions = $config['allowedExtensions'];
-            } else {
-                $this->allowedExtensions = explode(',', $config['allowedExtensions'] ?? '') ?? [];
-            }
-        }
+        $this->_checkAllowedExtensions($config);
         parent::__construct($form, $config);
     }
+
 
     public function createSubmissionField(): FileUploadField
     {
        return new FileUploadField($this);
+    }
+
+    private function _checkAllowedExtensions($config): void
+    {
+        if (isset($config['allowedExtensions'])) {
+            if (is_array($config['allowedExtensions'])) {
+                $this->allowedExtensions = array_filter(
+                    $config['allowedExtensions'],
+                    fn($ext) => $ext !== ''
+                );
+            } else {
+                $this->allowedExtensions = array_filter(
+                    array_map('trim', explode(',', $config['allowedExtensions'])),
+                    fn($ext) => $ext !== ''
+                );
+            }
+        }
     }
 }
