@@ -23,18 +23,20 @@ const config = {
 const validate = (field) => {
     return !(!field.handle || !field.label);
 }
-const render = (field, layout) => `
-    <div class="cfb:flex ${layout === 'horizontal' ? 'cfb:flex-row' : 'cfb:flex-col'}">
+const render = (field, orientation) => `
+    <div class="cfb:flex ${orientation === 'horizontal' ? 'cfb:flex-row' : 'cfb:flex-col'}">
         ${renderFieldHeader(field)}
-        <div class="${layout === 'horizontal' ? 'cfb:w-3/4' : ''}">
-            <div class="cfb:flex cfb:items-center cfb:justify-center cfb:w-full cfb:flex-3">
-              <input type="file"
-                       class="cfb:w-full cfb:text-slate-500 cfb:font-medium cfb:text-sm cfb:bg-gray-100
-                       cfb:file:cursor-pointer cfb:cursor-pointer cfb:file:border-0 cfb:file:py-2 cfb:file:px-4 cfb:file:mr-4
-                       cfb:file:bg-blue-500 cfb:file:hover:bg-gray-700 cfb:file:text-white cfb:rounded" disabled/>
+        <div class="${orientation === 'horizontal' ? 'cfb:w-3/4' : ''}">
+            <div class="">
+                <div class="cfb:flex cfb:items-center cfb:justify-center cfb:w-full cfb:flex-3">
+                  <input type="file"
+                           class="cfb:w-full cfb:text-slate-500 cfb:font-medium cfb:text-sm cfb:bg-gray-100
+                           cfb:file:cursor-pointer cfb:cursor-pointer cfb:file:border-0 cfb:file:py-2 cfb:file:px-4 cfb:file:mr-4
+                           cfb:file:bg-blue-500 cfb:file:hover:bg-gray-700 cfb:file:text-white cfb:rounded" disabled/>
+                </div>
             </div>
+            ${renderDescription(field)}
         </div>
-        ${renderDescription(field)}
     </div>
 `;
 

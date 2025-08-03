@@ -34,7 +34,7 @@ const render = (field, layout) => {
     return `
         <div class="cfb:flex ${layout === 'horizontal' ? 'cfb:flex-row' : 'cfb:flex-col'}">
             ${renderFieldHeader(field)}
-            <div>
+             <div class="${layout === 'horizontal' ? 'cfb:w-3/4' : ''}">
                 <div class="cfb:space-y-2 cfb:flex-3">
                     ${options}
                 </div>

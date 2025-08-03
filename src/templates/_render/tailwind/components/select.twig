@@ -15,20 +15,22 @@
             </label>
         </div>
     </div>
-    <select name="{{ field.handle }}" id="{{ field.id }}" class="flex-3 w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" {{ field.required ? 'required' }} >
-        {% if field.placeholder %}
-            <option value="">{{ field.placeholder }}</option>
+    <div class="space-y-2 flex-3">
+        <select name="{{ field.handle }}" id="{{ field.id }}" class="flex-3 w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" {{ field.required ? 'required' }} >
+            {% if field.placeholder %}
+                <option value="">{{ field.placeholder }}</option>
+            {% endif %}
+            {% for option in field.options %}
+                <option value="{{ option.value }}" {{ value == option.value ? 'selected' }} >{{ option.name }}</option>
+            {% endfor %}
+        </select>
+        {% if field.desc %}
+            <p class="text-sm font-light">{{ field.desc }}</p>
         {% endif %}
-        {% for option in field.options %}
-            <option value="{{ option.value }}" {{ value == option.value ? 'selected' }} >{{ option.name }}</option>
-        {% endfor %}
-    </select>
-    {% if field.desc %}
-        <p class="text-sm font-light">{{ field.desc }}</p>
-    {% endif %}
-    {% if errors %}
-        <p class="text-sm text-red-600 dark:text-red-500">
-            {{ errors[0] }}
-        </p>
-    {% endif %}
+        {% if errors %}
+            <p class="text-sm text-red-600 dark:text-red-500">
+                {{ errors[0] }}
+            </p>
+        {% endif %}
+    </div>
 </div>

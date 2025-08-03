@@ -136,8 +136,8 @@ var J=Object.defineProperty;var K=(e,t,n)=>t in e?J(e,t,{enumerable:!0,configura
         </div>
     `;return a("Property",t)+a("Validation",n)+a("Advanced",f(e))},oe=e=>{var t,n,s;m(["label","handle","desc","placeholder"],e),(t=document.getElementById("setting-rows"))==null||t.addEventListener("input",c=>e("rows",parseInt(c.target.value,10))),h(e),(n=document.getElementById("setting-minlength"))==null||n.addEventListener("input",c=>e("minlength",parseInt(c.target.value,10))),(s=document.getElementById("setting-maxlength"))==null||s.addEventListener("input",c=>e("maxlength",parseInt(c.target.value,10))),d(),x(e)},be={config:ie,validate:ae,render:re,renderSettings:le,initSettings:oe},de={defaultData:{handle:"",label:"",desc:"",placeholder:"Choose an option...",options:[{name:"Option 1",value:"Option 1",isDefault:!1},{name:"Option 2",value:"Option 2",isDefault:!1}],required:!1}},fe=e=>!(!e.handle||!e.label),me=(e,t)=>{const n=e.options.map(s=>`<option value="${s.value}">${s.name}</option>`).join("");return`
          <div class="cfb:flex ${t==="horizontal"?"cfb:flex-row":"cfb:flex-col"}">
+            ${v(e)}
             <div class="${t==="horizontal"?"cfb:w-3/4":""}">
-                ${v(e)}
                 <select class="cfb:flex-3 cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md cfb:bg-gray-50" disabled>
                     <option value="">${e.placeholder}</option>
                     ${n}
@@ -163,9 +163,9 @@ var J=Object.defineProperty;var K=(e,t,n)=>t in e?J(e,t,{enumerable:!0,configura
         </div>
     `).join("");return`
          <div class="cfb:flex ${t==="horizontal"?"cfb:flex-row":"cfb:flex-col"}">
+          ${v(e)}
              <div class="${t==="horizontal"?"cfb:w-3/4":""}">
-                <div class="cfb:w-3/4">
-                    ${v(e)}
+                <div class="cfb:w-full">
                     <div class="cfb:space-y-2 cfb:flex-3">
                         ${n}
                     </div>
@@ -188,7 +188,7 @@ var J=Object.defineProperty;var K=(e,t,n)=>t in e?J(e,t,{enumerable:!0,configura
     `).join("");return`
         <div class="cfb:flex ${t==="horizontal"?"cfb:flex-row":"cfb:flex-col"}">
             ${v(e)}
-            <div>
+             <div class="${t==="horizontal"?"cfb:w-3/4":""}">
                 <div class="cfb:space-y-2 cfb:flex-3">
                     ${n}
                 </div>
@@ -208,14 +208,16 @@ var J=Object.defineProperty;var K=(e,t,n)=>t in e?J(e,t,{enumerable:!0,configura
     <div class="cfb:flex ${t==="horizontal"?"cfb:flex-row":"cfb:flex-col"}">
         ${v(e)}
         <div class="${t==="horizontal"?"cfb:w-3/4":""}">
-            <div class="cfb:flex cfb:items-center cfb:justify-center cfb:w-full cfb:flex-3">
-              <input type="file"
-                       class="cfb:w-full cfb:text-slate-500 cfb:font-medium cfb:text-sm cfb:bg-gray-100
-                       cfb:file:cursor-pointer cfb:cursor-pointer cfb:file:border-0 cfb:file:py-2 cfb:file:px-4 cfb:file:mr-4
-                       cfb:file:bg-blue-500 cfb:file:hover:bg-gray-700 cfb:file:text-white cfb:rounded" disabled/>
+            <div class="">
+                <div class="cfb:flex cfb:items-center cfb:justify-center cfb:w-full cfb:flex-3">
+                  <input type="file"
+                           class="cfb:w-full cfb:text-slate-500 cfb:font-medium cfb:text-sm cfb:bg-gray-100
+                           cfb:file:cursor-pointer cfb:cursor-pointer cfb:file:border-0 cfb:file:py-2 cfb:file:px-4 cfb:file:mr-4
+                           cfb:file:bg-blue-500 cfb:file:hover:bg-gray-700 cfb:file:text-white cfb:rounded" disabled/>
+                </div>
             </div>
+            ${y(e)}
         </div>
-        ${y(e)}
     </div>
 `,Me=e=>{const t=`
         ${g(e)}

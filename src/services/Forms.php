@@ -317,7 +317,7 @@ class Forms extends Component
         $model->handle = $record->handle;
         $model->uid = $record->uid;
         $model->name = $record->name;
-        $model->setFields($this->_constructFormFields($record['fields'] ?? [], $model));
+        $model->setFields($this->_constructFormFields($record['fields'] ?? [], $model, false));
         $model->integrations = $this->_constructFormIntegrations($record['integrations'] ?? []);
         return $model;
     }
@@ -342,11 +342,12 @@ class Forms extends Component
      * Construct the form fields from array json data.
      * @throws \Exception
      */
-    private function _constructFormFields(array $data, Form $form): array
+    private function _constructFormFields(array $data, Form $form, bool $checkHandle = true): array
     {
         $elementTypes = Utils::getFormFieldMap();
 
         $fields = [];
+        $handles = [];
         foreach ($data as $key => $jsonElement) {
             $element = null;
             if (isset($jsonElement['type'])) {
@@ -357,7 +358,15 @@ class Forms extends Component
                 $element = new $elementTypes[$type]($form, $jsonElement);
                 if ($element !== null) {
                     $element->id = empty($jsonElement['id']) ? StringHelper::UUID(): $jsonElement['id'];
-                    $handle = $this->sanitizeOrGenerateHandle($jsonElement['label'] ?? $element::getType(), $jsonElement['handle']);
+                    if ($checkHandle && empty($jsonElement['handle'])) {
+                        $handle = $this->sanitizeOrGenerateHandle($jsonElement['label'] ?? $element::getType(), $jsonElement['handle']);
+                    }
+                    else if ($checkHandle && in_array($jsonElement['handle'], $handles)) {
+                        $handle = $jsonElement['handle'] . $key ;
+                    } else {
+                        $handle = $jsonElement['handle'] ?? '';
+                    }
+                    $handles[] = $handle;
                     $element->handle = $handle;
                     $element->order = $key;
                     if ($element->validate()) {

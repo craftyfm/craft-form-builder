@@ -29,8 +29,8 @@ const render = (field, layout) => {
     const options = field.options.map(opt => `<option value="${opt.value}">${opt.name}</option>`).join('');
     return `
          <div class="cfb:flex ${layout === 'horizontal' ? 'cfb:flex-row' : 'cfb:flex-col'}">
+            ${renderFieldHeader(field)}
             <div class="${layout === 'horizontal' ? 'cfb:w-3/4' : ''}">
-                ${renderFieldHeader(field)}
                 <select class="cfb:flex-3 cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md cfb:bg-gray-50" disabled>
                     <option value="">${field.placeholder}</option>
                     ${options}
