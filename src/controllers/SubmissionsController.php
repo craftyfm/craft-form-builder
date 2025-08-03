@@ -207,7 +207,6 @@ class SubmissionsController extends Controller
         }
         // Populate submission fields with sanitized data
         $this->populateSubmissionFields($submission, $request);
-
         // Validate the submission
         if (!$submission->validate()) {
             return $this->handleValidationErrors($submission, $request);

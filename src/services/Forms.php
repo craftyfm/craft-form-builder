@@ -237,10 +237,11 @@ class Forms extends Component
         if (empty($handle) && empty($label)) {
             return '';
         }
-        if (!$handle || !preg_match('/^[a-zA-Z_][a-zA-Z0-9_]*$/', $handle)) {
+        $handle = StringHelper::toCamelCase($handle);
+        if (!$handle) {
             // Generate a fallback handle from label or random string
             $slug = StringHelper::toCamelCase(StringHelper::toAscii($label));
-            $handle = $slug . '_' . StringHelper::randomString(6);
+            $handle = $slug . StringHelper::randomString(6);
         }
         return $handle;
     }
@@ -358,11 +359,11 @@ class Forms extends Component
                 $element = new $elementTypes[$type]($form, $jsonElement);
                 if ($element !== null) {
                     $element->id = empty($jsonElement['id']) ? StringHelper::UUID(): $jsonElement['id'];
-                    if ($checkHandle && empty($jsonElement['handle'])) {
-                        $handle = $this->sanitizeOrGenerateHandle($jsonElement['label'] ?? $element::getType(), $jsonElement['handle']);
-                    }
-                    else if ($checkHandle && in_array($jsonElement['handle'], $handles)) {
-                        $handle = $jsonElement['handle'] . $key ;
+                    if ($checkHandle) {
+                        $handle = $this->sanitizeOrGenerateHandle($jsonElement['label'] ?? $element::getType(), $jsonElement['handle'] ?? '');
+                        if(in_array($handle, $handles)) {
+                            $handle = $handle . $key;
+                        }
                     } else {
                         $handle = $jsonElement['handle'] ?? '';
                     }

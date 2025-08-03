@@ -56,38 +56,35 @@ class FileUploadField extends BaseField
         }
 
         if ($this->formField->limit > 1) {
-
+            $limit = $this->formField->limit;
             $rules[] = [
                 'uploadedFiles',
-                function ($attribute) {
-                    if (is_array($this->$attribute) && count($this->$attribute) > $this->formField->limit) {
-                        $this->addError($attribute, "Maximum of {$this->formField->limit} selections allowed.");
+                function ($attribute) use ($limit){
+                    if (is_array($this->$attribute) && count($this->$attribute) > $limit) {
+                        $this->addError($attribute, "Maximum of {$limit} selections allowed.");
                     }
                 }
             ];
         }
 
         if ($this->formField->maxSize > 0) {
-
+            $maxSize = $this->formField->maxSize * 1024 * 1024;
             $rules[] = [
                 'uploadedFiles',
                 'each',
-                'rule' => [function ($attribute, $params, $validator, $value) {
-                    $maxSize = $this->formField->maxSize * 1024 * 1024;
-
+                'rule' => [function ($attribute, $params, $validator, $value) use ($maxSize) {
                     if ($value instanceof UploadedFile) {
                         if ($value->size > $maxSize) {
-                            $this->addError($attribute, "File size exceeds the maximum of {$this->formField->maxSize} MB.");
+                            $this->addError($attribute, "File size exceeds the maximum of {$maxSize} MB.");
                         }
                     }
                 }]
             ];
         }
 
-//
-        if ($this->formField->allowedExtensions) {
-            $allowed = $this->formField->allowedExtensions;
 
+        if ($this->formField->allowedExtensions) {
+            $allowed = $this->formField->allowedExtensions;;
             $rules[] = [
                 'uploadedFiles',
                 'each',

@@ -106,6 +106,7 @@ class FormsController extends Controller
             }
             FormBuilder::getInstance()->forms->saveForm($form);
         } catch (\Exception|Error $error) {
+
             FormBuilder::log($error, 'error');
             return $this->asFailure("Internal server error ",[
                 'success' => false,
