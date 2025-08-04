@@ -3,9 +3,12 @@
     { label: 'Layout & Style', icon: 'cfb:iconify-[mdi--palette]', tab: 'layout' },
     { label: 'Submit Behavior', icon: 'cfb:iconify-[mdi--check-circle]', tab: 'behavior' },
     { label: 'Admin Email', icon: 'cfb:iconify-[mdi--email]', tab: 'admin-email' },
-    { label: 'Integrations', icon: 'cfb:iconify-[mdi--circle]', tab: 'integrations' },
 ] %}
-
+{% if form.integrations %}
+    {% set tabs = tabs|merge([
+        { label: 'Integrations', icon: 'cfb:iconify-[mdi--circle]', tab: 'integrations' },
+    ]) %}
+{% endif %}
 <div id="main-settings-modal" class="cfb:fixed cfb:inset-0 cfb:bg-gray-50 cfb:bg-opacity-10 cfb:flex cfb:items-center cfb:justify-center cfb:z-50 cfb:hidden cfb:overflow-hidden">
     <div class="cfb:flex cfb:flex-col cfb:bg-white cfb:rounded-lg cfb:overflow-hidden cfb:shadow-xl cfb:w-[90vw] cfb:mx-4 cfb:h-[95vh]">
         <!-- Modal Header -->

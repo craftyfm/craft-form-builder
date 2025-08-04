@@ -2,10 +2,10 @@
 
 namespace craftyfm\formbuilder\models\form_fields;
 
-use craft\base\Model;
 use craft\helpers\App;
 use craftyfm\formbuilder\FormBuilder;
 use craftyfm\formbuilder\integrations\captcha\BaseCaptcha as BaseCaptchaIntegration;
+
 class Hcaptcha extends BaseCaptcha
 {
     public static string $type = 'hcaptcha';
@@ -38,7 +38,7 @@ class Hcaptcha extends BaseCaptcha
         if (isset($this->captchaIntegration)) {
             return $this->captchaIntegration;
         }
-        $this->captchaIntegration = new \craftyfm\formbuilder\integrations\captcha\ReCaptcha([
+        $this->captchaIntegration = new \craftyfm\formbuilder\integrations\captcha\HCaptcha([
             'siteKey' => $this->getSiteKey(),
             'secretKey' => $this->getSecretKey(),
             'errorMessage' => $this->_getErrorMessage(),

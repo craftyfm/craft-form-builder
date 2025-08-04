@@ -11,7 +11,6 @@ use craft\helpers\UrlHelper;
 use craft\web\View;
 use craftyfm\formbuilder\FormBuilder;
 use craftyfm\formbuilder\helpers\Utils;
-use craftyfm\formbuilder\integrations\base\BaseIntegration;
 use craftyfm\formbuilder\models\Form;
 use craftyfm\formbuilder\models\FormSettings;
 use craftyfm\formbuilder\models\Submission;

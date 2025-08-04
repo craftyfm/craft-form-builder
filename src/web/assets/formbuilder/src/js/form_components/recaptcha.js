@@ -1,6 +1,7 @@
 import {
-    initSettingGroupButton, renderAdvanceSettings,
-    renderElementButtonHeader,
+    initSettingGroupButton,
+    labelHandleListener,
+    renderAdvanceSettings,
     renderSettingGroup,
     settingsInputListeners
 } from '../utils.js';
@@ -39,8 +40,8 @@ const renderSettings = (field) => {
 };
 
 const initSettings = (updateFieldData) => {
-    settingsInputListeners([ 'handle'], updateFieldData);
     initSettingGroupButton();
+    labelHandleListener(updateFieldData);
 };
 
 export default {

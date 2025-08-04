@@ -9,8 +9,10 @@ use craftyfm\formbuilder\FormBuilder;
 use craftyfm\formbuilder\models\SubmissionStatus;
 use yii\web\BadRequestHttpException;
 use yii\web\MethodNotAllowedHttpException;
+use yii\web\NotFoundHttpException;
 use yii\web\Response;
-use yii\web\NotFoundHttpException;;
+
+;
 
 class SubmissionStatusController extends Controller
 {

@@ -16,6 +16,7 @@ import url from "./url";
 import phone from "./phone";
 import number from "./number";
 import checkbox from "./checkbox";
+
 export const components = {
     text,
     email,

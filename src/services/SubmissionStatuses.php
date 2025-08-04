@@ -11,7 +11,6 @@ use craft\errors\BusyResourceException;
 use craft\errors\StaleResourceException;
 use craft\events\ConfigEvent;
 use craft\helpers\Db;
-use craft\helpers\ProjectConfig as ProjectConfigHelper;
 use craft\helpers\StringHelper;
 use craftyfm\formbuilder\FormBuilder;
 use craftyfm\formbuilder\helpers\Table;

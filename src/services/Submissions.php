@@ -5,22 +5,16 @@ namespace craftyfm\formbuilder\services;
 use Craft;
 use craft\base\Component;
 use craft\errors\VolumeException;
-use craft\helpers\Template;
 use craft\helpers\UrlHelper;
-use craft\helpers\Db;
-use craft\web\UploadedFile;
 use craftyfm\formbuilder\events\SubmissionEvent;
 use craftyfm\formbuilder\FormBuilder;
 use craftyfm\formbuilder\jobs\IntegrationJob;
 use craftyfm\formbuilder\jobs\SendNotificationJob;
-use craftyfm\formbuilder\models\form_fields\FileUpload;
 use craftyfm\formbuilder\models\Submission;
 use craftyfm\formbuilder\models\submission_fields\FileUploadField;
 use craftyfm\formbuilder\records\SubmissionRecord;
 use DateTime;
 use Throwable;
-use Twig\Markup;
-use yii\base\Event;
 use yii\db\Exception;
 
 class Submissions extends Component

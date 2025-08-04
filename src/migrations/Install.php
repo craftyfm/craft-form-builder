@@ -2,7 +2,6 @@
 
 namespace craftyfm\formbuilder\migrations;
 
-use Craft;
 use craft\db\Migration;
 use craftyfm\formbuilder\helpers\Table;
 use yii\base\Exception;

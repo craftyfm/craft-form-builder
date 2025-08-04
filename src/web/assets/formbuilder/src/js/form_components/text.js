@@ -1,14 +1,14 @@
 import {
-    renderSettingGroup,
+    initCommonValidationSettings,
+    initSettingGroupButton,
+    labelHandleListener,
+    renderAdvanceSettings,
     renderCommonPropertySettings,
     renderCommonValidationSettings,
-    initCommonValidationSettings,
-    renderFieldHeader,
-    settingsInputListeners,
-    initSettingGroupButton,
-    renderAdvanceSettings,
     renderDescription,
-    autoGenerateHandleFromLabel
+    renderFieldHeader,
+    renderSettingGroup,
+    settingsInputListeners,
 } from '../utils.js';
 
 const config = {
@@ -81,13 +81,13 @@ const renderSettings = (field, formState) => {
 };
 
 const initSettings = (updateFieldData, renderer) => {
-    settingsInputListeners(['label', 'handle', 'desc', 'placeholder'], updateFieldData);
+    settingsInputListeners(['desc', 'placeholder'], updateFieldData);
     initCommonValidationSettings(updateFieldData);
     initSettingGroupButton();
     if(renderer.formState.settings.icons !== '') {
         renderer.iconPicker.init('setting-icon', renderer.formState.settings.icons)
     }
-    autoGenerateHandleFromLabel(updateFieldData);
+    labelHandleListener(updateFieldData);
 
 };
 

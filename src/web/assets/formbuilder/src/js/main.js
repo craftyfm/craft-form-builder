@@ -1,6 +1,6 @@
 import '../css/main.css';
-import { Renderer } from './ui/renderer.js';
-import { MainSettingsManager } from './ui/mainSettingsManager.js';
+import {Renderer} from './ui/renderer.js';
+import {MainSettingsManager} from './ui/mainSettingsManager.js';
 import {initDragDrop} from "./ui/dragDrop";
 import {registerPreviewEventListeners} from "./ui/preview";
 import {saveForm} from "./ui/saveForm";

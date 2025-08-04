@@ -2,8 +2,6 @@
 
 namespace craftyfm\formbuilder\models\form_fields;
 
-use craft\base\Model;
-use craftyfm\formbuilder\helpers\Utils;
 use craftyfm\formbuilder\models\submission_fields\ScalarField;
 
 class Checkbox extends BaseInput

@@ -2,10 +2,6 @@
 
 namespace craftyfm\formbuilder\models\submission_fields;
 
-use craft\base\Model;
-use craftyfm\formbuilder\models\form_fields\Base;
-use craftyfm\formbuilder\models\form_fields\BaseInput;
-
 class ScalarField extends BaseField
 {
     public ?string $_value = null;

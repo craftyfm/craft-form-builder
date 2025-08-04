@@ -5,8 +5,8 @@ namespace craftyfm\formbuilder\services;
 use craft\base\Component;
 use craftyfm\formbuilder\FormBuilder;
 use craftyfm\formbuilder\integrations\captcha\BaseCaptcha;
-use craftyfm\formbuilder\integrations\captcha\ReCaptcha;
 use craftyfm\formbuilder\integrations\captcha\HCaptcha;
+use craftyfm\formbuilder\integrations\captcha\ReCaptcha;
 
 /**
  * Captcha Manager Service

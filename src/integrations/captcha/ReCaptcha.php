@@ -2,7 +2,6 @@
 
 namespace craftyfm\formbuilder\integrations\captcha;
 
-use Craft;
 use craft\web\Request;
 
 /**

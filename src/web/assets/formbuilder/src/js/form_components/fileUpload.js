@@ -1,12 +1,14 @@
 import {
-    renderSettingGroup,
-    renderCommonValidationSettings,
     initCommonValidationSettings,
-    renderFieldHeader,
-    renderCommonPropertySettings,
     initSettingGroupButton,
-    settingsInputListeners,
-    renderAdvanceSettings, renderDescription, autoGenerateHandleFromLabel
+    labelHandleListener,
+    renderAdvanceSettings,
+    renderCommonPropertySettings,
+    renderCommonValidationSettings,
+    renderDescription,
+    renderFieldHeader,
+    renderSettingGroup,
+    settingsInputListeners
 } from '../utils.js';
 
 const config = {
@@ -68,11 +70,11 @@ const renderSettings = (field) => {
 };
 
 const initSettings = (updateFieldData) => {
-    settingsInputListeners(['label', 'allowedExtensions', 'limit', 'handle', 'desc'], updateFieldData);
+    settingsInputListeners(['allowedExtensions', 'limit', 'desc'], updateFieldData);
     initCommonValidationSettings(updateFieldData);
     document.getElementById('setting-maxSize')?.addEventListener('input', (e) => updateFieldData('maxSize', e.target.value));
     initSettingGroupButton();
-    autoGenerateHandleFromLabel(updateFieldData);
+    labelHandleListener(updateFieldData);
 };
 
 export default {

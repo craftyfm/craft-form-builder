@@ -13,17 +13,16 @@ use craftyfm\formbuilder\models\form_fields\Checkbox;
 use craftyfm\formbuilder\models\form_fields\Checkboxes;
 use craftyfm\formbuilder\models\form_fields\Email;
 use craftyfm\formbuilder\models\form_fields\FileUpload;
-use craftyfm\formbuilder\models\form_fields\Text;
 use craftyfm\formbuilder\models\form_fields\Number;
 use craftyfm\formbuilder\models\form_fields\Phone;
 use craftyfm\formbuilder\models\form_fields\Radio;
 use craftyfm\formbuilder\models\form_fields\Select;
+use craftyfm\formbuilder\models\form_fields\Text;
 use craftyfm\formbuilder\models\form_fields\TextArea;
 use craftyfm\formbuilder\models\form_fields\Url;
 use craftyfm\formbuilder\models\FormSettings;
 use craftyfm\formbuilder\models\Submission;
 use craftyfm\formbuilder\models\submission_fields\BaseField;
-use craftyfm\formbuilder\models\submission_fields\ScalarField;
 use Throwable;
 use yii\base\InvalidConfigException;
 use yii\db\Exception;
@@ -38,7 +37,6 @@ class SubmissionsController extends Controller
     protected array|int|bool $allowAnonymous = ['submit'];
 
     /**
-     * @throws InvalidConfigException
      * @throws NotFoundHttpException
      * @throws ForbiddenHttpException
      * @throws \Exception
@@ -408,7 +406,6 @@ class SubmissionsController extends Controller
         if (!$submission->captcha) {
             return;
         }
-
         if (!$submission->captcha->verifyRequest($request)) {
             $submission->addError('captcha', $submission->captcha->errorMessage);
         }

@@ -1,4 +1,4 @@
-import { components } from '../form_components';
+import {components} from '../form_components';
 import {deepCopy, renderElementButtonHeader} from '../utils.js';
 import {handleDragEnd, handleDragStart} from "./dragDrop";
 import {IconifyPicker} from "./components/IconPicker";
@@ -146,11 +146,13 @@ export class Renderer {
         });
     }
 
-    updateFieldData = (attr, value,) => {
+    updateFieldData = (attr, value, renderForm = true) => {
         const element = this.formState.fields.find(el => el.id === this.selectedFieldId);
         if (element) {
             element[attr] = value;
-            this.renderForm();
+            if (renderForm) {
+                this.renderForm();
+            }
         }
     }
 

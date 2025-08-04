@@ -5,7 +5,6 @@ namespace craftyfm\formbuilder\fields;
 use Craft;
 use craft\base\ElementInterface;
 use craft\base\Field;
-use craft\helpers\Html;
 use craftyfm\formbuilder\FormBuilder;
 use craftyfm\formbuilder\models\Form;
 use yii\db\Schema;

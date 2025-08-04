@@ -2,8 +2,6 @@
 
 namespace craftyfm\formbuilder\models\form_fields;
 
-use craft\base\Model;
-
 abstract class BaseInput extends Base
 {
     public string $label;
