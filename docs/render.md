@@ -32,7 +32,7 @@ Use this when you know the form handle:
 {{ form }}
 ```
 
-You can also control whether to load the plugin’s assets (CSS, JS):
+You can also control whether to load the framework assets (CSS, JS):
 
 ```twig
 {% set form = craft.formBuilder.renderForm('yourFormHandle', false) %}
@@ -62,4 +62,4 @@ To disable automatic asset loading here:
 {% endif %}
 ```
 
-> This gives you full control over how and when the plugin’s assets are loaded in your templates.
+> This gives you full control over when the plugin’s assets are loaded in your templates.
