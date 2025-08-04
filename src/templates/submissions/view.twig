@@ -1,0 +1,242 @@
+{% extends "_layouts/cp" %}
+{% set title = "Submission #" ~ submission.id %}
+{% import "_includes/forms" as forms %}
+{% set selectedSubnavItem = 'submissions' %}
+
+{% css %}
+.selected-options {
+    list-style-type: disc;
+    padding-left: 1.5rem;
+    margin: 0.5rem 0;
+    font-size: 14px;
+    color: #333;
+}
+
+.selected-options li {
+    margin-bottom: 0.25rem;
+}
+
+{% endcss %}
+
+{% block actionButton %}
+    {% if setStatuses and currentUser.can('form-builder-updateSubmissions') %}
+        <div class="buttons">
+            <div class="btngroup">
+                <button type="button" class="btn menubtn" aria-controls="set-status-menu"
+                        data-disclosure-trigger>Set Status
+                </button>
+                <div id="set-status-menu" class="menu menu--disclosure" data-disclosure-menu>
+                    <ul>
+                        {% for setStatus in setStatuses %}
+                            <li>
+                                <a role="button" type="button" class="menu-item" tabindex="0"
+                                   href="{{ setStatus.url }}">
+                                    <span class="status {{ setStatus.color }}"></span>
+                                    {{ setStatus.name }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+{#            <button type="button" id="widgetManagerBtn" class="btn settings icon" title="{{ 'Settings'|t('app') }}"#}
+{#                    aria-label="{{ 'Settings'|t('app') }}" aria-expanded="false"></button>#}
+        </div>
+    {% endif %}
+{% endblock %}
+
+
+{% block content %}
+    {% for name, field in submission.getSubmissionFields() %}
+        {% set formField = field.getFormField() %}
+        {% set hasFields = true %}
+
+        {% if formField.type == 'text' %}
+            {{ forms.textField({
+                label: formField.label,
+                id: formField.handle,
+                name: formField.handle,
+                value: field.value,
+                type: 'text',
+                readonly: true
+            }) }}
+        {% elseif formField.type == 'email' %}
+            {{ forms.textField({
+                label: formField.label,
+                id: formField.handle,
+                name: formField.handle,
+                value: field.value,
+                type: 'email',
+                readonly: true
+            }) }}
+        {% elseif formField.type == 'phone' %}
+            {{ forms.textField({
+                label: formField.label,
+                id: formField.handle,
+                name: formField.handle,
+                value: field.value,
+                type: 'tel',
+                readonly: true
+            }) }}
+        {% elseif formField.type == 'number' %}
+            {{ forms.textField({
+                label: formField.label,
+                id: formField.handle,
+                name: formField.handle,
+                value: field.value,
+                type: 'number',
+                readonly: true
+            }) }}
+        {% elseif formField.type == 'url' %}
+            {{ forms.textField({
+                label: formField.label,
+                id: formField.handle,
+                name: formField.handle,
+                value: field.value,
+                type: 'url',
+                readonly: true
+            }) }}
+        {% elseif formField.type == 'textarea' %}
+            {{ forms.textareaField({
+                label: formField.label,
+                id: formField.handle,
+                name: formField.handle,
+                value: field.value,
+                readonly: true
+            }) }}
+
+        {% elseif formField.type == 'select' %}
+            <div class="field">
+                <div class="heading">
+                    <label class="">{{ formField.label }}</label>
+                </div>
+                {% if field.value %}
+                    <ul class="selected-options">
+                        {% for option in formField.options %}
+                            {% if option.value in field.value %}
+                                <li>{{ option.name }}</li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div>No Selected</div>
+                {% endif %}
+            </div>
+
+        {% elseif formField.type == 'radio' %}
+            <div class="field">
+                <div class="heading">
+                    <label class="">{{ formField.label }}</label>
+                </div>
+                {% if field.value %}
+                    <ul class="selected-options">
+                        {% for option in formField.options %}
+                            {% if option.value in field.value %}
+                                <li>{{ option.name }}</li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div>No Selected</div>
+                {% endif %}
+            </div>
+        {% elseif formField.type == 'checkboxes' %}
+            <div class="field">
+                <div class="heading">
+                    <label class="">{{ formField.label }}</label>
+                </div>
+                {% if field.value %}
+                    <ul class="selected-options">
+                        {% for option in formField.options %}
+                            {% if option.value in field.value %}
+                                <li>{{ option.name }}</li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div>No Selected</div>
+                {% endif %}
+            </div>
+        {% elseif formField.type == 'checkbox' %}
+            <div class="field">
+                <div class="heading">
+                    <label class="">{{ formField.label }}</label>
+                </div>
+                {{ forms.checkbox({
+                    id: formField.handle,
+                    name: formField.handle,
+                    label: formField.checkboxLabel,
+                    checked: field.value,
+                    disabled: true,
+                }) }}
+            </div>
+
+        {% elseif formField.type == 'fileUpload' %}
+            {% set value = field.getValue() %}
+            <div class="field">
+                <div class="heading">
+                    <label class="">{{ formField.label }}</label>
+                </div>
+                {% if value %}
+                    <ul>
+                        {% for asset in value %}
+                            <li><a href="{{ asset.getCpEditUrl() }}" target="_blank">{{ asset.filename }}</a></li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div>No file uploaded</div>
+                {% endif %}
+
+            </div>
+
+        {% endif %}
+    {% endfor %}
+
+
+{% endblock %}
+
+{% block details %}
+    <div class="meta">
+        <div class="field">
+            <div class="heading">
+                <label class="">Submitted on</label>
+            </div>
+            <div class="input ltr">
+                {{ submission.dateCreated|datetime }}
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="heading">
+                <label class="">Form</label>
+            </div>
+            <div class="input ltr">
+                <a href="{{ submission.form.getEditUrl() }}">{{ submission.form.name }}</a>
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="heading">
+                <label class="">Status</label>
+            </div>
+            <div class="input ltr">
+                {% if submission.status %}
+                    <span class="status {{ submission.status.color }}"></span> {{ submission.status.name }}
+                {% else %}
+                    No Status
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="heading">
+                <label class="">IP Address</label>
+            </div>
+            <div class="input ltr">
+                {{ submission.ipAddress ?? '-' }}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

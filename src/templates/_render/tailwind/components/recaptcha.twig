@@ -1,0 +1,21 @@
+<input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
+
+{% do craft.app.view.registerJsFile("https://www.google.com/recaptcha/api.js?render=#{field.siteKey}") %}
+
+<script>
+    const formId = "{{ form.uid|escape }}"
+    const siteKey = "{{ field.siteKey|escape }}"
+</script>
+
+{% js %}
+    document.getfieldById(formId).addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        grecaptcha.ready(function () {
+            grecaptcha.execute(siteKey, { action: 'submit' }).then(function (token) {
+                document.getfieldById('g-recaptcha-response').value = token;
+                e.target.submit();
+            });
+        });
+    });
+{% endjs %}

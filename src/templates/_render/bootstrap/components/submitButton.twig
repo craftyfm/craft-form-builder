@@ -1,0 +1,23 @@
+{% set spacing = field.spacing %}
+{% set resetStyle = field.resetStyle %}
+{% set resetText = field.resetText %}
+{% set submitStyle = field.submitStyle %}
+{% set submitText = field.submitText %}
+
+{% set wrapperClass = 'mb-3 d-flex ' ~  (spacing == 'wide' ? 'justify-content-between' : 'gap-2' ) %}
+{% set resetClass = "btn btn-" ~ resetStyle %}
+{% set submitClass = "btn btn-" ~ submitStyle %}
+
+
+<div class="{{ wrapperClass }}">
+    <button
+            type="reset"
+            class="{{ resetClass }}">
+        {{ resetText }}
+    </button>
+    <button
+            type="submit"
+            class="{{ submitClass }}">
+        {{ submitText }}
+    </button>
+</div>

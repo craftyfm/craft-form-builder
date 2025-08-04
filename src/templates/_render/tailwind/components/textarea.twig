@@ -1,0 +1,38 @@
+{% set id = field.id|default(field.handle) %}
+{% set label = field.label %}
+{% set name = field.handle %}
+{% set required = field.required|default(false) %}
+{% set placeholder = field.placeholder|default('') %}
+{% set description = field.desc %}
+{% set rows = field.rows %}
+{% set minlength = field.minlength %}
+{% set maxlength = field.maxlength %}
+{% set errors = submission.getErrors(field.handle) %}
+{% set value = attribute(submission, field.handle) ?? field.defaultValue ?? null %}
+
+
+<div class="flex {{ orientation == 'horizontal' ? 'flex-row' : 'flex-col'}}">
+    <div class="mb-2 font-light flex-1">
+        <div class="flex justify-between items-center">
+            <label class="block text-sm font-medium text-gray-700" for="{{ id }}">
+                {{ field.label }}
+                {{ field.required ? '<span class="text-red-500 ml-1">*</span>' : ''}}
+            </label>
+        </div>
+    </div>
+    <div class="flex-3">
+        <textarea placeholder="{{field.placeholder}}" id="{{ id }}" name="{{ name }}"
+                  rows="{{field.rows}}"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 resize-none"
+              {{ field.required ? 'required' }}
+              >{{ value }}</textarea>
+        {% if field.desc %}
+            <p class="text-sm font-light">{{ field.desc }}</p>
+        {% endif %}
+        {% if errors %}
+            <p class="mt-2 text-sm text-red-600 dark:text-red-500">
+                {{ errors[0] }}
+            </p>
+        {% endif %}
+    </div>
+</div>

@@ -1,0 +1,76 @@
+@import "tailwindcss/utilities.css" prefix(cfb);
+@import "tailwindcss/theme.css" prefix(cfb);
+@import "tailwindcss/preflight.css" prefix(cfb);
+@plugin "@iconify/tailwind4" {
+    prefix: "iconify";
+    scale: 1.2;
+}
+@source "../../../../../../templates/_builder";
+@source "../js";
+@source inline("left", "end", "center", "justify");
+
+.cfb\:hide-scrollbar {
+    scrollbar-width: none;         /* Firefox */
+    -ms-overflow-style: none;      /* IE/Edge */
+}
+.cfb\:hide-scrollbar::-webkit-scrollbar {
+    display: none;                 /* Chrome, Safari */
+}
+.cfb\:delete-btn-wrapper:hover .cfb\:delete-tooltip {
+    opacity: 1;
+
+}
+
+.cfb\:delete-tooltip {
+    position: absolute;
+    bottom: 100%;           /* Position above the button */
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 8px;
+    padding: 4px 8px;
+    background-color: #1f2937; /* dark gray */
+    color: white;
+    font-size: 12px;
+    border-radius: 4px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    white-space: nowrap;
+    z-index: 10;
+}
+
+.cfb\:preview-device-frame {
+    margin-left: auto;                /* mx-auto */
+    margin-right: auto;
+    overflow: auto;                   /* overflow-auto */
+    max-height: 80vh;                 /* max-h-[80vh] */
+    transition: width 0.3s ease, height 0.3s ease, transform 0.3s ease;
+    border-top: 2px solid #d1d5db;   /* Light gray */
+    border-bottom: 2px solid #d1d5db;
+    border-left: 2px solid #d1d5db;
+    border-right: 2px solid #d1d5db;
+    margin-top: 1rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* subtle shadow */
+    padding: 0 10px 10px 10px;
+}
+
+.cfb\:preview-device-frame.cfb\:mobile  {
+    width: 377px;
+    height: 667px;
+    padding-top:10px;
+
+}
+
+.cfb\:preview-device-frame.cfb\:tablet {
+    width: 770px;
+    height: 1024px;
+    padding-top:10px;
+}
+
+.cfb\:preview-device-frame.cfb\:desktop {
+    width: 1012px;
+    height: 800px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+

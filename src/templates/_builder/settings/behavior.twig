@@ -1,0 +1,42 @@
+<div class="cfb-tab-content cfb-tab-behavior cfb:hidden">
+    <!-- Action on Submit -->
+    <div class="cfb:mb-6">
+        <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-3">
+            Action After Successful Submit
+        </label>
+        <div class="cfb:space-y-3">
+            <label class="cfb:flex cfb:items-center cfb:cursor-pointer cfb:p-3 cfb:border cfb:border-gray-200 cfb:rounded-lg cfb:hover:bg-gray-50">
+                <input type="radio" name="settings[actionOnSubmit]" value="message" class="cfb:w-4 cfb:h-4 cfb:text-blue-600 cfb:border-gray-300 focus:cfb:ring-blue-500" {{ form.settings.actionOnSubmit == 'message' ? 'checked' }}>
+                <div class="cfb:ml-3">
+                    <span class="cfb:text-sm cfb:font-medium cfb:text-gray-700">Show Success Message</span>
+                    <p class="cfb:text-xs cfb:text-gray-500 cfb:mt-1">Display a success message on the same page</p>
+                </div>
+            </label>
+            <label class="cfb:flex cfb:items-center cfb:cursor-pointer cfb:p-3 cfb:border cfb:border-gray-200 cfb:rounded-lg cfb:hover:bg-gray-50">
+                <input type="radio" name="settings[actionOnSubmit]" value="redirect" class="cfb:w-4 cfb:h-4 cfb:text-blue-600 cfb:border-gray-300 focus:cfb:ring-blue-500" {{ form.settings.actionOnSubmit == 'redirect' ? 'checked' }}>
+                <div class="cfb:ml-3">
+                    <span class="cfb:text-sm cfb:font-medium cfb:text-gray-700">Redirect to URL</span>
+                    <p class="cfb:text-xs cfb:text-gray-500 cfb:mt-1">Redirect user to a specific page after submission</p>
+                </div>
+            </label>
+        </div>
+    </div>
+
+    <!-- Success Message -->
+    <div class="cfb:mb-6 cfb-success-message-field" style="display: {{ form.settings.actionOnSubmit == 'message' ? 'block' : 'none' }};">
+        <label for="success-message" class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">
+            Success Message
+        </label>
+        <textarea id="success-message" name="settings[successMessage]" rows="4" placeholder="Enter success message..." class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-lg focus:cfb:outline-none focus:cfb:ring-2 focus:cfb:ring-blue-500 focus:cfb:border-blue-500 cfb:resize-none">{{ form.settings.successMessage }}</textarea>
+        <p class="cfb:text-xs cfb:text-gray-500 cfb:mt-1">This message will be displayed after successful form submission</p>
+    </div>
+
+    <!-- Redirect URL -->
+    <div class="cfb:mb-6 cfb-redirect-url-field" style="display: {{ form.settings.actionOnSubmit == 'redirect' ? 'block' : 'none' }};">
+        <label for="redirect-url" class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">
+            Redirect URL
+        </label>
+        <input value="{{ form.settings.redirectUrl }}" type="text" id="redirect-url" name="settings[redirectUrl]" placeholder="https://example.com/thank-you" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-lg focus:cfb:outline-none focus:cfb:ring-2 focus:cfb:ring-blue-500 focus:cfb:border-blue-500">
+        <p class="cfb:text-xs cfb:text-gray-500 cfb:mt-1">Enter the URL where users should be redirected after successful submission</p>
+    </div>
+</div>

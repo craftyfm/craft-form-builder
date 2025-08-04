@@ -1,0 +1,138 @@
+{% extends "form-builder/settings/_layouts/base" %}
+{% import "_includes/forms" as forms %}
+
+{% set title = "ReCaptcha Settings" %}
+{% set settings = craft.app.plugins.getPlugin('form-builder').settings %}
+{% set captcha = settings.captchas.recaptcha %}
+{% set currentPage = 'recaptcha' %}
+{% if errors is not defined %}
+    {% set errors = [] %}
+{% endif %}
+
+{% if craft.app.config.general.allowAdminChanges %}
+    {% set readOnly = false %}
+{% else %}
+    {% set readOnly = true %}
+{% endif %}
+
+{% block content %}
+    {{ actionInput('form-builder/settings/save-captcha') }}
+    <input type="hidden" name="handle" value="recaptcha">
+
+    <div class="fb-settings-container">
+        <!-- Enable/Disable recaptcha -->
+        <div class="fb-settings-section">
+            {{ forms.lightswitchField({
+                label: "Enable recaptcha"|t('form-builder'),
+                instructions: "Enable recaptcha protection for your forms."|t('form-builder'),
+                id: 'enabled',
+                name: 'enabled',
+                on: captcha.enabled ?? false,
+                toggle: 'recaptcha-settings',
+                disabled: readOnly
+            }) }}
+        </div>
+
+        <!-- recaptcha Configuration -->
+        <div id="recaptcha-settings"
+             class="fb-settings-section" {{ not (captcha.enabled ?? false) ? 'style="display: none;"' }}>
+            <h2>{{ "API Configuration"|t('form-builder') }}</h2>
+            <p class="light">{{ "Get your Site Key and Secret Key from your recaptcha dashboard at https://dashboard.recaptcha.com/"|t('form-builder') }}</p>
+
+            {{ forms.autosuggestField({
+                label: "Site Key"|t('form-builder'),
+                instructions: "Your recaptcha site key (public key)."|t('form-builder'),
+                id: 'siteKey',
+                name: 'siteKey',
+                required: true,
+                suggestEnvVars: true,
+                value: captcha.siteKey ?? '',
+                placeholder: "10000000-ffff-ffff-ffff-000000000001",
+                errors: errors.siteKey is defined ? errors.siteKey,
+                disabled: readOnly
+            }) }}
+
+            {{ forms.autosuggestField({
+                label: "Secret Key"|t('form-builder'),
+                instructions: "Your recaptcha secret key (private key). Keep this confidential."|t('form-builder'),
+                id: 'secretKey',
+                name: 'secretKey',
+                required: true,
+                suggestEnvVars: true,
+                value: captcha.secretKey ?? '',
+                required: true,
+                type: 'password',
+                placeholder: "0x0000000000000000000000000000000000000000",
+                errors: errors.secretKey is defined ? errors.secretKey,
+                disabled: readOnly
+            }) }}
+
+            {{ forms.textField({
+                label: "Threshold"|t('form-builder'),
+                instructions: "Score threshold for reCAPTCHA v3 (0.0 to 1.0). Lower values are more strict. Default is 0.5."|t('form-builder'),
+                id: 'threshold',
+                name: 'threshold',
+                value: captcha.threshold ?? '0.5',
+                placeholder: "0.5",
+                type: 'number',
+                min: 0,
+                max: 1,
+                step: 0.1,
+                errors: errors.threshold is defined ? errors.threshold,
+                disabled: readOnly
+            }) }}
+
+            {{ forms.textareaField({
+                label: "Error Message"|t('form-builder'),
+                instructions: "Message shown when recaptcha verification fails."|t('form-builder'),
+                id: 'errorMessage',
+                name: 'errorMessage',
+                value: captcha.errorMessage ?? 'Please complete the recaptcha verification.',
+                rows: 2,
+                placeholder: "Please complete the recaptcha verification.",
+                disabled: readOnly
+            }) }}
+        </div>
+    </div>
+
+{% endblock %}
+
+{% css %}
+.fb-settings-container {
+    max-width: 800px;
+}
+
+.fb-settings-section {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e3e5e8;
+}
+
+.fb-settings-section:last-child {
+    border-bottom: none;
+}
+
+.fb-settings-section h2 {
+    margin-bottom: 2px;
+    color: #29323d;
+}
+
+.fb-settings-section > p.light {
+    margin-bottom: 20px;
+    font-size: 13px;
+}
+{% endcss %}
+
+{% js %}
+document.addEventListener('DOMContentLoaded', function () {
+    const enabledField = document.getElementById('enabled');
+    const settingsSection = document.getElementById('recaptcha-settings');
+
+    if (enabledField && settingsSection) {
+        enabledField.addEventListener('click', function () {
+            const isChecked = this.getAttribute('aria-checked') === 'true';
+            settingsSection.style.display = isChecked ? 'block' : 'none';
+        });
+    }
+});
+{% endjs %}

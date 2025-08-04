@@ -1,0 +1,358 @@
+{% extends "_layouts/cp" %}
+{% set title = "Forms" %}
+{% import "_includes/forms" as forms %}
+{% do view.registerAssetBundle('craft\\web\\assets\\admintable\\AdminTableAsset') -%}
+
+{% set title = "Forms"|t('form-builder') %}
+{% set selectedSubnavItem = 'forms' %}
+
+{% block actionButton %}
+    <button type="button" class="btn submit" id="new-form-btn">
+        {{ "New form"|t('form-builder') }}
+    </button>
+{% endblock %}
+
+{% block content %}
+    <div id="forms-admin-table"></div>
+    <script>
+        var deleteAction = "{{ actionUrl('form-builder/forms/delete')  }}";
+        var saveEndpoint = "{{ actionUrl('form-builder/forms/save')  }}";
+    </script>
+
+
+    <!-- New Form Modal -->
+    <div id="new-form-modal" class="modal fullscreen" style="display: none;">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>{{ "Create New Form"|t('form-builder') }}</h2>
+            </div>
+            <form id="new-form-form" method="post" accept-charset="UTF-8">
+                {{ csrfInput() }}
+                {{ actionInput('form-builder/forms/save') }}
+
+                <div class="modal-body">
+                    <div class="field">
+                        {{ forms.textField({
+                            label: "Name"|t('form-builder'),
+                            instructions: "What this form will be called in the control panel."|t('form-builder'),
+                            id: 'name',
+                            name: 'name',
+                            value: '',
+                            required: true,
+                            autofocus: true,
+                            errors: []
+                        }) }}
+                    </div>
+
+                    <div class="field">
+                        {{ forms.textField({
+                            label: "Handle"|t('form-builder'),
+                            instructions: "How you'll refer to this form in the templates."|t('form-builder'),
+                            id: 'handle',
+                            name: 'handle',
+                            class: 'code',
+                            autocorrect: false,
+                            autocapitalize: false,
+                            value: '',
+                            required: true,
+                            errors: []
+                        }) }}
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <div class="buttons">
+                        <button type="button" class="btn" id="cancel-modal">{{ "Cancel"|t('form-builder') }}</button>
+                        <button type="submit" class="btn submit" id="create-form-btn">{{ "Create Form"|t('form-builder') }}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% css %}
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* dark overlay */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal .errors {
+    color: red;
+    font-size: small;
+}
+.modal-container {
+    background: white;
+    border-radius: 8px;
+    padding: 2rem;
+    max-width: 500px;
+    width: 100%;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-close {
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #555;
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.modal .field {
+    margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.modal .btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    background: #ccc;
+    cursor: pointer;
+}
+
+.modal .btn.submit {
+    background-color: #007c8c;
+    color: white;
+}
+
+{% endcss %}
+
+{% js %}
+const columns = [
+    {
+        name: '__slot:title',
+        title: 'Name'
+    },
+    {
+        name: 'handle',
+        title: 'Handle'
+    },
+    {
+        name: 'framework',
+        title: 'Framework'
+    },
+    {
+        name: 'orientation',
+        title: 'Orientation'
+    },
+    {
+        name: 'updated',
+        title: 'Date Created'
+    },
+    {
+        name: 'created',
+        title: 'Date Created'
+    },
+];
+
+new Craft.VueAdminTable({
+
+    columns: columns,
+    container: '#forms-admin-table',
+    tableDataEndpoint: '/actions/form-builder/forms/table-data',
+    deleteAction:deleteAction
+});
+{% endjs %}
+
+{% js %}
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('new-form-modal');
+    const overlay = document.getElementById('modal-overlay');
+    const form = document.getElementById('new-form-form');
+    const nameField = document.getElementById('name');
+    const handleField = document.getElementById('handle');
+    const modalContainer = modal.querySelector('.modal-container');
+
+    modal.addEventListener('click', function (e) {
+        if (e.target === modal) {
+            hideModal();
+            console.log('hide');
+        }
+    })
+    // Show modal function
+    function showModal() {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        nameField.focus();
+    }
+
+    // Hide modal function
+    function hideModal() {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+        form.reset();
+        clearErrors();
+    }
+
+    // Clear form errors
+    function clearErrors() {
+        const errorFields = form.querySelectorAll('.field.has-errors');
+        errorFields.forEach(field => {
+            field.classList.remove('has-errors');
+            const errorDiv = field.querySelector('.errors');
+            if (errorDiv) {
+                errorDiv.remove();
+            }
+        });
+    }
+
+    // Show field error
+    function showError(fieldName, message) {
+        const field = form.querySelector(`[name="${fieldName}"]`).closest('.field');
+        field.classList.add('has-errors');
+
+        // Remove existing error
+        const existingError = field.querySelector('.errors');
+        if (existingError) {
+            existingError.remove();
+        }
+
+        // Add new error
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'errors';
+        errorDiv.textContent = message;
+        field.appendChild(errorDiv);
+    }
+
+    // Generate handle from name
+    function generateHandle(name) {
+        return name
+            .toLowerCase()
+            .trim()
+            .replace(/[^a-z0-9\s]/g, '') // remove non-alphanumeric (except space)
+            .replace(/\s+(.)/g, (_, char) => char.toUpperCase()) // capitalize letters after spaces
+            .replace(/\s/g, ''); // remove any remaining spaces
+    }
+
+    // Auto-generate handle from name
+    nameField.addEventListener('input', function() {
+        if (!handleField.dataset.userModified) {
+            handleField.value = generateHandle(this.value);
+        }
+    });
+
+    // Track if user manually modified handle
+    handleField.addEventListener('input', function() {
+        this.dataset.userModified = 'true';
+    });
+
+    // Event listeners for showing modal
+    document.getElementById('new-form-btn').addEventListener('click', showModal);
+    const newFormBtnEmpty = document.getElementById('new-form-btn-empty');
+    if (newFormBtnEmpty) {
+        newFormBtnEmpty.addEventListener('click', showModal);
+    }
+
+    // Event listeners for hiding modal
+    document.getElementById('cancel-modal').addEventListener('click', hideModal);
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal.style.display === 'flex') {
+            hideModal();
+        }
+    });
+
+    // Handle form submission
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        clearErrors();
+
+        const formData = new FormData(form);
+        const name = formData.get('name').trim();
+        const handle = formData.get('handle').trim();
+        const csrfToken = formData.get('CRAFT_CSRF_TOKEN');
+        // Client-side validation
+        let hasErrors = false;
+
+        if (!name) {
+            showError('name', "Name is required.");
+            hasErrors = true;
+        }
+
+        if (!handle) {
+            showError('handle', "Handle is required.");
+            hasErrors = true;
+        } else if (!/^[a-zA-Z][a-zA-Z0-9_]*$/.test(handle)) {
+            showError('handle', "Handle must start with a letter and contain only letters, numbers, and underscores.");
+            hasErrors = true;
+        }
+
+        if (hasErrors) {
+            return;
+        }
+
+        // Show loading state
+        modalContainer.classList.add('loading');
+
+        // Submit form via AJAX
+        fetch(saveEndpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRF-Token': csrfToken
+            },
+            body: JSON.stringify({
+                form: { name, handle }
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            modalContainer.classList.remove('loading');
+
+            if (data.success) {
+                // Redirect to form edit page
+                window.location.href = data.formUrl;
+            } else {
+                // Show server-side errors
+                if (data.errors) {
+                    for (const [field, messages] of Object.entries(data.errors)) {
+                        if (Array.isArray(messages) && messages.length > 0) {
+                            showError(field, messages[0]);
+                        }
+                    }
+                } else {
+                    // Generic error
+                    showError('name', data.message ||  "An error occurred while creating the form.");
+                }
+            }
+        })
+        .catch(error => {
+            modalContainer.classList.remove('loading');
+            console.error('Error:', error);
+            showError('name', "An error occurred while creating the form.");
+        });
+    });
+});
+{% endjs %}

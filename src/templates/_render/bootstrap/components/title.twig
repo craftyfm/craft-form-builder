@@ -1,0 +1,10 @@
+{% set text = field.text %}
+{% set level = field.level %}
+{% set align = field.align %}
+{% set wrapperClass = 'mb-3' %}
+
+<div class="{{ wrapperClass }}">
+    <{{ level }} class="text-{{ align }}">
+        {{ text }}
+    </{{ level }}>
+</div>

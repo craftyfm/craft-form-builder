@@ -1,0 +1,66 @@
+{% extends "_layouts/cp" %}
+{% set title = "Submissions" %}
+{% do view.registerAssetBundle('craft\\web\\assets\\admintable\\AdminTableAsset') -%}
+{% set selectedSubnavItem = 'submissions' %}
+
+{% block sidebar %}
+    <nav>
+        <ul>
+            <li>
+                <a href="{{ cpUrl('form-builder/submissions') }}" class="{{ currentFormId == null ? 'sel' }}">All Submissions</a>
+            </li>
+            <li class="heading"><span>Forms</span></li>
+            {% for form in forms %}
+                    <li>
+                        <a href="{{ cpUrl('form-builder/submissions/' ~ form.handle) }}" class="{{ form.id == currentFormId ? "sel" }}">
+                            {{ form.name }}
+                        </a>
+                    </li>
+            {% endfor %}
+        </ul>
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div id="submissions-admin-table"></div>
+
+    <script>
+        var currentFormId = {{ currentFormId ? currentFormId : null|json_encode|raw }};
+        var deleteAction = "{{ currentUser.can('form-builder-deleteSubmissions') ? actionUrl('form-builder/submissions/delete') : "" }}";
+    </script>
+{% endblock %}
+
+{% js %}
+const columns = [
+    {
+        name: 'title',
+        title: 'Title',
+        callback: function(value) {
+            if (value) {
+                return `<a href="${value.url}">${value.html}</a>`;
+            }
+
+            return '';
+        }
+    },
+    {
+        name: 'formName',
+        title: 'Form'
+    },
+    {
+        name: 'dateCreated',
+        title: 'Date Submitted'
+    },
+];
+
+new Craft.VueAdminTable({
+
+    columns: columns,
+    container: '#submissions-admin-table',
+    tableDataEndpoint: `/actions/form-builder/submissions/table-data?formId=${currentFormId}`,
+    deleteAction: deleteAction ? deleteAction : null,
+    deleteFailMessage: 'Failed to delete submission.',
+    deleteSuccessMessage: 'Submission deleted.',
+
+});
+{% endjs %}

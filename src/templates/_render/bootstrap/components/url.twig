@@ -1,0 +1,65 @@
+{% set id = field.id|default(field.handle) %}
+{% set label = field.label %}
+{% set type = 'url' %}
+{% set required = field.required|default(false) %}
+{% set placeholder = field.placeholder|default('') %}
+{% set description = field.desc %}
+{% set iconSvg = field.getIconSvg() %}
+{% set errors = submission.getErrors(field.handle) %}
+{% set value = attribute(submission, field.handle) ?? field.defaultValue ?? null %}
+
+{% set wrapperClass = orientation == 'horizontal' ? 'row g-2 align-items-center mb-3' : 'mb-3' %}
+{% set labelWrapperClass = orientation == 'horizontal' ? 'col-sm-2' : '' %}
+{% set labelClass = orientation == 'horizontal' ? 'col-form-label fw-medium' : 'form-label fw-medium' %}
+{% set inputWrapperClass = orientation == 'horizontal' ? 'col-sm-10' : '' %}
+
+
+<div class="{{ wrapperClass }}">
+    <div class="{{ labelWrapperClass }}">
+        <label for="{{ id }}" class="{{ labelClass }}">
+            {{ label }}{{ required ? '<span class="text-danger">*</span>' }}
+        </label>
+    </div>
+
+    <div class="{{ inputWrapperClass }}">
+        {% if iconSvg is not empty %}
+            <div class="input-group">
+                    <span class="input-group-text">
+                        <span style="width: 1rem; height: 1rem; display: inline-flex; align-items: center;">
+                            {{ iconSvg|raw }}
+                        </span>
+                    </span>
+                <input
+                        name="{{ field.handle }}"
+                        type="{{ type }}"
+                        id="{{ id }}"
+                        placeholder="{{ placeholder }}"
+                        class="form-control {{ errors ? 'is-invalid' : '' }}"
+                        {{ required ? 'required' }}
+                        value="{{ value }}"
+                >
+            </div>
+
+        {% else %}
+            <input
+                    name="{{ field.handle }}"
+                    type="{{ type }}"
+                    id="{{ id }}"
+                    placeholder="{{ placeholder }}"
+                    class="form-control {{ errors ? 'is-invalid' : '' }}"
+                    value="{{ value }}"
+                    {{ required ? 'required' }}
+            >
+        {% endif %}
+        {% if description %}
+            <div class='form-text'>{{ description }}</div>
+        {% endif %}
+        {% if errors %}
+            <div class="invalid-feedback">
+                {{ errors[0] }}
+            </div>
+        {% endif %}
+    </div>
+
+</div>
+

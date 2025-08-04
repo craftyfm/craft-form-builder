@@ -1,0 +1,59 @@
+{% set id = field.id|default(field.handle) %}
+{% set label = field.label %}
+{% set checkboxLabel = field.checkboxLabel ?? '' %}
+{% set required = field.required|default(false) %}
+{% set description = field.desc %}
+{% set name = field.handle %}
+{% set errors = submission.getErrors(field.handle) %}
+{% set value = attribute(submission, field.handle).value ?? field.defaultValue ?? null %}
+{% set wrapperClass = (orientation == 'horizontal' ? 'row mb-3' : 'mb-3') %}
+{% set labelWrapperClass = orientation == 'horizontal' ? 'col-sm-2' : '' %}
+{% set labelClass = orientation == 'horizontal' ?  'col-form-label fw-medium' :  'form-label fw-medium' %}
+{% set inputWrapperClass = orientation == 'horizontal' ? 'col-sm-10' : '' %}
+
+<div class="{{ wrapperClass }}">
+    {% if label %}
+        <label class="{{ labelClass }} {{ labelWrapperClass }}" for="{{ id }}">
+            {{ label }}
+            {% if required %}<span class="text-danger">*</span>{% endif %}
+        </label>
+
+    {% endif %}
+
+    <div class=" {{ inputWrapperClass }} ">
+        <div class="form-check">
+            <input type="hidden" name="{{ name }}" value="0">
+            <input
+                    class="form-check-input {{ errors ? 'is-invalid' : '' }}"
+                    type="checkbox"
+                    name="{{ name }}"
+                    id="{{ id }}"
+                    value="1"
+                    {% if value %}checked{% endif %}
+                    {% if required %}required{% endif %}
+            >
+            {% if checkboxLabel %}
+                <label class="form-check-label" for="{{ id }}">
+                    {{ checkboxLabel }}
+                </label>
+            {% endif %}
+            {% if errors %}
+                <div class="invalid-feedback">
+                    {{ errors[0] }}
+                </div>
+            {% endif %}
+        </div>
+
+        {% if description %}
+            <div class="form-text">{{ description }}</div>
+        {% endif %}
+    </div>
+
+
+
+    {% if errors %}
+        <div class="invalid-feedback">
+            {{ errors[0] }}
+        </div>
+    {% endif %}
+</div>

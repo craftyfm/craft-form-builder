@@ -1,0 +1,119 @@
+{% extends "_layouts/cp" %}
+{% import "_includes/forms" as forms %}
+{% set title = not integration ? "Create Integration"|t : "Edit Integration: " ~ integration.name %}
+ {% set readOnly = true %}
+{% if craft.app.config.general.allowAdminChanges %}
+    {% set fullPageForm = true %}
+    {% set readOnly = false %}
+{#    {% set saveShortcutRedirect = continueEditingUrl %}#}
+
+    {% set formActions = [
+        {
+            label: 'Save' | t('app'),
+            shortcut: true,
+            retainScroll: true,
+        }
+    ]%}
+{% endif %}
+
+{% block details %}
+
+<div class="meta">
+    {{ forms.lightswitchField({
+        first: true,
+        label: 'Enabled'|t('form-builder'),
+        id: 'enabled',
+        name: 'enabled',
+        on:  not integration  ? true : integration.enabled,
+        disabled: readOnly
+    }) }}
+</div>
+{% endblock %}
+
+{% block content %}
+    {{ actionInput('form-builder/integration-settings/save') }}
+    {{ redirectInput('form-builder/settings/integrations') }}
+    {% if integration and integration.id != null %}
+        {{ hiddenInput('id', integration.id) }}
+    {% endif %}
+
+    {{ forms.selectField({
+        label: 'Integration Provider' | t,
+        instructions: 'Select the provider',
+        id: 'provider',
+        name: 'provider',
+        options: providerOptions,
+        value: integration ? className(integration),
+        errors: errors['provider'] is defined ? errors['provider'],
+        disabled: readOnly
+    }) }}
+
+    {{ forms.textField({
+        label: "Name"|t,
+        instructions: "The display name for this integration"|t,
+        id: 'name',
+        name: 'name',
+        value: integration ? integration.name,
+        errors: integration? integration.getErrors('name'),
+        autofocus: true,
+        required: true,
+        disabled: readOnly
+    }) }}
+
+    {{ forms.textField({
+        label: "Handle"|t,
+        instructions: "The display name for this integration"|t,
+        id: 'handle',
+        name: 'handle',
+        value: integration ? integration.handle,
+        errors: integration ? integration.getErrors('handle'),
+        autofocus: true,
+        required: true,
+        disabled: readOnly
+    }) }}
+
+    {% for provider, providerInstance in providerInstances %}
+        {% set isCurrent = integration and (provider == className(integration)) %}
+
+        <div id="{{ provider | id }}" class="{{ not isCurrent ? 'hidden' }} integration-settings">
+            {% namespace 'settings[' ~ provider ~ ']' %}
+                {% if isCurrent %}
+                    {{ integration.getSettingsHtml() | raw }}
+                {% else %}
+                    {{ providerInstance.getSettingsHtml() | raw }}
+                {% endif %}
+            {% endnamespace %}
+        </div>
+    {% endfor %}
+{% endblock %}
+
+
+{% if not integration or not integration.handle %}
+    {% js "new Craft.HandleGenerator('##{'name'|namespaceInputId}', '##{'handle'|namespaceInputId}');" %}
+{% endif %}
+
+{% js %}
+    document.addEventListener('DOMContentLoaded', () => {
+        const select = document.querySelector('#provider');
+        const allSettings = document.querySelectorAll('.integration-settings');
+
+        function transformClassToId(className) {
+            return className.replace(/\\/g, '-');
+        }
+
+        function toggleIntegrationSettings() {
+            const selected = select.value;
+            const targetId = transformClassToId(selected);
+            allSettings.forEach(group => {
+                if (group.id === targetId) {
+                    group.classList.remove('hidden');
+                } else {
+                    group.classList.add('hidden');
+                }
+            });
+        }
+
+        select.addEventListener('change', toggleIntegrationSettings);
+        toggleIntegrationSettings();
+    });
+{% endjs %}

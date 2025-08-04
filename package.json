@@ -1,0 +1,30 @@
+{
+  "name": "craft-form-builder",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:formbuilder": "vite build --config vite.formbuilder.config.mjs",
+    "build:bootstrap": "vite build --config vite.bootstrap.config.mjs",
+    "build:tailwind": "vite build --config vite.tailwind.config.mjs",
+    "watch:formbuilder": "vite build --watch --config vite.formbuilder.config.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@iconify-json/mdi": "^1.2.3",
+    "@iconify/tailwind4": "^1.0.6",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.11",
+    "vite": "^6.3.5"
+  },
+  "dependencies": {
+    "@iconify-json/mdi-light": "^1.2.2",
+    "@tailwindcss/cli": "^4.1.11",
+    "@tailwindcss/vite": "^4.1.11",
+    "bootstrap": "^5.3.7",
+    "sass": "^1.89.2"
+  }
+}

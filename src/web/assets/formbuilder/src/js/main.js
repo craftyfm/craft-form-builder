@@ -1,0 +1,88 @@
+import '../css/main.css';
+import { Renderer } from './ui/renderer.js';
+import { MainSettingsManager } from './ui/mainSettingsManager.js';
+import {initDragDrop} from "./ui/dragDrop";
+import {registerPreviewEventListeners} from "./ui/preview";
+import {saveForm} from "./ui/saveForm";
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Main containers
+    const formContainer = document.getElementById('form-container');
+
+    let selectedFieldId = null;
+
+    let formState = {
+        name: window.FormBuilderData?.name || 'Form',
+        handle: window.FormBuilderData?.handle || '',
+        id: window.FormBuilderData?.id || null,
+        settings: {
+            orientation: window.FormBuilderData?.settings.orientation || 'vertical',
+            icons: window.FormBuilderData?.settings.icons || '',
+            framework: window.FormBuilderData?.settings.framework || 'bootstrap',
+            class: window.FormBuilderData?.settings.class || '',
+            collectIp: window.FormBuilderData?.settings.collectIp || false,
+            actionOnSubmit: window.FormBuilderData?.settings.actionOnSubmit || 'message',
+            successMessage: window.FormBuilderData?.settings.successMessage || 'Thank you for submitting the form.',
+            redirectUrl: window.FormBuilderData?.settings.redirectUrl || '',
+        },
+        adminNotif: {
+            enabled: window.FormBuilderData?.adminNotif.enabled || false,
+            subject: window.FormBuilderData?.adminNotif.subject || '',
+            recipients: window.FormBuilderData?.adminNotif.recipients || '',
+            message: window.FormBuilderData?.adminNotif.message || '',
+        },
+        fields:window.FormBuilderData?.fields || [],
+        integrations:window.FormBuilderData?.integrations || [],
+    };
+
+    // Initialize the renderer
+    const renderer = new Renderer(formState, (fieldId) => {
+        selectedFieldId = fieldId;
+    });
+
+    // Initialize the main settings manager
+    const mainSettingsManager = new MainSettingsManager(formState, () => {
+        renderer.renderForm();
+        renderer.renderSettings();
+    });
+
+    // Set up event handlers for the renderer
+    renderer.setupEventListeners();
+    initDragDrop(renderer, formState, formContainer);
+
+    // --- Initial Render ---
+    renderer.checkEmptyState();
+    renderer.renderForm();
+    renderer.renderSettings();
+
+    registerPreviewEventListeners(formState);
+
+    document.getElementById('save-form').addEventListener('click', () => {
+        saveForm(formState)
+            .then((updatedFormState) => {
+                // FormState has been updated, now refresh any UI that depends on it
+                console.log('Form saved successfully, formState updated:', updatedFormState);
+                
+                // Re-render components that might depend on the updated formState
+                renderer.renderForm();
+                renderer.renderSettings();
+                
+                // Update any other components that might need refreshing
+                // For example, if you have breadcrumbs or page title that show form name:
+                updatePageTitle(formState.settings.name);
+            })
+            .catch((error) => {
+                console.error('Failed to save form:', error);
+                // Error message is already displayed by saveForm function
+            });
+    });
+    
+    // Helper function to update page title or other UI elements
+    function updatePageTitle(formName) {
+        const pageTitle = document.querySelector('h1, .page-title');
+        if (pageTitle && formName) {
+            pageTitle.textContent = formName;
+        }
+        document.title = formName;
+    }
+});

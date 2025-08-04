@@ -1,0 +1,11 @@
+{% import "_includes/forms" as forms %}
+
+{{ forms.textField({
+    label: "Webhook URL"|t('form-builder'),
+    id: 'webhookUrl',
+    name: 'webhookUrl',
+    value: integration.webhookUrl,
+    type: 'text',
+    errors: integration.getErrors('webhookUrl'),
+    required: true
+}) }}

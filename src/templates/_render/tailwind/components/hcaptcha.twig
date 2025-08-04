@@ -1,0 +1,21 @@
+<input type="hidden" name="h-captcha-response" id="h-captcha-response">
+
+{% do craft.app.view.registerJsFile("https://www.google.com/recaptcha/api.js?render=#{field.siteKey}") %}
+
+<script>
+    const formId = "{{ form.uid|escape }}"
+    const siteKey = "{{ field.siteKey|escape }}"
+</script>
+
+{% js %}
+document.getfieldById(formId).addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    hcaptcha.ready(function () {
+        hcaptcha.execute(siteKey, { async: true }).then(function (token) {
+            document.getfieldById('h-captcha-response').value = token;
+            e.target.submit();
+        });
+    });
+});
+{% endjs %}

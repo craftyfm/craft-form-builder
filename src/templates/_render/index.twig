@@ -1,0 +1,5 @@
+{% if form.settings.framework == 'tailwind' %}
+    {% include 'form-builder/_render/tailwind/index' %}
+{% else %}
+    {% include 'form-builder/_render/bootstrap/index' %}
+{% endif %}

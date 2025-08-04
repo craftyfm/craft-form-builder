@@ -1,0 +1,22 @@
+<input type="hidden" name="h-captcha-response" id="h-captcha-response">
+
+{# Load hCaptcha script #}
+{% do craft.app.view.registerJsFile("https://js.hcaptcha.com/1/api.js?render={{ field.siteKey|url_encode }}") %}
+
+<script>
+    const formId = "{{ form.uid|escape }}";
+    const siteKey = "{{ field.siteKey|escape }}";
+</script>
+
+{% js %}
+document.getElementById(formId).addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    hcaptcha.ready(function () {
+        hcaptcha.execute(siteKey, {action: 'submit'}).then(function (token) {
+            document.getElementById('h-captcha-response').value = token;
+            e.target.submit();
+        });
+    });
+});
+{% endjs %}

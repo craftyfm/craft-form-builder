@@ -1,0 +1,11 @@
+{% extends 'form-builder/_render/layouts/base' %}
+
+{% block content %}
+    <div class="container mt-lg-5 mx-auto md:mt-10">
+        {% if form.settings.framework == 'tailwind' %}
+            {% include 'form-builder/_render/tailwind/index' %}
+        {% else %}
+            {% include 'form-builder/_render/bootstrap/index' %}
+        {% endif %}
+    </div>
+{% endblock %}

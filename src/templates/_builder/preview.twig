@@ -1,0 +1,41 @@
+<div id="preview-modal"
+     class="cfb:fixed cfb:inset-0 cfb:z-50 cfb:flex cfb:items-center cfb:justify-center
+     cfb:bg-black/50 cfb:transition-opacity cfb:duration-300 cfb:opacity-0 cfb:pointer-events-none"
+     tabindex="-1"
+     aria-hidden="true">
+    <div class="cfb:mx-auto cfb:overflow-y-auto cfb:h-[95vh] cfb:w-11/12">
+        <div class="cfb:bg-white cfb:rounded-lg cfb:shadow-lg cfb:flex cfb:flex-col cfb:h-full">
+            <div class="cfb:flex cfb:items-start cfb:justify-between cfb:p-4 cfb:border-b cfb:border-b-gray-700 cfb:mx-3">
+                <div class="">
+                    <p class="cfb:font-bold">Form Preview</p>
+                </div>
+                <div class="cfb:gap-4 cfb:flex cfb:flex-row cfb:-ml-10 cbf:items-center">
+                    <button data-width="375" data-height="667" data-device="mobile"
+                        class="cfb-preview-switcher cfb:hover:text-blue-400 cfb:text-sm cfb:text-black cfb:transition">
+                        <span class="cfb:iconify-[mdi--mobile-phone] cfb:text-base"></span>
+                    </button>
+
+                    <button data-width="768" data-height="1024" data-device="tablet"
+                            class="cfb-preview-switcher cfb:hover:text-blue-400 cfb:text-sm cfb:text-black  cfb:transition">
+                        <span class="cfb:iconify-[mdi--tablet] cfb:text-base"></span>
+                    </button>
+
+                    <button data-width="1280" data-height="800" data-device="desktop"
+                            class="cfb-preview-switcher cfb:hover:text-blue-400 cfb:text-blue-600 cfb:text-sm cfb:transition">
+                        <span class="cfb:iconify-[mdi--desktop-windows] cfb:text-base"></span>
+                    </button>
+                </div>
+
+                <button id="close-modal-btn" type="button" class="cfb:text-gray-400 cfb:hover:text-gray-600 cfb:transition-colors">
+                    <span class="cfb:iconify-[mdi--close] cfb:text-xl"></span>
+                </button>
+            </div>
+            <div class="cfb:h-full">
+                <div class="cfb:preview-device-frame cfb:desktop" id="cfb-preview-container">
+                    <!-- Iframe inserted here -->
+                    <iframe  id="preview-iframe" class="cfb:h-full cfb:w-full"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

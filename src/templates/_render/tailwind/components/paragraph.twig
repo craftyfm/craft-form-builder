@@ -1,0 +1,9 @@
+{% set text = field.text %}
+{% set align = field.align %}
+{% set wrapperClass = '' %}
+
+<div class="{{ wrapperClass }}">
+    <p class="text-{{ align }}">
+        {{ text }}
+    </p>
+</div>

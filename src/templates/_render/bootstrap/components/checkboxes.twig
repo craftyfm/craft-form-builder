@@ -1,0 +1,46 @@
+{% set id = field.id|default(field.handle) %}
+{% set label = field.label %}
+{% set required = field.required|default(false) %}
+{% set description = field.desc %}
+{% set name = field.handle %}
+{% set errors = submission.getErrors(field.handle) %}
+{% set value = attribute(submission, field.handle).value ?? field.defaultValue ?? null %}
+
+{% set wrapperClass = (orientation == 'horizontal' ? 'row mb-3' : 'mb-3') %}
+{% set labelWrapperClass = orientation == 'horizontal' ? 'col-sm-2' : '' %}
+{% set labelClass = orientation == 'horizontal' ?  'col-form-label fw-medium' :  'form-label fw-medium' %}
+{% set inputWrapperClass = orientation == 'horizontal' ? 'col-sm-10' : '' %}
+
+<div class="{{ wrapperClass }}">
+    <label for="{{ id }}" class="{{ labelClass }} {{ labelWrapperClass }}">
+        {{ label }}{{ required ? '<span class="text-danger">*</span>' }}
+    </label>
+
+    <div class="{{ inputWrapperClass }}">
+        {% for option in field.options %}
+            {% set optionId = id ~ '-' ~ loop.index %}
+            <div class="form-check">
+                <input
+                        class="form-check-input {{ errors ? 'is-invalid' : '' }}"
+                        type="checkbox"
+                        name="{{ name }}[]"
+                        id="{{ optionId }}"
+                        value="{{ option.value }}"
+                        {% if loop.index == 0 and required %}required{% endif %}
+                        {% if option.value in value %} checked {% endif %}
+                >
+                <label class="form-check-label" for="{{ optionId }}">
+                    {{ option.name }}
+                </label>
+                {% if loop.last and errors %}
+                    <div class="invalid-feedback">
+                        {{ errors[0] }}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+        {% if description %}
+            <div class="form-text">{{ description }}</div>
+        {% endif %}
+    </div>
+</div>
