@@ -178,7 +178,7 @@ class Forms extends Component
      * @throws LoaderError
      * @throws \Exception
      */
-    public function renderFormByHandle($formHandle, $loadAsset = true): Markup
+    public function renderFormByHandle($formHandle, $loadAsset = false): Markup
     {
         $form = $this->getFormByHandle($formHandle);
         return $this->renderForm($form, $loadAsset);
@@ -190,7 +190,7 @@ class Forms extends Component
      * @throws RuntimeError
      * @throws LoaderError
      */
-    public function renderForm(Form $form, $loadAsset = true): Markup
+    public function renderForm(Form $form, $loadAsset = false): Markup
     {
         $routeParams = Craft::$app->getUrlManager()->getRouteParams();
         $submission = $routeParams['submission'] ?? new Submission($form);
