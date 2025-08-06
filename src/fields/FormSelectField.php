@@ -29,7 +29,7 @@ class FormSelectField extends Field
         // Get forms from your plugin
         $forms = FormBuilder::getInstance()->forms->getAllForms(); // replace with your actual method
 
-        $options = [ ['label' => '', 'value' => null]];
+        $options = [ ['label' => 'Select a form', 'value' => null]];
         foreach ($forms as $form) {
             $options[] = ['label' => $form->name, 'value' => $form->id];
         }
