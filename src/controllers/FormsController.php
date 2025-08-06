@@ -163,6 +163,9 @@ class FormsController extends Controller
         $form = FormBuilder::getInstance()->forms->constructForms($rawData);
         $submission = new Submission($form);
         $form->uid = $formJson['uid'] ?? StringHelper::UUID();
+        $this->view->on(View::EVENT_BEFORE_RENDER_TEMPLATE, function ($e) {
+            $e->sender->assetBundles = [];
+        });
         return $this->renderTemplate('form-builder/_render/preview', [
             'form' => $form, 'submission' => $submission, 'loadAsset' => true,
         ], View::TEMPLATE_MODE_CP);

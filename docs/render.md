@@ -39,8 +39,8 @@ You can also control whether to load the framework assets (CSS, JS):
 {{ form }}
 ```
 
-* `true` (default): Loads CSS/JS assets.
-* `false`: Skips asset loading (useful if you load styles manually).
+* `true` : Loads CSS/JS assets.
+* `false`: (default) Skips asset loading.
 
 ---
 
@@ -54,11 +54,11 @@ If you’ve added the **Form Select** field to an entry:
 {% endif %}
 ```
 
-To disable automatic asset loading here:
+Load with framework assets (bootstrap/tailwind):
 
 ```twig
 {% if entry.form %}
-    {{ entry.form.render(false) }}
+    {{ entry.form.render(true) }}
 {% endif %}
 ```
 
