@@ -183,7 +183,7 @@ class Form extends Model
      * @throws Exception
      * @throws LoaderError
      */
-    public function render(bool $loadAsset = true): Markup
+    public function render(bool $loadAsset = false): Markup
     {
         return FormBuilder::getInstance()->forms->renderForm($this, $loadAsset);
     }
