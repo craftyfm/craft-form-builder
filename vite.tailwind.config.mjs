@@ -1,11 +1,24 @@
+// vite.config.js
 import { defineConfig } from 'vite';
 import path from 'path';
-import tailwindcss from "@tailwindcss/vite";
+import tailwindcss from '@tailwindcss/vite';
+import prefixWrap from 'postcss-prefixwrap';
+
 export default defineConfig({
     base: '',
     plugins: [
-        tailwindcss(),
+        tailwindcss(), // Keep the TailwindCSS Vite plugin
     ],
+    css: {
+        postcss: {
+            plugins: [
+                prefixWrap('.form-builder', {
+                    prefixRootTags: true,
+                    ignoredSelectors: [':root', ':host', 'html', 'body'],
+                }),
+            ],
+        },
+    },
     build: {
         outDir: 'src/web/assets/tailwind/dist',
         emptyOutDir: true, // Cleans the folder before building
@@ -18,9 +31,9 @@ export default defineConfig({
                     if (info.name && info.name.endsWith('.css')) {
                         return 'css/[name].css';
                     }
-                    return 'assets/[name]';
+                    return 'assets/[name][extname]'; // Added [extname] to preserve file extensions
                 },
             },
         },
-    }
+    },
 });

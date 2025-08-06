@@ -5,31 +5,31 @@
 {% set allowedExtensions = field.allowedExtensions %}
 {% set required = field.required|default(false) %}
 
-<div class="flex {{ orientation == 'horizontal' ? 'flex-row' : 'flex-col'}}">
-    <div class="mb-2 font-light flex-1">
-        <div class="flex justify-between items-center">
-            <label class="block text-sm font-medium text-gray-700">
+<div class="cfb:flex {{ orientation == 'horizontal' ? 'cfb:flex-row' : 'cfb:flex-col'}}">
+    <div class="cfb:mb-2 cfb:font-light cfb:flex-1">
+        <div class="">
+            <label class="block cfb:text-sm cfb:font-medium cfb:text-gray-700">
                 {{ field.label }}
-                {{ field.required ? '<span class="text-red-500 ml-1">*</span>' : ''}}
+                {{ field.required ? '<span class="cfb:text-red-500 cfb:ml-1">*</span>' : ''}}
             </label>
         </div>
     </div>
-    <div class="space-y-2 flex-3">
+    <div class="cfb:space-y-2 cfb:flex-3">
         <input type="file"
                name="{{ field.handle }}{% if limit and limit > 1 %}[]{% endif %}"
-               class="w-full text-slate-500 font-medium text-sm bg-gray-100
-               file:cursor-pointer cursor-pointer file:border-0 file:py-2 file:px-4 file:mr-4
-               file:bg-blue-500 file:hover:bg-gray-700 file:text-white rounded" {{ field.required ? 'required' }}
+               class="cfb:w-full cfb:text-slate-500 cfb:font-medium cfb:text-sm cfb:bg-gray-100
+               cfb:file:cursor-pointer cfb:cursor-pointer cfb:file:border-0 cfb:file:py-2 cfb:file:px-4 cfb:file:mr-4
+               cfb:file:bg-blue-500 cfb:file:hover:bg-gray-700 cfb:file:text-white cfb:rounded" {{ field.required ? 'required' }}
                 {% if allowedExtensions|length %}accept="{{ allowedExtensions|map(ext => '.' ~ ext)|join(',') }}"{% endif %}
                 {% if limit and limit > 1 %}multiple{% endif %}
                 {% if required %}required{% endif %}
                 {% if maxSize %}data-max-size="{{ maxSize }}"{% endif %}
         />
         {% if field.desc %}
-            <p class="text-sm font-light">{{ field.desc }}</p>
+            <p class="cfb:text-sm cfb:font-light">{{ field.desc }}</p>
         {% endif %}
         {% if errors %}
-            <p class="text-sm text-red-600 dark:text-red-500">
+            <p class="cfb:text-sm cfb:text-red-600 dark:cfb:text-red-500">
                 {{ errors[0] }}
             </p>
         {% endif %}

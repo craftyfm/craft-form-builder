@@ -5,25 +5,25 @@
 {% set submitText = field.submitText %}
 
 {% set resetClass = field.resetStyle == 'primary'
-    ? 'bg-blue-600 text-white'
+    ? 'cfb:bg-blue-600 cfb:text-white'
     : field.resetStyle == 'secondary'
-    ? 'bg-gray-500 text-white'
-    : 'bg-red-500 text-white' %}
+    ? 'cfb:bg-gray-500 cfb:text-white'
+    : 'cfb:bg-red-500 cfb:text-white' %}
 {% set submitClass = 'primary'
-    ? 'bg-blue-600 text-white'
-    : 'bg-gray-600 text-white' %}
+    ? 'cfb:bg-blue-600 cfb:text-white'
+    : 'cfb:bg-gray-600 cfb:text-white' %}
 {% set spacingClass = field.spacing == 'wide'
-    ? 'justify-between'
+    ? 'cfb:justify-between'
     : field.spacing == 'tight'
-    ? 'gap-2'
-    : 'gap-4' %}
+    ? 'cfb:gap-2'
+    : 'cfb:gap-4' %}
 
 
-<div class="flex {{ spacingClass }}">
-    <button type="reset" class="px-3 py-1 rounded-sm text-sm cursor-pointer {{ resetClass }}">
+<div class="cfb:flex {{ spacingClass }}">
+    <button type="reset" class="cfb:px-3 cfb:py-1 cfb:rounded-sm cfb:text-sm cfb:cursor-pointer {{ resetClass }}">
         {{ field.resetText }}
     </button>
-    <button type="submit" class="px-3 py-1 rounded-sm text-sm cursor-pointer  {{ submitClass }}">
+    <button type="submit" class="cfb:px-3 cfb:py-1 cfb:rounded-sm cfb:text-sm cfb:cursor-pointer  {{ submitClass }}">
         {{field.submitText}}
     </button>
 </div>

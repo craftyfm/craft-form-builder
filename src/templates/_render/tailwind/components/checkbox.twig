@@ -1,35 +1,35 @@
 {% set id = field.id|default(field.handle) %}
 {% set errors = submission.getErrors(field.handle) %}
 {% set value = attribute(submission, field.handle).value ?? field.defaultValue ?? null %}
-<div class="flex {{ orientation == 'horizontal' ? 'flex-row' : 'flex-col'}}">
-    <div class="mb-2 font-light flex-1">
-        <div class="flex justify-between items-center">
-            <label class="block text-sm font-medium text-gray-700" for="{{ id }}">
+<div class="cfb:flex {{ orientation == 'horizontal' ? 'cfb:flex-row' : 'cfb:flex-col'}}">
+    <div class="cfb:mb-2 cfb:font-light cfb:flex-1">
+        <div class="">
+            <label class="block cfb:text-sm cfb:font-medium cfb:text-gray-700" for="{{ id }}">
                 {{ field.label }}
-                {{ field.required ? '<span class="text-red-500 ml-1">*</span>' : '' }}
+                {{ field.required ? '<span class="cfb:text-red-500 cfb:ml-1">*</span>' : '' }}
             </label>
         </div>
     </div>
 
-    <div class="space-y-2 flex-3">
-        <div class="flex items-center gap-2">
+    <div class="cfb:space-y-2 cfb:flex-3">
+        <div class="cfb:flex cfb:items-center cfb:gap-2">
             <input type="hidden" name="{{ field.handle }}" value="0">
             <input
                     type="checkbox"
                     id="{{ id }}"
                     name="{{ field.handle }}"
                     value="1"
-                    class="border-gray-300 rounded {{ errors ? 'border-red-500' : '' }}"
+                    class="cfb:border-gray-300 cfb:rounded {{ errors ? 'cfb:border-red-500' : '' }}"
                     {% if value %}checked{% endif %}
                     {% if field.required %}required{% endif %}
             >
-            <label for="{{ id }}" class="text-sm text-gray-700">{{ field.checkboxLabel }}</label>
+            <label for="{{ id }}" class="cfb:text-sm cfb:text-gray-700">{{ field.checkboxLabel }}</label>
         </div>
         {% if field.desc %}
-            <p class="text-sm font-light">{{ field.desc }}</p>
+            <p class="cfb:text-sm cfb:font-light">{{ field.desc }}</p>
         {% endif %}
         {% if errors %}
-            <p class="text-sm text-red-600 dark:text-red-500">
+            <p class="cfb:text-sm cfb:text-red-600 dark:cfb:text-red-500">
                 {{ errors[0] }}
             </p>
         {% endif %}

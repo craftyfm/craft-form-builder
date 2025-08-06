@@ -6,7 +6,7 @@
     {% set style = style ~ 'height:' ~ height ~ 'px;' %}
 {% endif %}
 
-<div class="flex justify-{{ field.align }} items-start ">
+<div class="cfb:flex cfb:justify-{{ field.align }} cfb:items-start ">
     <img
             {% if width %} width="{{ width }}"{% endif %}
             {% if height %} height="{{ height }}"{% endif %}

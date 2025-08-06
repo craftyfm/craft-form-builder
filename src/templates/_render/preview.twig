@@ -1,7 +1,53 @@
 {% extends 'form-builder/_render/layouts/base' %}
+{% css %}
+/* Base styles */
+.preview-container {
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
 
+/* Container width (like `container`) */
+@media (min-width: 640px) {
+    .preview-container {
+        max-width: 640px;
+    }
+}
+@media (min-width: 768px) {
+    .preview-container {
+        max-width: 768px;
+        margin-top: 3rem; /* Equivalent to mt-lg-5 */
+    }
+}
+@media (min-width: 1024px) {
+    .preview-container {
+        max-width: 1024px;
+    }
+}
+@media (min-width: 1280px) {
+    .preview-container {
+        max-width: 1280px;
+    }
+}
+@media (min-width: 1536px) {
+    .preview-container {
+        max-width: 1536px;
+    }
+}
+
+/* Large screen override for margin-top */
+@media (min-width: 1024px) {
+    .preview-container {
+        margin-top: 2.5rem; /* Equivalent to mt-10 */
+    }
+}
+
+
+{% endcss %}
 {% block content %}
-    <div class="container mt-lg-5 mx-auto md:mt-10">
+    <div class="preview-container">
         {% if form.settings.framework == 'tailwind' %}
             {% include 'form-builder/_render/tailwind/index' %}
         {% else %}

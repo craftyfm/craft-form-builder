@@ -7,18 +7,20 @@
 {% set iconSet = form.settings.icons %}
 {% set hasErrors = submission.hasErrors() %}
 
-{% if craft.app.session.hasFlash('success') %}
-    <div class="alert alert-success" role="alert">
-        {{ craft.app.session.getFlash('success') }}
-    </div>
-{% endif %}
-{% if craft.app.session.hasFlash('error') %}
-    <div class="alert alert-danger" role="alert">
-        {{ craft.app.session.getFlash('error') }}
-    </div>
-{% endif %}
 <form id="{{ form.uid }}" method="POST" enctype="multipart/form-data" accept-charset="UTF-8"
-      class="{{ form.settings.class }} " >
+      class="{{ form.settings.class }} form-builder" >
+
+    {% if craft.app.session.hasFlash('success') %}
+        <div class="alert alert-success" role="alert">
+            {{ craft.app.session.getFlash('success') }}
+        </div>
+    {% endif %}
+    {% if craft.app.session.hasFlash('error') %}
+        <div class="alert alert-danger" role="alert">
+            {{ craft.app.session.getFlash('error') }}
+        </div>
+    {% endif %}
+
     <input type="hidden" name="action" value="form-builder/submissions/submit">
     <input type="hidden" name="formId" value="{{ form.id }}">
     {{ csrfInput() }}

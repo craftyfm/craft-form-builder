@@ -3,20 +3,20 @@
 {% set value = attribute(submission, field.handle) ?? field.defaultValue ?? null %}
 {% set errors = submission.getErrors(field.handle) %}
 
-<div class="flex {{ orientation == 'horizontal' ? 'flex-row' : 'flex-col' }} ">
-    <div class="mb-2 font-light flex-1">
-        <div class="flex justify-between items-center">
-            <label class="block text-sm font-medium text-gray-700" for="{{ id }}">
+<div class="cfb:flex {{ orientation == 'horizontal' ? 'cfb:flex-row' : 'cfb:flex-col' }} ">
+    <div class="cfb:mb-2 cfb:font-light cfb:flex-1">
+        <div class="">
+            <label class="block cfb:text-sm cfb:font-medium cfb:text-gray-700" for="{{ id }}">
                 {{ field.label }}
-                {{ field.required ? '<span class="text-red-500 ml-1">*</span>' : '' }}
+                {{ field.required ? '<span class="cfb:text-red-500 cfb:ml-1">*</span>' : '' }}
             </label>
         </div>
     </div>
 
-    <div class="relative w-full flex-3">
+    <div class="cfb:relative cfb:w-full cfb:flex-3">
 
-        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <div class="w-5 h-5 text-gray-700 flex items-center justify-center">
+        <div class="cfb:absolute cfb:inset-y-0 cfb:left-0 cfb:pl-3 cfb:flex cfb:items-center cfb:pointer-events-none">
+            <div class="cfb:w-5 h-5 cfb:text-gray-700 cfb:flex cfb:items-center cfb:justify-center">
                 {{ iconSvg|raw }}
             </div>
         </div>
@@ -27,14 +27,14 @@
                name="{{ field.handle }}"
                value="{{ value }}"
                placeholder="{{ field.placeholder }}"
-               class="{{ field.icon ? 'pl-10' : 'pl-3' }} pr-3 py-2 w-full border border-gray-300 rounded-md bg-gray-50"
+               class="{{ field.icon ? 'cfb:pl-10' : 'cfb:pl-3' }} cfb:pr-3 cfb:py-2 cfb:w-full cfb:border cfb:border-gray-300 cfb:rounded-md cfb:bg-gray-50"
                 {{ field.required ? 'required' }}
         >
         {% if field.desc %}
-            <p class="text-sm font-light">{{ field.desc }}</p>
+            <p class="cfb:text-sm cfb:font-light">{{ field.desc }}</p>
         {% endif %}
         {% if errors %}
-            <p class="text-sm text-red-600 dark:text-red-500">
+            <p class="cfb:text-sm cfb:text-red-600 dark:cfb:text-red-500">
                 {{ errors[0] }}
             </p>
         {% endif %}
