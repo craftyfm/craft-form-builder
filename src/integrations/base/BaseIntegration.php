@@ -9,10 +9,6 @@ use craftyfm\formbuilder\models\IntegrationResult;
 use craftyfm\formbuilder\models\Submission;
 use craftyfm\formbuilder\records\IntegrationRecord;
 use Throwable;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
-use yii\base\Exception;
 
 abstract class BaseIntegration extends SavableComponent implements IntegrationInterface
 {
@@ -218,6 +214,8 @@ abstract class BaseIntegration extends SavableComponent implements IntegrationIn
             ['id','ipAddress', 'dateCreated']
         );
 
+        $payload['formName'] = $submission->getForm()->name;
+        $payload['formHandle'] = $submission->getForm()->handle;
         $submissionFields = $submission->getFieldValuesAsJson();
 
         return array_merge($payload, $submissionFields);

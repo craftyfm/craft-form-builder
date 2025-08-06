@@ -70,7 +70,7 @@ Send submitted form data to external services using integrations:
 1. Go to **Settings → Integrations**.
 2. Add a new integration.
 3. Currently supported integration: **Generic Webhook**
-    * Define the endpoint URL and payload structure.
+    * Define the endpoint URL.
 
 
 

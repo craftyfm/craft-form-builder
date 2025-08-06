@@ -3,7 +3,6 @@
 namespace craftyfm\formbuilder\models;
 
 use craft\base\Model;
-use craft\helpers\Html;
 use craft\helpers\UrlHelper;
 use craftyfm\formbuilder\FormBuilder;
 use craftyfm\formbuilder\models\form_fields\Base;
@@ -52,7 +51,6 @@ class Submission extends Model
                 $this->captcha = $field->getCaptchaIntegration();
             }
         }
-
         
         parent::__construct($config);
     }

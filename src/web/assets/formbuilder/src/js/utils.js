@@ -61,29 +61,6 @@ export const initSettingGroupButton = () => {
 }
 
 /**
- * Generates settings HTML for properties common to many input-like fields.
- * @param {object} element - The form element object.
- * @returns {string} - HTML string for common property settings.
- */
-export const renderCommonPropertySettings = (element) => `
-    <div>
-        <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">Label<span class="cfb:text-red-500 cfb:ml-1">*</span></label>
-        <input type="text" id="setting-label" value="${element.label}" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md">
-    </div>
-    <div>
-        <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">Description</label>
-        <input type="text" id="setting-desc" value="${element.desc}" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md">
-    </div>
-`;
-
-export const renderAdvanceSettings = (element) => `
-    <div>
-        <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">Handle<span class="cfb:text-red-500 cfb:ml-1">*</span></label>
-        <input type="text" id="setting-handle" value="${element.handle}" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md">
-`
-
-
-/**
  * Generates settings HTML for validation rules common to many fields.
  * @param {object} element - The form element object.
  * @returns {string} - HTML string for common validation settings.
@@ -182,12 +159,6 @@ export const createDropIndicator = () => {
     return indicator;
 }
 
-export const settingsInputListeners = (keys, updateElementProp) => {
-    keys.forEach(key => {
-        document.getElementById(`setting-${key}`)?.addEventListener('input', (e) => updateElementProp(key, e.target.value));
-    })
-}
-
 export const settingInputOptionsListeners = (updateFieldData) => {
     document.getElementById('setting-options')?.addEventListener('input', (e) => {
         const options = e.target.value
@@ -209,16 +180,80 @@ export const escapeHtml = (str) =>
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;");
 
-export const toKebabCase = (str) => {
-    return str
-        .toLowerCase() // lowercase everything
-        .trim() // remove leading/trailing spaces
-        .replace(/[^a-z0-9\s-]/g, '') // remove non-alphanumeric (except space and dash)
-        .replace(/\s+/g, '-') // replace spaces with dashes
-        .replace(/-+/g, '-') // collapse multiple dashes
+
+/**
+ * Generates settings HTML for properties common to many input-like fields.
+ * @param {object} element - The form element object.
+ * @returns {string} - HTML string for common property settings.
+ */
+export const renderCommonPropertySettings = (element) => `
+    <div>
+        <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">Label<span class="cfb:text-red-500 cfb:ml-1">*</span></label>
+        <input type="text" id="setting-label" value="${element.label}" 
+            class="cfb:peer cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md cfb:invalid:border-red-500 cfb:focus:invalid:border-transparent">
+        <p class="cfb:hidden cfb:peer-invalid:block cfb:font-light cfb:text-sm cfb:text-red-500 cfb:pt-0 cfb:mt-0">
+            This field is required.
+        </p>
+    </div>
+    <div>
+        <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">Description</label>
+        <input type="text" id="setting-desc" value="${element.desc}" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md">
+    </div>
+`;
+
+export const renderAdvanceSettings = (element) => `
+    <div>
+        <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">Handle<span class="cfb:text-red-500 cfb:ml-1">*</span></label>
+        <input type="text" id="setting-handle" value="${element.handle}" class="cfb:peer cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md cfb:invalid:border-red-500 cfb:focus:invalid:border-transparent">
+        <p class="cfb:hidden cfb:peer-invalid:block cfb:font-light cfb:text-sm cfb:text-red-500 cfb:pt-0 cfb:mt-0">
+            This field is required.
+        </p>   
+    </div>     
+`
+
+
+export const settingsInputListeners = (keys, updateElementProp) => {
+    keys.forEach(key => {
+        document.getElementById(`setting-${key}`)?.addEventListener('input', (e) => updateElementProp(key, e.target.value));
+    })
 }
 
-export const toCamelCase = (str) => {
+export const labelHandleListener = (updateElementProp) => {
+    const labelInput = document.getElementById('setting-label');
+    const handleInput = document.getElementById('setting-handle');
+    let handleManuallyEdited = handleInput.value !== '';
+
+    const validateRequired = (input) => {
+        input.setCustomValidity(input.value.trim() === '' ? 'This field is required.' : '');
+    };
+
+    // Initial validation
+    if (labelInput) {
+        validateRequired(labelInput);
+    }
+    validateRequired(handleInput);
+
+    if (labelInput) {
+        labelInput.addEventListener('input', () => {
+            validateRequired(labelInput);
+            updateElementProp('label', labelInput.value);
+
+            if (!handleManuallyEdited) {
+                handleInput.value = toCamelCase(labelInput.value);
+                updateElementProp('handle', handleInput.value, false);
+                validateRequired(handleInput);
+            }
+        });
+    }
+
+    handleInput.addEventListener('input', () => {
+        handleManuallyEdited = true;
+        updateElementProp('handle', handleInput.value);
+        validateRequired(handleInput);
+    });
+};
+
+const toCamelCase = (str) => {
     return str
         .toLowerCase()
         .trim()
@@ -226,27 +261,3 @@ export const toCamelCase = (str) => {
         .replace(/\s+(.)/g, (_, char) => char.toUpperCase()) // capitalize letters after spaces
         .replace(/\s/g, ''); // remove any remaining spaces
 };
-
-
-export const autoGenerateHandleFromLabel = (updateFieldData) => {
-    const labelInput = document.getElementById('setting-label');
-    const handleInput = document.getElementById('setting-handle');
-    if (!labelInput || !handleInput) {
-        return;
-    }
-    if (handleInput.value !== '') {
-        return;
-    }
-    let handleManuallyEdited = false;
-    // Track if user manually changes the handle
-    handleInput.addEventListener('input', () => {
-        handleManuallyEdited = true;
-    });
-
-    labelInput.addEventListener('input', () => {
-        if (!handleManuallyEdited) {
-            handleInput.value = toCamelCase(labelInput.value);
-            updateFieldData('handle', handleInput.value);
-        }
-    });
-}

@@ -1,4 +1,10 @@
-import {initSettingGroupButton, renderAdvanceSettings, renderSettingGroup, settingsInputListeners} from '../utils.js';
+import {
+    initSettingGroupButton,
+    labelHandleListener,
+    renderAdvanceSettings,
+    renderSettingGroup,
+    settingsInputListeners
+} from '../utils.js';
 
 const config = {
     defaultData: {
@@ -84,13 +90,13 @@ const renderSettings = (field) => {
 };
 
 const initSettings = (updateFieldData) => {
-    settingsInputListeners(['handle'], updateFieldData);
     document.getElementById('setting-submit-text')?.addEventListener('input', (e) => updateFieldData('submitText', e.target.value));
     document.getElementById('setting-reset-text')?.addEventListener('input', (e) => updateFieldData('resetText', e.target.value));
     document.getElementById('setting-submit-style')?.addEventListener('change', (e) => updateFieldData('submitStyle', e.target.value));
     document.getElementById('setting-reset-style')?.addEventListener('change', (e) => updateFieldData('resetStyle', e.target.value));
     document.getElementById('setting-spacing')?.addEventListener('change', (e) => updateFieldData('spacing', e.target.value));
     initSettingGroupButton();
+    labelHandleListener(updateFieldData);
 };
 
 export default {

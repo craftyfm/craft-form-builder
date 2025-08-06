@@ -3,7 +3,6 @@
 namespace craftyfm\formbuilder\models;
 
 use craft\base\Model;
-use craftyfm\formbuilder\records\FormRecord;
 
 class FormSettings extends Model
 {

@@ -4,9 +4,9 @@ namespace craftyfm\formbuilder\services;
 
 use Craft;
 use craft\base\Component;
+use craftyfm\formbuilder\models\EmailNotification as EmailNotificationModel;
 use craftyfm\formbuilder\models\Submission;
 use craftyfm\formbuilder\records\EmailNotificationRecord;
-use craftyfm\formbuilder\models\EmailNotification as EmailNotificationModel;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;

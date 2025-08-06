@@ -2,8 +2,6 @@
 
 namespace craftyfm\formbuilder\integrations\webhooks;
 
-use Craft;
-use craft\helpers\UrlHelper;
 use craftyfm\formbuilder\integrations\base\BaseIntegration;
 use craftyfm\formbuilder\models\IntegrationResult;
 use craftyfm\formbuilder\models\Submission;

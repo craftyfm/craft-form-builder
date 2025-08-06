@@ -1,0 +1,3 @@
+<div class="h-captcha" data-sitekey="{{ field.siteKey }}"></div>
+{# Load hCaptcha script #}
+{% do craft.app.view.registerJsFile("https://js.hcaptcha.com/1/api.js") %}

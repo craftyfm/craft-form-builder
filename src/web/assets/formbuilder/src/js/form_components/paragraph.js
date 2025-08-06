@@ -1,6 +1,7 @@
 import {
-    initSettingGroupButton, renderAdvanceSettings,
-    renderElementButtonHeader,
+    initSettingGroupButton,
+    labelHandleListener,
+    renderAdvanceSettings,
     renderSettingGroup,
     settingsInputListeners
 } from '../utils.js';
@@ -44,9 +45,10 @@ const renderSettings = (field) => {
 };
 
 const initSettings = (updateFieldData) => {
-    settingsInputListeners(['text', 'handle'], updateFieldData);
+    settingsInputListeners(['text'], updateFieldData);
     document.getElementById('setting-alignment')?.addEventListener('change', (e) => updateFieldData('alignment', e.target.value));
     initSettingGroupButton();
+    labelHandleListener(updateFieldData);
 };
 
 export default {

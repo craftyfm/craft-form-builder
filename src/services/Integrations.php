@@ -12,7 +12,6 @@ use craft\helpers\Json;
 use craft\helpers\ProjectConfig as ProjectConfigHelper;
 use craft\helpers\StringHelper;
 use craftyfm\formbuilder\events\RegisterIntegrationEvent;
-use craftyfm\formbuilder\events\SubmissionEvent;
 use craftyfm\formbuilder\FormBuilder;
 use craftyfm\formbuilder\helpers\Table;
 use craftyfm\formbuilder\integrations\base\BaseIntegration;

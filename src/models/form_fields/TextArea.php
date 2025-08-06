@@ -2,7 +2,6 @@
 
 namespace craftyfm\formbuilder\models\form_fields;
 
-use craft\base\Model;
 use craftyfm\formbuilder\models\submission_fields\ScalarField;
 
 class TextArea extends BaseInput

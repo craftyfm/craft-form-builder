@@ -1,12 +1,12 @@
-var J=Object.defineProperty;var K=(e,t,n)=>t in e?J(e,t,{enumerable:!0,configurable:!0,writable:!0,value:n}):e[t]=n;var E=(e,t,n)=>K(e,typeof t!="symbol"?t+"":t,n);const Y=e=>JSON.parse(JSON.stringify(e)),a=(e,t,n=!1)=>`
+var J=Object.defineProperty;var K=(e,t,c)=>t in e?J(e,t,{enumerable:!0,configurable:!0,writable:!0,value:c}):e[t]=c;var E=(e,t,c)=>K(e,typeof t!="symbol"?t+"":t,c);const Y=e=>JSON.parse(JSON.stringify(e)),a=(e,t,c=!1)=>`
         <div class="cfb:mb-7">
             <div class="cfb:flex cfb:justify-between cfb:text-gray-800 cfb:mb-3 cfb:border-b">
                 <h4 class="cfb:text-lg cfb:font-semibold ">${e}</h4>
-                <button data-open="${n?"0":"1"}" class="toggle-button-setting-group" id="toggle-${e.toLowerCase()}" data-content="group-settings-${e.toLowerCase()}">
-                    ${n?'<span class="cfb:iconify-[mdi--add]"></span>':'<span class="cfb:iconify-[mdi--minus]"></span>'}
+                <button data-open="${c?"0":"1"}" class="toggle-button-setting-group" id="toggle-${e.toLowerCase()}" data-content="group-settings-${e.toLowerCase()}">
+                    ${c?'<span class="cfb:iconify-[mdi--add]"></span>':'<span class="cfb:iconify-[mdi--minus]"></span>'}
                 </button>
             </div>
-            <div class="cfb:flex-col cfb:gap-3  cfb:flex cfb:transition-all cfb:duration-500 ${n?"cfb:hidden":""}" id="group-settings-${e.toLowerCase()}">
+            <div class="cfb:flex-col cfb:gap-3  cfb:flex cfb:transition-all cfb:duration-500 ${c?"cfb:hidden":""}" id="group-settings-${e.toLowerCase()}">
                 ${t}
             </div>
         </div>
@@ -24,27 +24,14 @@ var J=Object.defineProperty;var K=(e,t,n)=>t in e?J(e,t,{enumerable:!0,configura
                 <input type="hidden" name="name" value="">
             </div>
         </div>
-    `,d=()=>{document.querySelectorAll(".toggle-button-setting-group").forEach(t=>{t.addEventListener("click",n=>{const s=t.dataset.content;t.dataset.open==="0"?(t.dataset.open="1",t.querySelector("span").classList.replace("cfb:iconify-[mdi--add]","cfb:iconify-[mdi--minus]"),document.getElementById(s).classList.remove("cfb:hidden")):(t.dataset.open="0",t.querySelector("span").classList.replace("cfb:iconify-[mdi--minus]","cfb:iconify-[mdi--add]"),document.getElementById(s).classList.add("cfb:hidden"))})})},g=e=>`
-    <div>
-        <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">Label<span class="cfb:text-red-500 cfb:ml-1">*</span></label>
-        <input type="text" id="setting-label" value="${e.label}" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md">
-    </div>
-    <div>
-        <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">Description</label>
-        <input type="text" id="setting-desc" value="${e.desc}" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md">
-    </div>
-`,f=e=>`
-    <div>
-        <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">Handle<span class="cfb:text-red-500 cfb:ml-1">*</span></label>
-        <input type="text" id="setting-handle" value="${e.handle}" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md">
-`,p=e=>`
+    `,d=()=>{document.querySelectorAll(".toggle-button-setting-group").forEach(t=>{t.addEventListener("click",c=>{const s=t.dataset.content;t.dataset.open==="0"?(t.dataset.open="1",t.querySelector("span").classList.replace("cfb:iconify-[mdi--add]","cfb:iconify-[mdi--minus]"),document.getElementById(s).classList.remove("cfb:hidden")):(t.dataset.open="0",t.querySelector("span").classList.replace("cfb:iconify-[mdi--minus]","cfb:iconify-[mdi--add]"),document.getElementById(s).classList.add("cfb:hidden"))})})},p=e=>`
     <div>
         <label class="cfb:flex cfb:items-center cfb:gap-2">
             <input type="checkbox" id="setting-required" ${e.required?"checked":""} class="cfb:text-blue-600 cfb:border-gray-300 cfb:rounded">
             <span class="cfb:text-sm cfb:font-medium cfb:text-gray-700">Required Field</span>
         </label>
     </div>
-`,h=e=>{var t;(t=document.getElementById("setting-required"))==null||t.addEventListener("change",n=>e("required",n.target.checked))},W=()=>`
+`,h=e=>{var t;(t=document.getElementById("setting-required"))==null||t.addEventListener("change",c=>e("required",c.target.checked))},W=()=>`
         <div class="cfb:flex cfb:opacity-0 cfb:group-hover:opacity-100 cfb:transition-opacity cfb:justify-between">
             <span class="cfb:text-sm cfb:font-medium cfb:text-gray-500 cfb:w-4 cfb:h-4 cfb:iconify-[mdi--drag-variant]"></span>
             <span class="delete-container cfb:delete-btn-wrapper cfb:mb-1"></span>
@@ -62,8 +49,29 @@ var J=Object.defineProperty;var K=(e,t,n)=>t in e?J(e,t,{enumerable:!0,configura
         <div class="">
             <p class="cfb:text-sm cfb:font-light">${e.desc??""}</p>
         </div>
-    `),F=(e,t)=>[...e.querySelectorAll(".form-field-wrapper")].reduce((s,c)=>{const i=c.getBoundingClientRect(),r=t-i.top-i.height/2;return r<0&&r>s.offset?{offset:r,element:c}:s},{offset:Number.NEGATIVE_INFINITY}).element,G=()=>{const e=document.createElement("div");e.className="cfb:relative cfb:my-4";const t=document.createElement("div");t.className="cfb:absolute cfb:inset-0 cfb:flex cfb:items-center";const n=document.createElement("div");n.className="cfb:w-full cfb:border-t cfb:border-blue-500",t.appendChild(n);const s=document.createElement("div");s.className="cfb:relative cfb:flex cfb:justify-center";const c=document.createElement("span");return c.className="cfb:bg-white cfb:px-3 cfb:text-sm cfb:text-blue-500 cfb:font-medium",c.textContent="Drop here",s.appendChild(c),e.appendChild(t),e.appendChild(s),e},m=(e,t)=>{e.forEach(n=>{var s;(s=document.getElementById(`setting-${n}`))==null||s.addEventListener("input",c=>t(n,c.target.value))})},B=e=>{var t;(t=document.getElementById("setting-options"))==null||t.addEventListener("input",n=>{const s=n.target.value.split(`
-`).filter(c=>c.trim()!=="").map(c=>({name:c.trim(),value:c.trim(),isDefault:!1}));e("options",s)})},X=e=>e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"),Q=e=>e.toLowerCase().trim().replace(/[^a-z0-9\s]/g,"").replace(/\s+(.)/g,(t,n)=>n.toUpperCase()).replace(/\s/g,""),x=e=>{const t=document.getElementById("setting-label"),n=document.getElementById("setting-handle");if(!t||!n||n.value!=="")return;let s=!1;n.addEventListener("input",()=>{s=!0}),t.addEventListener("input",()=>{s||(n.value=Q(t.value),e("handle",n.value))})},Z={defaultData:{handle:"",label:"",desc:"",placeholder:"Enter text...",icon:"",iconSvg:null,required:!1}},ee=e=>!(!e.handle||!e.label),te=(e,t)=>`
+    `),F=(e,t)=>[...e.querySelectorAll(".form-field-wrapper")].reduce((s,n)=>{const i=n.getBoundingClientRect(),r=t-i.top-i.height/2;return r<0&&r>s.offset?{offset:r,element:n}:s},{offset:Number.NEGATIVE_INFINITY}).element,G=()=>{const e=document.createElement("div");e.className="cfb:relative cfb:my-4";const t=document.createElement("div");t.className="cfb:absolute cfb:inset-0 cfb:flex cfb:items-center";const c=document.createElement("div");c.className="cfb:w-full cfb:border-t cfb:border-blue-500",t.appendChild(c);const s=document.createElement("div");s.className="cfb:relative cfb:flex cfb:justify-center";const n=document.createElement("span");return n.className="cfb:bg-white cfb:px-3 cfb:text-sm cfb:text-blue-500 cfb:font-medium",n.textContent="Drop here",s.appendChild(n),e.appendChild(t),e.appendChild(s),e},B=e=>{var t;(t=document.getElementById("setting-options"))==null||t.addEventListener("input",c=>{const s=c.target.value.split(`
+`).filter(n=>n.trim()!=="").map(n=>({name:n.trim(),value:n.trim(),isDefault:!1}));e("options",s)})},X=e=>e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"),x=e=>`
+    <div>
+        <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">Label<span class="cfb:text-red-500 cfb:ml-1">*</span></label>
+        <input type="text" id="setting-label" value="${e.label}" 
+            class="cfb:peer cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md cfb:invalid:border-red-500 cfb:focus:invalid:border-transparent">
+        <p class="cfb:hidden cfb:peer-invalid:block cfb:font-light cfb:text-sm cfb:text-red-500 cfb:pt-0 cfb:mt-0">
+            This field is required.
+        </p>
+    </div>
+    <div>
+        <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">Description</label>
+        <input type="text" id="setting-desc" value="${e.desc}" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md">
+    </div>
+`,f=e=>`
+    <div>
+        <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">Handle<span class="cfb:text-red-500 cfb:ml-1">*</span></label>
+        <input type="text" id="setting-handle" value="${e.handle}" class="cfb:peer cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md cfb:invalid:border-red-500 cfb:focus:invalid:border-transparent">
+        <p class="cfb:hidden cfb:peer-invalid:block cfb:font-light cfb:text-sm cfb:text-red-500 cfb:pt-0 cfb:mt-0">
+            This field is required.
+        </p>   
+    </div>     
+`,u=(e,t)=>{e.forEach(c=>{var s;(s=document.getElementById(`setting-${c}`))==null||s.addEventListener("input",n=>t(c,n.target.value))})},m=e=>{const t=document.getElementById("setting-label"),c=document.getElementById("setting-handle");let s=c.value!=="";const n=i=>{i.setCustomValidity(i.value.trim()===""?"This field is required.":"")};t&&n(t),n(c),t&&t.addEventListener("input",()=>{n(t),e("label",t.value),s||(c.value=Q(t.value),e("handle",c.value,!1),n(c))}),c.addEventListener("input",()=>{s=!0,e("handle",c.value),n(c)})},Q=e=>e.toLowerCase().trim().replace(/[^a-z0-9\s]/g,"").replace(/\s+(.)/g,(t,c)=>c.toUpperCase()).replace(/\s/g,""),Z={defaultData:{handle:"",label:"",desc:"",placeholder:"Enter text...",icon:"",iconSvg:null,required:!1}},ee=e=>!(!e.handle||!e.label),te=(e,t)=>`
         <div class="cfb:flex ${t==="horizontal"?"cfb:flex-row":"cfb:flex-col"}">
             ${v(e)}
             <div class="${t==="horizontal"?"cfb:w-3/4":""}">
@@ -84,14 +92,14 @@ var J=Object.defineProperty;var K=(e,t,n)=>t in e?J(e,t,{enumerable:!0,configura
             </div>
         </div>
 
-`,ne=(e,t)=>{let n=`
-        ${g(e)}
+`,ce=(e,t)=>{let c=`
+        ${x(e)}
         <div>
             <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">Placeholder</label>
             <input type="text" id="setting-placeholder" value="${e.placeholder}" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md">
         </div>  
        
-    `;return t.settings.icons!==""&&(n+=`<div>
+    `;return t.settings.icons!==""&&(c+=`<div>
             <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">Icon</label>
             <div id="setting-icon" class="icon-picker">    
                 <div class="icon-picker--icon" role="img" tabindex="0">
@@ -103,7 +111,7 @@ var J=Object.defineProperty;var K=(e,t,n)=>t in e?J(e,t,{enumerable:!0,configura
                 <button type="button" class="icon-picker--remove-btn btn" tabindex="0">Remove</button>
                 <input type="hidden" name="name" value="">
             </div>
-        </div>`),a("Property",n)+a("Validation",p(e))+a("Advanced",f(e))},ce=(e,t)=>{m(["label","handle","desc","placeholder"],e),h(e),d(),t.formState.settings.icons!==""&&t.iconPicker.init("setting-icon",t.formState.settings.icons),x(e)},se={config:Z,validate:ee,render:te,renderSettings:ne,initSettings:ce},ie={defaultData:{handle:"",label:"",placeholder:"Enter your message...",desc:"",rows:4,required:!1,minlength:0,maxlength:0}},ae=e=>!(!e.handle||!e.label),re=(e,t)=>`
+        </div>`),a("Property",c)+a("Validation",p(e))+a("Advanced",f(e))},ne=(e,t)=>{u(["desc","placeholder"],e),h(e),d(),t.formState.settings.icons!==""&&t.iconPicker.init("setting-icon",t.formState.settings.icons),m(e)},se={config:Z,validate:ee,render:te,renderSettings:ce,initSettings:ne},ie={defaultData:{handle:"",label:"",placeholder:"Enter your message...",desc:"",rows:4,required:!1,minlength:0,maxlength:0}},ae=e=>!(!e.handle||!e.label),re=(e,t)=>`
      <div class="cfb:flex ${t==="horizontal"?"cfb:flex-row":"cfb:flex-col"}">
         ${v(e)}
         <div class="${t==="horizontal"?"cfb:w-3/4":""}">
@@ -114,8 +122,8 @@ var J=Object.defineProperty;var K=(e,t,n)=>t in e?J(e,t,{enumerable:!0,configura
             ${y(e)}
         </div>
     </div>
-`,le=e=>{const t=`
-        ${g(e)}
+`,oe=e=>{const t=`
+        ${x(e)}
         <div>
             <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">Placeholder</label>
             <input type="text" id="setting-placeholder" value="${e.placeholder}" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md">
@@ -124,7 +132,7 @@ var J=Object.defineProperty;var K=(e,t,n)=>t in e?J(e,t,{enumerable:!0,configura
             <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">Rows</label>
             <input type="number" id="setting-rows" value="${e.rows}" min="1" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md">
         </div>
-    `,n=`
+    `,c=`
         ${p(e)}
         <div>
             <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">Min Length</label>
@@ -134,32 +142,32 @@ var J=Object.defineProperty;var K=(e,t,n)=>t in e?J(e,t,{enumerable:!0,configura
             <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">Max Length</label>
             <input type="number" id="setting-maxlength" value="${e.maxlength}" min="0" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md">
         </div>
-    `;return a("Property",t)+a("Validation",n)+a("Advanced",f(e))},oe=e=>{var t,n,s;m(["label","handle","desc","placeholder"],e),(t=document.getElementById("setting-rows"))==null||t.addEventListener("input",c=>e("rows",parseInt(c.target.value,10))),h(e),(n=document.getElementById("setting-minlength"))==null||n.addEventListener("input",c=>e("minlength",parseInt(c.target.value,10))),(s=document.getElementById("setting-maxlength"))==null||s.addEventListener("input",c=>e("maxlength",parseInt(c.target.value,10))),d(),x(e)},be={config:ie,validate:ae,render:re,renderSettings:le,initSettings:oe},de={defaultData:{handle:"",label:"",desc:"",placeholder:"Choose an option...",options:[{name:"Option 1",value:"Option 1",isDefault:!1},{name:"Option 2",value:"Option 2",isDefault:!1}],required:!1}},fe=e=>!(!e.handle||!e.label),me=(e,t)=>{const n=e.options.map(s=>`<option value="${s.value}">${s.name}</option>`).join("");return`
+    `;return a("Property",t)+a("Validation",c)+a("Advanced",f(e))},le=e=>{var t,c,s;u(["desc","placeholder"],e),(t=document.getElementById("setting-rows"))==null||t.addEventListener("input",n=>e("rows",parseInt(n.target.value,10))),h(e),(c=document.getElementById("setting-minlength"))==null||c.addEventListener("input",n=>e("minlength",parseInt(n.target.value,10))),(s=document.getElementById("setting-maxlength"))==null||s.addEventListener("input",n=>e("maxlength",parseInt(n.target.value,10))),d(),m(e)},be={config:ie,validate:ae,render:re,renderSettings:oe,initSettings:le},de={defaultData:{handle:"",label:"",desc:"",placeholder:"Choose an option...",options:[{name:"Option 1",value:"Option 1",isDefault:!1},{name:"Option 2",value:"Option 2",isDefault:!1}],required:!1}},fe=e=>!(!e.handle||!e.label),me=(e,t)=>{const c=e.options.map(s=>`<option value="${s.value}">${s.name}</option>`).join("");return`
          <div class="cfb:flex ${t==="horizontal"?"cfb:flex-row":"cfb:flex-col"}">
             ${v(e)}
             <div class="${t==="horizontal"?"cfb:w-3/4":""}">
                 <select class="cfb:flex-3 cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md cfb:bg-gray-50" disabled>
                     <option value="">${e.placeholder}</option>
-                    ${n}
+                    ${c}
                 </select>
                 ${y(e)}
             </div>
         </div>
     `},ue=e=>{const t=`
-        ${g(e)}
+        ${x(e)}
         <div>
             <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">Placeholder</label>
             <input type="text" id="setting-placeholder" value="${e.placeholder}" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md">
         </div>  
         <div>
             <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">Options (one per line)</label>
-            <textarea id="setting-options" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md" rows="4" placeholder="Enter one option per line">${e.options.map(n=>n.name).join(`
+            <textarea id="setting-options" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md" rows="4" placeholder="Enter one option per line">${e.options.map(c=>c.name).join(`
 `)}</textarea>
         </div>
-    `;return a("Property",t)+a("Validation",p(e))+a("Advanced",f(e))},ge=e=>{m(["label","handle","desc","placeholder"],e),B(e),h(e),d(),x(e)},pe={config:de,validate:fe,render:me,renderSettings:ue,initSettings:ge},he={defaultData:{handle:"",label:"",desc:"",options:[{name:"Option 1",value:"Option 1",isDefault:!1},{name:"Option 2",value:"Option 2",isDefault:!1}],required:!1}},ve=e=>!(!e.handle||!e.label),ye=(e,t)=>{const n=e.options.map((s,c)=>`
+    `;return a("Property",t)+a("Validation",p(e))+a("Advanced",f(e))},ge=e=>{u(["desc","placeholder"],e),B(e),h(e),d(),m(e)},pe={config:de,validate:fe,render:me,renderSettings:ue,initSettings:ge},he={defaultData:{handle:"",label:"",desc:"",options:[{name:"Option 1",value:"Option 1",isDefault:!1},{name:"Option 2",value:"Option 2",isDefault:!1}],required:!1}},ve=e=>!(!e.handle||!e.label),ye=(e,t)=>{const c=e.options.map((s,n)=>`
         <div class="cfb:flex cfb:items-center cfb:gap-2 ">
-            <input type="checkbox" id="${e.id}_${c}" name="${e.id}[]" value="${s.value}" class="cfb:border-gray-300 cfb:rounded" disabled>
-            <label for="${e.id}_${c}" class="cfb:text-sm cfb:text-gray-700">${s.name}</label>
+            <input type="checkbox" id="${e.id}_${n}" name="${e.id}[]" value="${s.value}" class="cfb:border-gray-300 cfb:rounded" disabled>
+            <label for="${e.id}_${n}" class="cfb:text-sm cfb:text-gray-700">${s.name}</label>
         </div>
     `).join("");return`
          <div class="cfb:flex ${t==="horizontal"?"cfb:flex-row":"cfb:flex-col"}">
@@ -167,30 +175,30 @@ var J=Object.defineProperty;var K=(e,t,n)=>t in e?J(e,t,{enumerable:!0,configura
              <div class="${t==="horizontal"?"cfb:w-3/4":""}">
                 <div class="cfb:w-full">
                     <div class="cfb:space-y-2 cfb:flex-3">
-                        ${n}
+                        ${c}
                     </div>
                     ${y(e)}
                 </div>
             </div>
         </div>
     `},xe=e=>{const t=`
-        ${g(e)}
+        ${x(e)}
         <div>
             <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">Options (one per line)</label>
-            <textarea id="setting-options" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md" rows="4" placeholder="Enter one option per line">${e.options.map(n=>n.name).join(`
+            <textarea id="setting-options" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md" rows="4" placeholder="Enter one option per line">${e.options.map(c=>c.name).join(`
 `)}</textarea>
         </div>
-    `;return a("Property",t)+a("Validation",p(e))+a("Advanced",f(e))},$e=e=>{m(["label","handle","desc"],e),B(e),h(e),d(),x(e)},Se={config:he,validate:ve,render:ye,renderSettings:xe,initSettings:$e},we={defaultData:{handle:"",label:"",desc:"",options:[{name:"Option 1",value:"Option 1",isDefault:!1},{name:"Option 2",value:"Option 2",isDefault:!1}],required:!1}},Ee=e=>!(!e.handle||!e.label),Le=(e,t)=>{const n=e.options.map((s,c)=>`
+    `;return a("Property",t)+a("Validation",p(e))+a("Advanced",f(e))},$e=e=>{u(["desc"],e),B(e),h(e),d(),m(e)},Se={config:he,validate:ve,render:ye,renderSettings:xe,initSettings:$e},we={defaultData:{handle:"",label:"",desc:"",options:[{name:"Option 1",value:"Option 1",isDefault:!1},{name:"Option 2",value:"Option 2",isDefault:!1}],required:!1}},Ee=e=>!(!e.handle||!e.label),Le=(e,t)=>{const c=e.options.map((s,n)=>`
         <div class="cfb:flex cfb:items-center cfb:gap-2 ">
-            <input type="checkbox" id="${e.id}_${c}" name="${e.id}[]" value="${s.value}" class="cfb:border-gray-300 cfb:rounded" disabled>
-            <label for="${e.id}_${c}" class="cfb:text-sm cfb:text-gray-700">${s.name}</label>
+            <input type="checkbox" id="${e.id}_${n}" name="${e.id}[]" value="${s.value}" class="cfb:border-gray-300 cfb:rounded" disabled>
+            <label for="${e.id}_${n}" class="cfb:text-sm cfb:text-gray-700">${s.name}</label>
         </div>
     `).join("");return`
         <div class="cfb:flex ${t==="horizontal"?"cfb:flex-row":"cfb:flex-col"}">
             ${v(e)}
              <div class="${t==="horizontal"?"cfb:w-3/4":""}">
                 <div class="cfb:space-y-2 cfb:flex-3">
-                    ${n}
+                    ${c}
                 </div>
                 ${y(e)}
             </div>
@@ -198,13 +206,13 @@ var J=Object.defineProperty;var K=(e,t,n)=>t in e?J(e,t,{enumerable:!0,configura
             
         </div>
     `},ke=e=>{const t=`
-        ${g(e)}
+        ${x(e)}
         <div>
             <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">Options (one per line)</label>
-            <textarea id="setting-options" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md" rows="4" placeholder="Enter one option per line">${e.options.map(n=>n.name).join(`
+            <textarea id="setting-options" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md" rows="4" placeholder="Enter one option per line">${e.options.map(c=>c.name).join(`
 `)}</textarea>
         </div>
-    `;return a("Property",t)+a("Validation",p(e))+a("Advanced",f(e))},Ce=e=>{m(["label","handle","desc"],e),B(e),h(e),d(),x(e)},Ie={config:we,validate:Ee,render:Le,renderSettings:ke,initSettings:Ce},Be={defaultData:{handle:"",label:"",desc:"",allowedExtensions:"",limit:1,required:!1,maxSize:0}},Te=e=>!(!e.handle||!e.label),Ae=(e,t)=>`
+    `;return a("Property",t)+a("Validation",p(e))+a("Advanced",f(e))},Ce=e=>{u(["desc"],e),B(e),h(e),d(),m(e)},Ie={config:we,validate:Ee,render:Le,renderSettings:ke,initSettings:Ce},Be={defaultData:{handle:"",label:"",desc:"",allowedExtensions:"",limit:1,required:!1,maxSize:0}},Te=e=>!(!e.handle||!e.label),Ae=(e,t)=>`
     <div class="cfb:flex ${t==="horizontal"?"cfb:flex-row":"cfb:flex-col"}">
         ${v(e)}
         <div class="${t==="horizontal"?"cfb:w-3/4":""}">
@@ -220,7 +228,7 @@ var J=Object.defineProperty;var K=(e,t,n)=>t in e?J(e,t,{enumerable:!0,configura
         </div>
     </div>
 `,Me=e=>{const t=`
-        ${g(e)}
+        ${x(e)}
         <div>
             <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">Accepted Extensions</label>
             <input type="text" id="setting-allowedExtensions" value="${e.allowedExtensions}" placeholder="e.g. pdf, jpg" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md">
@@ -232,13 +240,13 @@ var J=Object.defineProperty;var K=(e,t,n)=>t in e?J(e,t,{enumerable:!0,configura
             <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">Limit</label>
             <input type="number" id="setting-limit" value="${e.limit}" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md">
         </div>
-    `,n=`
+    `,c=`
         ${p(e)}
         <div>
             <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">Max File Size in MBs</label>
             <input type="number" id="setting-maxSize" value="${e.maxSize?e.maxSize:""}" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md">
         </div>  
-    `;return a("Property",t)+a("Validation",n)+a("Advanced",f(e))},Ne=e=>{var t;m(["label","allowedExtensions","limit","handle","desc"],e),h(e),(t=document.getElementById("setting-maxSize"))==null||t.addEventListener("input",n=>e("maxSize",n.target.value)),d(),x(e)},qe={config:Be,validate:Te,render:Ae,renderSettings:Me,initSettings:Ne},Pe={defaultData:{handle:"submit",submitText:"Submit",resetText:"Reset",submitStyle:"primary",resetStyle:"secondary",spacing:"wide"}},je=e=>!!e.handle,ze=(e,t)=>{const n=e.submitStyle==="primary"?"cfb:bg-blue-600 cfb:text-white":"cfb:bg-gray-600 cfb:text-white",s=e.resetStyle==="primary"?"cfb:bg-blue-600 cfb:text-white":e.resetStyle==="secondary"?"cfb:bg-gray-500 cfb:text-white":"cfb:bg-red-500 cfb:text-white";return`
+    `;return a("Property",t)+a("Validation",c)+a("Advanced",f(e))},Ne=e=>{var t;u(["allowedExtensions","limit","desc"],e),h(e),(t=document.getElementById("setting-maxSize"))==null||t.addEventListener("input",c=>e("maxSize",c.target.value)),d(),m(e)},qe={config:Be,validate:Te,render:Ae,renderSettings:Me,initSettings:Ne},Pe={defaultData:{handle:"submit",submitText:"Submit",resetText:"Reset",submitStyle:"primary",resetStyle:"secondary",spacing:"wide"}},je=e=>!!e.handle,ze=(e,t)=>{const c=e.submitStyle==="primary"?"cfb:bg-blue-600 cfb:text-white":"cfb:bg-gray-600 cfb:text-white",s=e.resetStyle==="primary"?"cfb:bg-blue-600 cfb:text-white":e.resetStyle==="secondary"?"cfb:bg-gray-500 cfb:text-white":"cfb:bg-red-500 cfb:text-white";return`
         <div>
             <div class="cfb:flex cfb:justify-between cfb:items-center cfb:mb-3">
                 <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700">Submit Button</label>
@@ -247,12 +255,12 @@ var J=Object.defineProperty;var K=(e,t,n)=>t in e?J(e,t,{enumerable:!0,configura
                 <button type="reset" class="cfb:px-3 cfb:py-1 cfb:rounded-sm cfb:text-sm cfb:cursor-not-allowed ${s}" disabled>
                     ${e.resetText}
                 </button>
-                <button type="submit" class="cfb:px-3 cfb:py-1 cfb:rounded-sm cfb:text-sm cfb:cursor-not-allowed ${n}" disabled>
+                <button type="submit" class="cfb:px-3 cfb:py-1 cfb:rounded-sm cfb:text-sm cfb:cursor-not-allowed ${c}" disabled>
                     ${e.submitText}
                 </button>
             </div>
         </div>
-    `},De=e=>{const t=`
+    `},Oe=e=>{const t=`
         <div>
             <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">Submit Text</label>
             <input type="text" id="setting-submit-text" value="${e.submitText}" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md">
@@ -283,9 +291,9 @@ var J=Object.defineProperty;var K=(e,t,n)=>t in e?J(e,t,{enumerable:!0,configura
                 <option value="normal" ${e.spacing==="normal"?"selected":""}>Normal</option>
             </select>
         </div>
-    `;return a("Property",t)+a("Advanced",f(e))},Oe=e=>{var t,n,s,c,i;m(["handle"],e),(t=document.getElementById("setting-submit-text"))==null||t.addEventListener("input",r=>e("submitText",r.target.value)),(n=document.getElementById("setting-reset-text"))==null||n.addEventListener("input",r=>e("resetText",r.target.value)),(s=document.getElementById("setting-submit-style"))==null||s.addEventListener("change",r=>e("submitStyle",r.target.value)),(c=document.getElementById("setting-reset-style"))==null||c.addEventListener("change",r=>e("resetStyle",r.target.value)),(i=document.getElementById("setting-spacing"))==null||i.addEventListener("change",r=>e("spacing",r.target.value)),d()},He={config:Pe,validate:je,render:ze,renderSettings:De,initSettings:Oe},Fe={defaultData:{handle:"title",text:"Title Text",level:"h2",alignment:"start"}},Re=e=>!!e.handle,Ue=(e,t)=>{const n=e.level,s=`cfb:text-${e.alignment}`;return`
+    `;return a("Property",t)+a("Advanced",f(e))},De=e=>{var t,c,s,n,i;(t=document.getElementById("setting-submit-text"))==null||t.addEventListener("input",r=>e("submitText",r.target.value)),(c=document.getElementById("setting-reset-text"))==null||c.addEventListener("input",r=>e("resetText",r.target.value)),(s=document.getElementById("setting-submit-style"))==null||s.addEventListener("change",r=>e("submitStyle",r.target.value)),(n=document.getElementById("setting-reset-style"))==null||n.addEventListener("change",r=>e("resetStyle",r.target.value)),(i=document.getElementById("setting-spacing"))==null||i.addEventListener("change",r=>e("spacing",r.target.value)),d(),m(e)},He={config:Pe,validate:je,render:ze,renderSettings:Oe,initSettings:De},Fe={defaultData:{handle:"title",text:"Title Text",level:"h2",alignment:"start"}},Re=e=>!!e.handle,Ue=(e,t)=>{const c=e.level,s=`cfb:text-${e.alignment}`;return`
         <div class="cfb:flex cfb:justify-between cfb:items-start">
-            <${n} class="${s} cfb:w-full cfb:font-bold">${e.text}</${n}>
+            <${c} class="${s} cfb:w-full cfb:font-bold">${e.text}</${c}>
         </div>
     `},Ve=e=>{const t=`
         <div>
@@ -311,13 +319,13 @@ var J=Object.defineProperty;var K=(e,t,n)=>t in e?J(e,t,{enumerable:!0,configura
                 <option value="end" ${e.alignment==="end"?"selected":""}>Right</option>
             </select>
         </div>
-    `;return a("Property",t)+a("Advanced",f(e))},_e=e=>{var t,n,s,c;(t=document.getElementById("setting-handle"))==null||t.addEventListener("input",i=>e("handle",i.target.value)),(n=document.getElementById("setting-text"))==null||n.addEventListener("input",i=>e("text",i.target.value)),(s=document.getElementById("setting-level"))==null||s.addEventListener("change",i=>e("level",i.target.value)),(c=document.getElementById("setting-alignment"))==null||c.addEventListener("change",i=>e("alignment",i.target.value)),d()},Je={config:Fe,validate:Re,render:Ue,renderSettings:Ve,initSettings:_e},Ke={defaultData:{handle:"image",src:"",alt:"",width:null,height:null,alignment:"start"}},Ye=e=>!!e.handle,We=(e,t)=>{const n=e.width?`${e.width}px`:"auto",s=e.height?`${e.height}px`:"auto",c=e.width?`width="${e.width}"`:"",i=e.height?`height="${e.height}"`:"";return`
+    `;return a("Property",t)+a("Advanced",f(e))},_e=e=>{var t,c,s;(t=document.getElementById("setting-text"))==null||t.addEventListener("input",n=>e("text",n.target.value)),(c=document.getElementById("setting-level"))==null||c.addEventListener("change",n=>e("level",n.target.value)),(s=document.getElementById("setting-alignment"))==null||s.addEventListener("change",n=>e("alignment",n.target.value)),d(),m(e)},Je={config:Fe,validate:Re,render:Ue,renderSettings:Ve,initSettings:_e},Ke={defaultData:{handle:"image",src:"",alt:"",width:null,height:null,alignment:"start"}},Ye=e=>!!e.handle,We=(e,t)=>{const c=e.width?`${e.width}px`:"auto",s=e.height?`${e.height}px`:"auto",n=e.width?`width="${e.width}"`:"",i=e.height?`height="${e.height}"`:"";return`
     <div class="cfb:flex cfb:justify-${e.alignment} cfb:items-start">
         <img 
-            ${c} ${i}
+            ${n} ${i}
             src="${e.src}" 
             alt="${e.alt||""}" 
-            style="width: ${n}; height: ${s};"
+            style="width: ${c}; height: ${s};"
             class="cfb:object-fill" 
         />
     </div>
@@ -348,11 +356,11 @@ var J=Object.defineProperty;var K=(e,t,n)=>t in e?J(e,t,{enumerable:!0,configura
                 <option value="end" ${e.alignment==="end"?"selected":""}>Right</option>
             </select>
         </div>
-    `;return a("Property",t)+a("Advanced",f(e))},Xe=e=>{var t;m(["handle","src","alt","width","height"],e),(t=document.getElementById("setting-alignment"))==null||t.addEventListener("change",n=>e("alignment",n.target.value)),d()},Qe={config:Ke,validate:Ye,render:We,renderSettings:Ge,initSettings:Xe},Ze={defaultData:{handle:"paragraph",text:"This is a paragraph of text. You can edit it in the settings panel.",alignment:"start"}},et=e=>!!e.handle,tt=e=>`
+    `;return a("Property",t)+a("Advanced",f(e))},Xe=e=>{var t;u(["handle","src","alt","width","height"],e),(t=document.getElementById("setting-alignment"))==null||t.addEventListener("change",c=>e("alignment",c.target.value)),d(),m(e)},Qe={config:Ke,validate:Ye,render:We,renderSettings:Ge,initSettings:Xe},Ze={defaultData:{handle:"paragraph",text:"This is a paragraph of text. You can edit it in the settings panel.",alignment:"start"}},et=e=>!!e.handle,tt=e=>`
         <div class="cfb:flex cfb:justify-between cfb:items-start">
             <p class="${`cfb:text-${e.alignment}`} cfb:w-full">${e.text}</p>
         </div>
-    `,nt=e=>{const t=`
+    `,ct=e=>{const t=`
         <div>
             <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">Text</label>
             <textarea id="setting-text" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md" rows="6">${e.text}</textarea>
@@ -366,20 +374,20 @@ var J=Object.defineProperty;var K=(e,t,n)=>t in e?J(e,t,{enumerable:!0,configura
                 <option value="justify" ${e.alignment==="justify"?"selected":""}>Justify</option>
             </select>
         </div>
-    `;return a("Property",t)+a("Advanced",f(e))},ct=e=>{var t;m(["text","handle"],e),(t=document.getElementById("setting-alignment"))==null||t.addEventListener("change",n=>e("alignment",n.target.value)),d()},st={config:Ze,validate:et,render:tt,renderSettings:nt,initSettings:ct},it={defaultData:{html:"",handle:"html"}},at=e=>!!e.handle,rt=e=>`
+    `;return a("Property",t)+a("Advanced",f(e))},nt=e=>{var t;u(["text"],e),(t=document.getElementById("setting-alignment"))==null||t.addEventListener("change",c=>e("alignment",c.target.value)),d(),m(e)},st={config:Ze,validate:et,render:tt,renderSettings:ct,initSettings:nt},it={defaultData:{html:"",handle:"html"}},at=e=>!!e.handle,rt=e=>`
     <div class="cfb:flex cfb:justify-between cfb:items-start">
         <div class="cfb:w-full cfb:prose">
             <code class="cfb:line-clamp-3">${X(e.html)}</code>
         </div>
     </div>
-`,lt=e=>{const t=`
+`,ot=e=>{const t=`
         <div>
             <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">HTML Content</label>
             <textarea id="setting-html" placeholder="Put your HTML code here"
                 class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md cfb:font-mono" rows="10">${e.html}</textarea>
             <small class="cfb:text-sm cfb:font-light">Please ensure your code contains only HTML and no scripts.</small>
         </div>
-    `;return a("Property",t)+a("Advanced",f(e))},ot=e=>{m(["html","handle"],e),d()},bt={config:it,validate:at,render:rt,renderSettings:lt,initSettings:ot},dt={defaultData:{handle:"hcaptcha",siteKey:"",privateKey:"",required:!0}},ft=e=>!0,mt=e=>`
+    `;return a("Property",t)+a("Advanced",f(e))},lt=e=>{u(["html"],e),d(),m(e)},bt={config:it,validate:at,render:rt,renderSettings:ot,initSettings:lt},dt={defaultData:{handle:"hcaptcha",siteKey:"",privateKey:"",required:!0}},ft=e=>!0,mt=e=>`
     <div>
         <div class="cfb:flex cfb:justify-between cfb:items-center cfb:mb-3">
             <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700">hCaptcha</label>
@@ -393,7 +401,7 @@ var J=Object.defineProperty;var K=(e,t,n)=>t in e?J(e,t,{enumerable:!0,configura
             </div>
         </div>
     </div>
-`,ut=e=>a("Advanced",f(e)),gt=e=>{m(["handle"],e),d()},pt={config:dt,validate:ft,render:mt,renderSettings:ut,initSettings:gt},ht={defaultData:{handle:"recaptcha"}},vt=e=>!!e.handle,yt=(e,t)=>`
+`,ut=e=>a("Advanced",f(e)),gt=e=>{d(),m(e)},pt={config:dt,validate:ft,render:mt,renderSettings:ut,initSettings:gt},ht={defaultData:{handle:"recaptcha"}},vt=e=>!!e.handle,yt=(e,t)=>`
     <div>
         <div class="cfb:flex cfb:justify-between cfb:items-center cfb:mb-1">
             <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700">reCAPTCHA</label>
@@ -410,7 +418,7 @@ var J=Object.defineProperty;var K=(e,t,n)=>t in e?J(e,t,{enumerable:!0,configura
             </div>
         </div>
     </div>
-`,xt=e=>a("Advanced",f(e)),$t=e=>{m(["handle"],e),d()},St={config:ht,validate:vt,render:yt,renderSettings:xt,initSettings:$t},wt={defaultData:{handle:"",label:"",desc:"",placeholder:"Enter email...",icon:"",iconSvg:null,required:!1}},Et=e=>!(!e.handle||!e.label),Lt=(e,t)=>`
+`,xt=e=>a("Advanced",f(e)),$t=e=>{d(),m(e)},St={config:ht,validate:vt,render:yt,renderSettings:xt,initSettings:$t},wt={defaultData:{handle:"",label:"",desc:"",placeholder:"Enter email...",icon:"",iconSvg:null,required:!1}},Et=e=>!(!e.handle||!e.label),Lt=(e,t)=>`
         <div class="cfb:flex ${t==="horizontal"?"cfb:flex-row":"cfb:flex-col"}">
             ${v(e)}
             <div class="${t==="horizontal"?"cfb:w-3/4":""}">
@@ -431,13 +439,13 @@ var J=Object.defineProperty;var K=(e,t,n)=>t in e?J(e,t,{enumerable:!0,configura
             </div>
         </div>
 
-`,kt=(e,t)=>{let n=`
-        ${g(e)}
+`,kt=(e,t)=>{let c=`
+        ${x(e)}
         <div>
             <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">Placeholder</label>
             <input type="text" id="setting-placeholder" value="${e.placeholder}" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md">
         </div>  
-    `;return t.settings.icons!==""&&(n+=`${k(e)}`),a("Property",n)+a("Validation",p(e))+a("Advanced",f(e))},Ct=(e,t)=>{m(["label","handle","desc","placeholder"],e),h(e),d(),t.formState.settings.icons!==""&&t.iconPicker.init("setting-icon",t.formState.settings.icons),x(e)},It={config:wt,validate:Et,render:Lt,renderSettings:kt,initSettings:Ct},Bt={defaultData:{handle:"",label:"",desc:"",placeholder:"Enter url...",icon:"",iconSvg:null,required:!1}},Tt=e=>!(!e.handle||!e.label),At=(e,t)=>`
+    `;return t.settings.icons!==""&&(c+=`${k(e)}`),a("Property",c)+a("Validation",p(e))+a("Advanced",f(e))},Ct=(e,t)=>{u(["desc","placeholder"],e),h(e),d(),t.formState.settings.icons!==""&&t.iconPicker.init("setting-icon",t.formState.settings.icons),m(e)},It={config:wt,validate:Et,render:Lt,renderSettings:kt,initSettings:Ct},Bt={defaultData:{handle:"",label:"",desc:"",placeholder:"Enter url...",icon:"",iconSvg:null,required:!1}},Tt=e=>!(!e.handle||!e.label),At=(e,t)=>`
         <div class="cfb:flex ${t==="horizontal"?"cfb:flex-row":"cfb:flex-col"}">
             ${v(e)}
             <div class="${t==="horizontal"?"cfb:w-3/4":""}">
@@ -458,13 +466,13 @@ var J=Object.defineProperty;var K=(e,t,n)=>t in e?J(e,t,{enumerable:!0,configura
             </div>
         </div>
 
-`,Mt=(e,t)=>{let n=`
-        ${g(e)}
+`,Mt=(e,t)=>{let c=`
+        ${x(e)}
         <div>
             <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">Placeholder</label>
             <input type="text" id="setting-placeholder" value="${e.placeholder}" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md">
         </div>  
-    `;return t.settings.icons!==""&&(n+=`${k(e)}`),a("Property",n)+a("Validation",p(e))+a("Advanced",f(e))},Nt=(e,t)=>{m(["label","handle","desc","placeholder"],e),h(e),d(),t.formState.settings.icons!==""&&t.iconPicker.init("setting-icon",t.formState.settings.icons),x(e)},qt={config:Bt,validate:Tt,render:At,renderSettings:Mt,initSettings:Nt},Pt={defaultData:{handle:"",label:"",desc:"",placeholder:"Enter phone number...",icon:"",iconSvg:null,required:!1}},jt=e=>!(!e.handle||!e.label),zt=(e,t)=>`
+    `;return t.settings.icons!==""&&(c+=`${k(e)}`),a("Property",c)+a("Validation",p(e))+a("Advanced",f(e))},Nt=(e,t)=>{u(["desc","placeholder"],e),h(e),d(),t.formState.settings.icons!==""&&t.iconPicker.init("setting-icon",t.formState.settings.icons),m(e)},qt={config:Bt,validate:Tt,render:At,renderSettings:Mt,initSettings:Nt},Pt={defaultData:{handle:"",label:"",desc:"",placeholder:"Enter phone number...",icon:"",iconSvg:null,required:!1}},jt=e=>!(!e.handle||!e.label),zt=(e,t)=>`
         <div class="cfb:flex ${t==="horizontal"?"cfb:flex-row":"cfb:flex-col"}">
             ${v(e)}
             <div class="${t==="horizontal"?"cfb:w-3/4":""}">
@@ -485,13 +493,13 @@ var J=Object.defineProperty;var K=(e,t,n)=>t in e?J(e,t,{enumerable:!0,configura
             </div>
         </div>
 
-`,Dt=(e,t)=>{let n=`
-        ${g(e)}
+`,Ot=(e,t)=>{let c=`
+        ${x(e)}
         <div>
             <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">Placeholder</label>
             <input type="text" id="setting-placeholder" value="${e.placeholder}" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md">
         </div>  
-    `;return t.settings.icons!==""&&(n+=`${k(e)}`),a("Property",n)+a("Validation",p(e))+a("Advanced",f(e))},Ot=(e,t)=>{m(["label","handle","desc","placeholder"],e),h(e),d(),t.formState.settings.icons!==""&&t.iconPicker.init("setting-icon",t.formState.settings.icons),x(e)},Ht={config:Pt,validate:jt,render:zt,renderSettings:Dt,initSettings:Ot},Ft={defaultData:{handle:"",label:"",desc:"",placeholder:"Enter number...",icon:"",iconSvg:null,required:!1}},Rt=e=>!(!e.handle||!e.label),Ut=(e,t)=>`
+    `;return t.settings.icons!==""&&(c+=`${k(e)}`),a("Property",c)+a("Validation",p(e))+a("Advanced",f(e))},Dt=(e,t)=>{u(["desc","placeholder"],e),h(e),d(),t.formState.settings.icons!==""&&t.iconPicker.init("setting-icon",t.formState.settings.icons),m(e)},Ht={config:Pt,validate:jt,render:zt,renderSettings:Ot,initSettings:Dt},Ft={defaultData:{handle:"",label:"",desc:"",placeholder:"Enter number...",icon:"",iconSvg:null,required:!1}},Rt=e=>!(!e.handle||!e.label),Ut=(e,t)=>`
         <div class="cfb:flex ${t==="horizontal"?"cfb:flex-row":"cfb:flex-col"}">
             ${v(e)}
             <div class="${t==="horizontal"?"cfb:w-3/4":""}">
@@ -512,13 +520,13 @@ var J=Object.defineProperty;var K=(e,t,n)=>t in e?J(e,t,{enumerable:!0,configura
             </div>
         </div>
 
-`,Vt=(e,t)=>{let n=`
-        ${g(e)}
+`,Vt=(e,t)=>{let c=`
+        ${x(e)}
         <div>
             <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">Placeholder</label>
             <input type="text" id="setting-placeholder" value="${e.placeholder}" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md">
         </div>  
-    `;return t.settings.icons!==""&&(n+=`${k(e)}`),a("Property",n)+a("Validation",p(e))+a("Advanced",f(e))},_t=(e,t)=>{m(["label","handle","desc","placeholder"],e),h(e),d(),t.formState.settings.icons!==""&&t.iconPicker.init("setting-icon",t.formState.settings.icons),x(e)},Jt={config:Ft,validate:Rt,render:Ut,renderSettings:Vt,initSettings:_t},Kt={defaultData:{handle:"",label:"",checkboxLabel:"",desc:"",required:!1}},Yt=e=>!(!e.handle||!e.label),Wt=(e,t)=>`
+    `;return t.settings.icons!==""&&(c+=`${k(e)}`),a("Property",c)+a("Validation",p(e))+a("Advanced",f(e))},_t=(e,t)=>{u(["desc","placeholder"],e),h(e),d(),t.formState.settings.icons!==""&&t.iconPicker.init("setting-icon",t.formState.settings.icons),m(e)},Jt={config:Ft,validate:Rt,render:Ut,renderSettings:Vt,initSettings:_t},Kt={defaultData:{handle:"",label:"",checkboxLabel:"",desc:"",required:!1}},Yt=e=>!(!e.handle||!e.label),Wt=(e,t)=>`
         <div class="cfb:flex ${t==="horizontal"?"cfb:flex-row cfb:gap-3":"cfb:flex-col"}">
             ${v(e)}
             <div class="${t==="horizontal"?"cfb:w-3/4":""}">
@@ -530,16 +538,16 @@ var J=Object.defineProperty;var K=(e,t,n)=>t in e?J(e,t,{enumerable:!0,configura
             </div>
         </div>
     `,Gt=e=>{const t=`
-        ${g(e)}
+        ${x(e)}
             <div>
                 <label class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">Checkbox Label</label>
                 <input type="text" id="setting-checkboxLabel" value="${e.checkboxLabel}" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md">
             </div>
-    `;return a("Property",t)+a("Validation",p(e))+a("Advanced",f(e))},Xt=(e,t)=>{m(["label","handle","desc","checkboxLabel"],e),h(e),d(),x(e)},Qt={config:Kt,validate:Yt,render:Wt,renderSettings:Gt,initSettings:Xt},C={text:se,email:It,url:qt,phone:Ht,number:Jt,textarea:be,select:pe,radio:Se,checkbox:Qt,checkboxes:Ie,fileUpload:qe,submitButton:He,title:Je,image:Qe,paragraph:st,html:bt,hcaptcha:pt,recaptcha:St};let u=null,L=null;function V(e){L=this,this.classList.add("dragging"),u=G()}const _=e=>{L.classList.remove("dragging"),u&&u.parentNode&&u.parentNode.removeChild(u),L=null,u=null},Zt=(e,t,n)=>{document.querySelectorAll(".form-element").forEach(c=>{c.addEventListener("dragstart",i=>{i.dataTransfer.setData("text/plain",c.dataset.type)}),c.addEventListener("dragstart",V),c.addEventListener("dragend",_)}),n.addEventListener("dragover",c=>{if(c.preventDefault(),!u||e.formState.fields.length===0)return;const i=100,r=20;c.clientY<i?window.scrollBy(0,-r):c.clientY>window.innerHeight-i&&window.scrollBy(0,r);const o=F(n,c.clientY);u.parentNode&&u.parentNode.removeChild(u),o?n.insertBefore(u,o):n.appendChild(u)}),n.addEventListener("drop",c=>{if(c.preventDefault(),!u)return;const i=F(n,c.clientY),r=c.dataTransfer.getData("text/plain"),o=i?i.dataset.index:null;if(r)e.addField(r,o);else{const l=L.dataset.index;e.moveField(l,o,t,e)}})};class en{constructor(t){this.currentPage=1,this.modal=null,this.cancelToken=null,this.searchInput=null,this.iconListContainer=null,this.iconList=null,this.hasMore=!0,this.loading=!1,this.set=null,this.spinner=null,this.updateFieldData=t}get listLength(){return this.iconListContainer.querySelectorAll("button").length}init(t,n){this.set!==n&&(this.set=n,this.cleanState()),this.container=document.getElementById(t),this.preview=this.container.querySelector(".icon-picker--icon"),this.chooseBtn=this.container.querySelector(".icon-picker--choose-btn"),this.removeBtn=this.container.querySelector(".icon-picker--remove-btn"),this.inputName=this.container.querySelector('input[name="name"]'),this.chooseBtn.addEventListener("click",()=>{this.showModal()}),this.removeBtn.addEventListener("click",()=>{this.removeIcon()})}cleanState(){this.currentPage=1,this.hasMore=!0,this.modal&&this.updateIcons()}showModal(){this.set&&(this.modal?this.modal.style.display="flex":this.createModal())}createModal(){const t=document.createElement("div");t.className="cfb:bg-white cfb:shadow-lg cfb:rounded-lg cfb:p-6";const n=document.createElement("div");n.className="body",t.appendChild(n);const s=document.createElement("div");s.className="cfb:relative cfb:w-full",n.appendChild(s);const c=document.createElement("span");c.className="cfb:iconify-[mdi--magnify] cfb:absolute cfb:inset-y-2 cfb:left-3 cfb:flex cfb:items-center cfb:pointer-events-none",c.setAttribute("aria-hidden","true"),s.appendChild(c),this.searchInput=document.createElement("input"),this.searchInput.type="text",this.searchInput.name="search",this.searchInput.className="cfb:w-full cfb:pl-10 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md cfb:focus:ring-blue-500 cfb:focus:border-blue-500",this.searchInput.placeholder="Search",this.searchInput.setAttribute("aria-label","Search"),s.appendChild(this.searchInput);const i=document.createElement("button");i.className="clear-btn  cfb:absolute cfb:inset-y-0 cfb:right-3 cfb:flex cfb:items-center cfb:justify-center cfb:text-gray-400 cfb:hover:text-gray-600 cfb:focus:outline-none hidden",i.title="Clear search",i.setAttribute("aria-label","Clear search"),s.appendChild(i),this.iconListContainer=document.createElement("div"),this.iconListContainer.className="cfb:grid cfb:grid-cols-8 cfb:gap-2 cfb:max-h-96 cfb:overflow-y-auto cfb:p-4 border cfb:rounded-lg cfb:bg-gray-50 icon-picker-modal--list",n.appendChild(this.iconListContainer),this.updateLangAttribute(this.iconList),this.spinner=document.createElement("div"),this.spinner.className="spinner spinner-absolute",this.spinner.style.display="none",this.iconListContainer.appendChild(this.spinner),this.iconListContainer.addEventListener("scroll",this.onScroll.bind(this));let r;this.searchInput.addEventListener("input",()=>{clearTimeout(r),r=setTimeout(()=>{this.updateIcons()},300),this.searchInput.value?i.classList.remove("hidden"):i.classList.add("hidden")}),i.addEventListener("click",()=>{this.searchInput.value="",this.searchInput.dispatchEvent(new Event("input"))}),this.iconListContainer.addEventListener("click",l=>{let b;if(l.target.nodeName==="BUTTON")b=l.target;else if(b=l.target.closest("button"),!b)return;this.selectIcon(b)}),this.modal=document.createElement("div"),this.modal.className="cfb:fixed cfb:z-50 cfb:inset-0 cfb:flex cfb:items-center cfb:justify-center cfb:bg-white/50";const o=document.createElement("div");o.className="cfb:w-full cfb:max-w-2xl",o.appendChild(t),this.modal.appendChild(o),document.body.appendChild(this.modal),this.modal.addEventListener("click",l=>{l.target===this.modal&&(this.modal.style.display="none")}),this.updateIcons()}async onScroll(){if(this.loading||!this.hasMore)return;const t=this.iconListContainer.scrollTop,n=this.iconListContainer.scrollHeight,s=this.iconListContainer.clientHeight;t+s>=n-200&&this.loadMore()}async updateIcons(){this.iconListContainer.innerHTML=await this.loadIcons()}async loadMore(){this.currentPage+=1;const t=await this.loadIcons();if(t.length<=0){this.hasMore=!1;return}this.iconListContainer.innerHTML+=t}async loadIcons(){this.cancelToken&&this.cancelToken.abort();const n=document.getElementById("csrf-input").value;this.loading=!0;const s=this.searchInput.value;this.spinner.style.display="block",this.cancelToken=new AbortController;try{return(await(await fetch(Craft.getActionUrl("form-builder/icons/picker"),{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json","X-CSRF-Token":n},body:JSON.stringify({search:s,set:this.set,page:this.currentPage}),signal:this.cancelToken.signal})).json()).listHtml}catch(c){return c.name!=="AbortError"&&console.error("Error loading icons:",c),""}finally{this.spinner.style.display="none",this.cancelToken=null,this.loading=!1}}updateLangAttribute(t){document.documentElement.lang.startsWith("en")||t.setAttribute("lang","en")}selectIcon(t){this.modal.style.display="none";const n=t.getAttribute("title"),s=t.getAttribute("data-iconName");this.preview.innerHTML=t.innerHTML,this.preview.setAttribute("title",n),this.preview.setAttribute("aria-label",n),this.preview.setAttribute("role","img"),this.updateLangAttribute(this.preview),this.inputName.value=s;const c=this.chooseBtn.querySelector(".label");c&&(c.textContent="Change"),this.updateFieldData("icon",s),this.updateFieldData("iconSvg",t.innerHTML),this.chooseBtn.focus(),this.removeBtn.classList.remove("hidden"),this.container.classList.contains("small")&&this.chooseBtn.classList.add("hidden")}removeIcon(){this.preview.innerHTML="",this.preview.removeAttribute("title"),this.preview.removeAttribute("aria-label"),this.inputName.value="",this.updateFieldData("icon",""),this.updateFieldData("iconSvg",null);const t=this.chooseBtn.querySelector(".label");t&&(t.textContent="Choose"),this.removeBtn.classList.add("hidden"),this.container.classList.contains("small")?(this.chooseBtn.classList.remove("hidden"),this.chooseBtn.focus()):this.chooseBtn.focus()}}class tn{constructor(t,n){E(this,"updateFieldData",(t,n)=>{const s=this.formState.fields.find(c=>c.id===this.selectedFieldId);s&&(s[t]=n,this.renderForm())});E(this,"deleteField",t=>{this.formState.fields=this.formState.fields.filter(n=>n.id!==t),this.selectedFieldId===t?(this.selectedFieldId=null,this.selectField(null)):this.renderForm()});E(this,"addField",(t,n)=>{const s=C[t];if(s){if(["recaptcha","hcaptcha","captcha"].includes(t)&&!this.checkOnlyCaptchaActive())return alert("Only one captcha field can be active at a time"),!1;let i={id:crypto.randomUUID(),type:t,...Y(s.config.defaultData)};return(s.config.defaultData.handle!==void 0||s.config.defaultData.handle!=="")&&(i.handle=this.generateUniqueHandle(s.config.defaultData.handle)),n!==null?this.formState.fields.splice(Math.max(n,0),0,i):this.formState.fields.push(i),this.selectField(i.id),!0}return!1});E(this,"moveField",(t,n)=>{n===null&&(n=this.formState.fields.length),n=Math.max(n-1,0),[this.formState.fields[t],this.formState.fields[n]]=[this.formState.fields[n],this.formState.fields[t]],this.renderForm(),this.renderSettings()});this.formContainer=document.getElementById("form-container"),this.settingsContainer=document.getElementById("settings-container"),this.formState=t,this.selectedFieldId=null,this.selectionCallback=n,this.iconPicker=new en(this.updateFieldData)}checkEmptyState(){this.formState.fields.length===0&&(this.formContainer.innerHTML=` <div class="empty-state cfb:flex cfb:flex-col cfb:items-center cfb:justify-center cfb:h-full cfb:text-gray-500 cfb:text-center"
+    `;return a("Property",t)+a("Validation",p(e))+a("Advanced",f(e))},Xt=(e,t)=>{u(["desc","checkboxLabel"],e),h(e),d(),m(e)},Qt={config:Kt,validate:Yt,render:Wt,renderSettings:Gt,initSettings:Xt},C={text:se,email:It,url:qt,phone:Ht,number:Jt,textarea:be,select:pe,radio:Se,checkbox:Qt,checkboxes:Ie,fileUpload:qe,submitButton:He,title:Je,image:Qe,paragraph:st,html:bt,hcaptcha:pt,recaptcha:St};let g=null,L=null;function V(e){L=this,this.classList.add("dragging"),g=G()}const _=e=>{L.classList.remove("dragging"),g&&g.parentNode&&g.parentNode.removeChild(g),L=null,g=null},Zt=(e,t,c)=>{document.querySelectorAll(".form-element").forEach(n=>{n.addEventListener("dragstart",i=>{i.dataTransfer.setData("text/plain",n.dataset.type)}),n.addEventListener("dragstart",V),n.addEventListener("dragend",_)}),c.addEventListener("dragover",n=>{if(n.preventDefault(),!g||e.formState.fields.length===0)return;const i=200,r=20;n.clientY<i?c.scrollBy(0,-r):n.clientY>window.innerHeight-i&&c.scrollBy(0,r);const l=F(c,n.clientY);g.parentNode&&g.parentNode.removeChild(g),l?c.insertBefore(g,l):c.appendChild(g)}),c.addEventListener("drop",n=>{if(n.preventDefault(),!g)return;const i=F(c,n.clientY),r=n.dataTransfer.getData("text/plain"),l=i?i.dataset.index:null;if(r)e.addField(r,l);else{const o=L.dataset.index;e.moveField(o,l,t,e)}})};class ec{constructor(t){this.currentPage=1,this.modal=null,this.cancelToken=null,this.searchInput=null,this.iconListContainer=null,this.iconList=null,this.hasMore=!0,this.loading=!1,this.set=null,this.spinner=null,this.updateFieldData=t}get listLength(){return this.iconListContainer.querySelectorAll("button").length}init(t,c){this.set!==c&&(this.set=c,this.cleanState()),this.container=document.getElementById(t),this.preview=this.container.querySelector(".icon-picker--icon"),this.chooseBtn=this.container.querySelector(".icon-picker--choose-btn"),this.removeBtn=this.container.querySelector(".icon-picker--remove-btn"),this.inputName=this.container.querySelector('input[name="name"]'),this.chooseBtn.addEventListener("click",()=>{this.showModal()}),this.removeBtn.addEventListener("click",()=>{this.removeIcon()})}cleanState(){this.currentPage=1,this.hasMore=!0,this.modal&&this.updateIcons()}showModal(){this.set&&(this.modal?this.modal.style.display="flex":this.createModal())}createModal(){const t=document.createElement("div");t.className="cfb:bg-white cfb:shadow-lg cfb:rounded-lg cfb:p-6";const c=document.createElement("div");c.className="body",t.appendChild(c);const s=document.createElement("div");s.className="cfb:relative cfb:w-full",c.appendChild(s);const n=document.createElement("span");n.className="cfb:iconify-[mdi--magnify] cfb:absolute cfb:inset-y-2 cfb:left-3 cfb:flex cfb:items-center cfb:pointer-events-none",n.setAttribute("aria-hidden","true"),s.appendChild(n),this.searchInput=document.createElement("input"),this.searchInput.type="text",this.searchInput.name="search",this.searchInput.className="cfb:w-full cfb:pl-10 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-md cfb:focus:ring-blue-500 cfb:focus:border-blue-500",this.searchInput.placeholder="Search",this.searchInput.setAttribute("aria-label","Search"),s.appendChild(this.searchInput);const i=document.createElement("button");i.className="clear-btn  cfb:absolute cfb:inset-y-0 cfb:right-3 cfb:flex cfb:items-center cfb:justify-center cfb:text-gray-400 cfb:hover:text-gray-600 cfb:focus:outline-none hidden",i.title="Clear search",i.setAttribute("aria-label","Clear search"),s.appendChild(i),this.iconListContainer=document.createElement("div"),this.iconListContainer.className="cfb:grid cfb:grid-cols-8 cfb:gap-2 cfb:max-h-96 cfb:overflow-y-auto cfb:p-4 border cfb:rounded-lg cfb:bg-gray-50 icon-picker-modal--list",c.appendChild(this.iconListContainer),this.updateLangAttribute(this.iconList),this.spinner=document.createElement("div"),this.spinner.className="spinner spinner-absolute",this.spinner.style.display="none",this.iconListContainer.appendChild(this.spinner),this.iconListContainer.addEventListener("scroll",this.onScroll.bind(this));let r;this.searchInput.addEventListener("input",()=>{clearTimeout(r),r=setTimeout(()=>{this.updateIcons()},300),this.searchInput.value?i.classList.remove("hidden"):i.classList.add("hidden")}),i.addEventListener("click",()=>{this.searchInput.value="",this.searchInput.dispatchEvent(new Event("input"))}),this.iconListContainer.addEventListener("click",o=>{let b;if(o.target.nodeName==="BUTTON")b=o.target;else if(b=o.target.closest("button"),!b)return;this.selectIcon(b)}),this.modal=document.createElement("div"),this.modal.className="cfb:fixed cfb:z-50 cfb:inset-0 cfb:flex cfb:items-center cfb:justify-center cfb:bg-white/50";const l=document.createElement("div");l.className="cfb:w-full cfb:max-w-2xl",l.appendChild(t),this.modal.appendChild(l),document.body.appendChild(this.modal),this.modal.addEventListener("click",o=>{o.target===this.modal&&(this.modal.style.display="none")}),this.updateIcons()}async onScroll(){if(this.loading||!this.hasMore)return;const t=this.iconListContainer.scrollTop,c=this.iconListContainer.scrollHeight,s=this.iconListContainer.clientHeight;t+s>=c-200&&this.loadMore()}async updateIcons(){this.iconListContainer.innerHTML=await this.loadIcons()}async loadMore(){this.currentPage+=1;const t=await this.loadIcons();if(t.length<=0){this.hasMore=!1;return}this.iconListContainer.innerHTML+=t}async loadIcons(){this.cancelToken&&this.cancelToken.abort();const c=document.getElementById("csrf-input").value;this.loading=!0;const s=this.searchInput.value;this.spinner.style.display="block",this.cancelToken=new AbortController;try{return(await(await fetch(Craft.getActionUrl("form-builder/icons/picker"),{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json","X-CSRF-Token":c},body:JSON.stringify({search:s,set:this.set,page:this.currentPage}),signal:this.cancelToken.signal})).json()).listHtml}catch(n){return n.name!=="AbortError"&&console.error("Error loading icons:",n),""}finally{this.spinner.style.display="none",this.cancelToken=null,this.loading=!1}}updateLangAttribute(t){document.documentElement.lang.startsWith("en")||t.setAttribute("lang","en")}selectIcon(t){this.modal.style.display="none";const c=t.getAttribute("title"),s=t.getAttribute("data-iconName");this.preview.innerHTML=t.innerHTML,this.preview.setAttribute("title",c),this.preview.setAttribute("aria-label",c),this.preview.setAttribute("role","img"),this.updateLangAttribute(this.preview),this.inputName.value=s;const n=this.chooseBtn.querySelector(".label");n&&(n.textContent="Change"),this.updateFieldData("icon",s),this.updateFieldData("iconSvg",t.innerHTML),this.chooseBtn.focus(),this.removeBtn.classList.remove("hidden"),this.container.classList.contains("small")&&this.chooseBtn.classList.add("hidden")}removeIcon(){this.preview.innerHTML="",this.preview.removeAttribute("title"),this.preview.removeAttribute("aria-label"),this.inputName.value="",this.updateFieldData("icon",""),this.updateFieldData("iconSvg",null);const t=this.chooseBtn.querySelector(".label");t&&(t.textContent="Choose"),this.removeBtn.classList.add("hidden"),this.container.classList.contains("small")?(this.chooseBtn.classList.remove("hidden"),this.chooseBtn.focus()):this.chooseBtn.focus()}}class tc{constructor(t,c){E(this,"updateFieldData",(t,c,s=!0)=>{const n=this.formState.fields.find(i=>i.id===this.selectedFieldId);n&&(n[t]=c,s&&this.renderForm())});E(this,"deleteField",t=>{this.formState.fields=this.formState.fields.filter(c=>c.id!==t),this.selectedFieldId===t?(this.selectedFieldId=null,this.selectField(null)):this.renderForm()});E(this,"addField",(t,c)=>{const s=C[t];if(s){if(["recaptcha","hcaptcha","captcha"].includes(t)&&!this.checkOnlyCaptchaActive())return alert("Only one captcha field can be active at a time"),!1;let i={id:crypto.randomUUID(),type:t,...Y(s.config.defaultData)};return(s.config.defaultData.handle!==void 0||s.config.defaultData.handle!=="")&&(i.handle=this.generateUniqueHandle(s.config.defaultData.handle)),c!==null?this.formState.fields.splice(Math.max(c,0),0,i):this.formState.fields.push(i),this.selectField(i.id),!0}return!1});E(this,"moveField",(t,c)=>{if(c===null&&(c=this.formState.fields.length),c=Math.max(Math.min(c,this.formState.fields.length),0),t===c||t<0||t>=this.formState.fields.length)return;const s=this.formState.fields,[n]=s.splice(t,1);t<c&&c--,s.splice(c,0,n),this.renderForm(),this.renderSettings()});this.formContainer=document.getElementById("form-container"),this.settingsContainer=document.getElementById("settings-container"),this.formState=t,this.selectedFieldId=null,this.selectionCallback=c,this.iconPicker=new ec(this.updateFieldData)}checkEmptyState(){this.formState.fields.length===0&&(this.formContainer.innerHTML=` <div class="empty-state cfb:flex cfb:flex-col cfb:items-center cfb:justify-center cfb:h-full cfb:text-gray-500 cfb:text-center"
                  id="emptyState">
                 <span class="cfb:iconify-[mdi--add-bold] cfb:text-5xl cfb:mb-4"></span>
                 <p class="cfb:text-lg">Drag components here to build your form</p>
-            </div>`)}renderForm(){this.formContainer.innerHTML="",this.formState.fields.forEach((t,n)=>{const s=C[t.type];if(s){const c=s.validate(t)===!1,i=document.createElement("div");i.classList.add("form-field-wrapper","cfb:group","cfb:px-4","cfb:pb-4","cfb:pt-2","cfb:border","cfb:hover:border-blue-500","cfb:rounded-md","cfb:cursor-pointer"),t.id===this.selectedFieldId?i.classList.add("cfb:border-blue-500","cfb:bg-blue-50"):c?i.classList.add("cfb:border-red-500","cfb:bg-red-50"):i.classList.add("cfb:border-transparent"),i.dataset.id=t.id,i.dataset.index=n.toString();const r=W();i.innerHTML=`<div>${r}</div>
+            </div>`)}renderForm(){this.formContainer.innerHTML="",this.formState.fields.forEach((t,c)=>{const s=C[t.type];if(s){const n=s.validate(t)===!1,i=document.createElement("div");i.classList.add("form-field-wrapper","cfb:group","cfb:px-4","cfb:pb-4","cfb:pt-2","cfb:border","cfb:hover:border-blue-500","cfb:rounded-md","cfb:cursor-pointer"),t.id===this.selectedFieldId?i.classList.add("cfb:border-blue-500","cfb:bg-blue-50"):n?i.classList.add("cfb:border-red-500","cfb:bg-red-50"):i.classList.add("cfb:border-transparent"),i.dataset.id=t.id,i.dataset.index=c.toString();const r=W();i.innerHTML=`<div>${r}</div>
                                             ${s.render(t,this.formState.settings.orientation)}`,i.draggable=!0,i.querySelector(".delete-container").innerHTML=`
                     <div class="cfb:relative">
                         <button class="delete-field cfb:text-gray-400 hover:cfb:text-red-500 cfb:transition-colors" data-id="${t.id}">
@@ -549,7 +557,7 @@ var J=Object.defineProperty;var K=(e,t,n)=>t in e?J(e,t,{enumerable:!0,configura
                             Remove
                         </span>
                     </div>
-                `,this.formContainer.appendChild(i),i.addEventListener("dragstart",V),i.addEventListener("dragend",_)}}),this.checkEmptyState()}renderSettings(){const t=this.formState.fields.find(n=>n.id===this.selectedFieldId);if(t){const n=C[t.type];n&&n.renderSettings?(this.settingsContainer.innerHTML=n.renderSettings(t,this.formState),n.initSettings&&n.initSettings(this.updateFieldData,this)):this.settingsContainer.innerHTML='<div class="cfb:p-4 cfb:text-gray-500">No settings available.</div>'}else this.settingsContainer.innerHTML=` <div class="no-selection cfb:text-center cfb:text-gray-500 cfb:mt-10">
+                `,this.formContainer.appendChild(i),i.addEventListener("dragstart",V),i.addEventListener("dragend",_)}}),this.checkEmptyState()}renderSettings(){const t=this.formState.fields.find(c=>c.id===this.selectedFieldId);if(t){const c=C[t.type];c&&c.renderSettings?(this.settingsContainer.innerHTML=c.renderSettings(t,this.formState),c.initSettings&&c.initSettings(this.updateFieldData,this)):this.settingsContainer.innerHTML='<div class="cfb:p-4 cfb:text-gray-500">No settings available.</div>'}else this.settingsContainer.innerHTML=` <div class="no-selection cfb:text-center cfb:text-gray-500 cfb:mt-10">
                                                         <span class="cfb:iconify-[mdi--settings] cfb:text-5xl cfb:mb-4"></span>
                                                     <p>Select a component to edit</p>
-                                                </div>`}selectField(t){this.selectedFieldId=t,this.renderForm(),this.renderSettings(),this.selectionCallback&&this.selectionCallback(t)}setupEventListeners(){this.formContainer.addEventListener("click",t=>{const n=t.target.closest(".form-field-wrapper");n&&this.selectField(n.dataset.id);const s=t.target.closest(".delete-field");if(s){t.stopPropagation();const c=s.dataset.id;this.deleteField(c)}})}generateUniqueHandle(t){if((i=>!this.formState.fields.some(r=>r.handle===i))(t))return t;const s=this.formState.fields.map(i=>i.handle).filter(i=>i&&i.startsWith(t)).map(i=>{const r=i.match(new RegExp(`^${t}(\\d+)$`));return r?parseInt(r[1],10):0}).filter(i=>!isNaN(i)).sort((i,r)=>i-r);let c=1;for(const i of s)if(i===c)c++;else if(i>c)break;return`${t}${c}`}checkOnlyCaptchaActive(t=null){const n=["recaptcha","hcaptcha","captcha"];return this.formState.fields.filter(c=>t&&c.id===t?!1:n.includes(c.type)).length<1}}class nn{initializeSettingsModal(){const t=document.querySelectorAll(".cfb-settings-tab"),n=document.querySelectorAll(".cfb-tab-content");t.forEach(r=>{r.addEventListener("click",o=>{const l=o.currentTarget.getAttribute("data-tab");t.forEach($=>{$.classList.remove("cfb:text-blue-600","cfb:border-blue-600","cfb:bg-blue-50","cfb-settings-tab-active"),$.classList.add("cfb:text-gray-500","cfb:hover:text-gray-700","cfb:hover:bg-gray-50")}),o.currentTarget.classList.remove("cfb:text-gray-500","cfb:hover:text-gray-700","cfb:hover:bg-gray-50"),o.currentTarget.classList.add("cfb:text-blue-600","cfb:border-blue-600","cfb:bg-blue-50","cfb-settings-tab-active"),n.forEach($=>{$.classList.add("cfb:hidden")});const b=document.querySelector(`.cfb-tab-${l}`);b&&b.classList.remove("cfb:hidden")})});const s=document.querySelectorAll('input[name="settings\\[actionOnSubmit\\]"]'),c=document.querySelector(".cfb-success-message-field"),i=document.querySelector(".cfb-redirect-url-field");s.forEach(r=>{r.addEventListener("change",o=>{const l=o.target.value;l==="message"?(c.style.display="block",i.style.display="none"):l==="redirect"&&(c.style.display="none",i.style.display="block")})}),this.initializeAdminNotifTab(),this.initializeIntegrationTab()}initializeIntegrationTab(){document.querySelectorAll("[data-integration]").forEach(t=>{t.addEventListener("click",n=>{n.preventDefault();const s=t.getAttribute("data-integration");document.querySelectorAll(".integration-settings").forEach(c=>{c.classList.add("cfb:hidden")}),document.getElementById(`integration-${s}`).classList.remove("cfb:hidden"),document.querySelectorAll("[data-integration]").forEach(c=>{c.classList.remove("cfb:bg-blue-100","cfb:text-blue-700")}),t.classList.add("cfb:bg-blue-100","cfb:text-blue-700")})})}initializeAdminNotifTab(){const t=this,n=document.getElementById("form-admin-notif-enabled");n.addEventListener("click",function(s){t.adminNotifCondition(n)}),t.adminNotifCondition(n)}adminNotifCondition(t){const s=t.getAttribute("aria-checked")==="true";document.querySelectorAll(".cfb-admin-notif").forEach(i=>{s===!1?i.style.display="none":i.style.display="block"})}constructor(t,n){this.formState=t,this.onSettingsUpdated=n,this.formSettingsModal=document.getElementById("main-settings-modal"),this.formSettingsButton=document.getElementById("main-settings-btn"),this.formSettings=document.getElementById("main-settings-form"),this.closeSettingModals=document.querySelectorAll(".cfb-close-main-settings-modal"),this.init(),this.initializeSettingsModal()}init(){this.formSettingsButton.addEventListener("click",()=>this.openSettingsModal()),this.formSettings.addEventListener("submit",t=>this.updateFormSetting(t)),this.closeSettingModals.forEach(t=>t.addEventListener("click",()=>this.closeSettingsModal())),this.formSettingsModal.addEventListener("click",t=>{t.target===this.formSettingsModal&&this.closeSettingsModal()})}openSettingsModal(){this.formSettingsModal.classList.remove("cfb:hidden")}closeSettingsModal(){this.formSettingsModal.classList.add("cfb:hidden")}updateFormSetting(t){t.preventDefault();const n=new FormData(t.target),s={};if(n.forEach((c,i)=>{const r=i.match(/^integrations\[(\w+)\]\[(\w+)\]$/);if(r){const l=r[1],b=r[2];s[l]||(s[l]={}),s[l][b]=c;return}const o=i.match(/^(\w+)\[(\w+)\]$/);if(o){const l=o[1],b=o[2];this.formState[l]||(this.formState[l]={}),this.formState[l][b]=c}else this.formState[i]=c}),Object.keys(s).length>0){this.formState.integrations={};for(const[c,i]of Object.entries(s))Object.keys(i).length>0&&(this.formState.integrations[c]=i)}console.log(this.formState),this.closeSettingsModal(),this.onSettingsUpdated&&this.onSettingsUpdated()}}const w=document.getElementById("preview-modal"),I=document.getElementById("preview-btn"),cn=document.getElementById("close-modal-btn"),sn=document.getElementById("preview-iframe"),R=document.querySelectorAll(".cfb-preview-switcher"),an=document.getElementById("cfb-preview-container"),rn="cfb-preview-switcher cfb:hover:text-blue-400 cfb:text-blue-600 cfb:text-sm cfb:transition",ln="cfb-preview-switcher cfb:hover:text-blue-400 cfb:text-sm cfb:text-black cfb:transition",on=e=>{const n=document.getElementById("csrf-input").value,s={form:e};fetch(Craft.getActionUrl("form-builder/forms/preview"),{method:"POST",headers:{"Content-Type":"application/json","X-CSRF-Token":n},body:JSON.stringify(s)}).then(c=>{if(!c.ok)throw new Error("Network response was not ok");return c.text()}).then(c=>{w.classList.remove("cfb:opacity-0","cfb:pointer-events-none"),w.classList.add("cfb:opacity-100","cfb:pointer-events-auto"),sn.srcdoc=c}).catch(c=>{Craft.cp.displayError("Failed to send preview request")})},bn=e=>{I==null||I.addEventListener("click",()=>on(e)),cn.addEventListener("click",U),w.addEventListener("click",t=>{t.target===w&&U()}),R.forEach(t=>{t.addEventListener("click",n=>{R.forEach(c=>c.className=ln),t.className=rn;const s=t.dataset.device;an.className=`cfb:preview-device-frame cfb:${s}`})})},U=()=>{w.classList.remove("cfb:opacity-100","cfb:pointer-events-auto"),w.classList.add("cfb:opacity-0","cfb:pointer-events-none")},dn=e=>{const n=document.getElementById("csrf-input").value,s={form:e};return fetch(Craft.getActionUrl("form-builder/forms/save"),{method:"POST",headers:{"Content-Type":"application/json","X-CSRF-Token":n,Accept:"application/json"},body:JSON.stringify(s)}).then(c).then(i).catch(r);async function c(l){const b=await l.json();if(!l.ok)throw o(b.message||"Unknown error",b);return b}function i(l){if(l.success===!1)throw o(l.message||"Unknown error",l);location.reload()}function r(l){throw Craft.cp.displayError(l.message),l}function o(l,b){const $=new Error(l);return $.data=b,$}};document.addEventListener("DOMContentLoaded",()=>{var c,i,r,o,l,b,$,T,A,M,N,q,P,j,z,D,O;const e=document.getElementById("form-container");let t={name:((c=window.FormBuilderData)==null?void 0:c.name)||"Form",handle:((i=window.FormBuilderData)==null?void 0:i.handle)||"",id:((r=window.FormBuilderData)==null?void 0:r.id)||null,settings:{orientation:((o=window.FormBuilderData)==null?void 0:o.settings.orientation)||"vertical",icons:((l=window.FormBuilderData)==null?void 0:l.settings.icons)||"",framework:((b=window.FormBuilderData)==null?void 0:b.settings.framework)||"bootstrap",class:(($=window.FormBuilderData)==null?void 0:$.settings.class)||"",collectIp:((T=window.FormBuilderData)==null?void 0:T.settings.collectIp)||!1,actionOnSubmit:((A=window.FormBuilderData)==null?void 0:A.settings.actionOnSubmit)||"message",successMessage:((M=window.FormBuilderData)==null?void 0:M.settings.successMessage)||"Thank you for submitting the form.",redirectUrl:((N=window.FormBuilderData)==null?void 0:N.settings.redirectUrl)||""},adminNotif:{enabled:((q=window.FormBuilderData)==null?void 0:q.adminNotif.enabled)||!1,subject:((P=window.FormBuilderData)==null?void 0:P.adminNotif.subject)||"",recipients:((j=window.FormBuilderData)==null?void 0:j.adminNotif.recipients)||"",message:((z=window.FormBuilderData)==null?void 0:z.adminNotif.message)||""},fields:((D=window.FormBuilderData)==null?void 0:D.fields)||[],integrations:((O=window.FormBuilderData)==null?void 0:O.integrations)||[]};const n=new tn(t,S=>{});new nn(t,()=>{n.renderForm(),n.renderSettings()}),n.setupEventListeners(),Zt(n,t,e),n.checkEmptyState(),n.renderForm(),n.renderSettings(),bn(t),document.getElementById("save-form").addEventListener("click",()=>{dn(t).then(S=>{console.log("Form saved successfully, formState updated:",S),n.renderForm(),n.renderSettings(),s(t.settings.name)}).catch(S=>{console.error("Failed to save form:",S)})});function s(S){const H=document.querySelector("h1, .page-title");H&&S&&(H.textContent=S),document.title=S}});
+                                                </div>`}selectField(t){this.selectedFieldId=t,this.renderForm(),this.renderSettings(),this.selectionCallback&&this.selectionCallback(t)}setupEventListeners(){this.formContainer.addEventListener("click",t=>{const c=t.target.closest(".form-field-wrapper");c&&this.selectField(c.dataset.id);const s=t.target.closest(".delete-field");if(s){t.stopPropagation();const n=s.dataset.id;this.deleteField(n)}})}generateUniqueHandle(t){if((i=>!this.formState.fields.some(r=>r.handle===i))(t))return t;const s=this.formState.fields.map(i=>i.handle).filter(i=>i&&i.startsWith(t)).map(i=>{const r=i.match(new RegExp(`^${t}(\\d+)$`));return r?parseInt(r[1],10):0}).filter(i=>!isNaN(i)).sort((i,r)=>i-r);let n=1;for(const i of s)if(i===n)n++;else if(i>n)break;return`${t}${n}`}checkOnlyCaptchaActive(t=null){const c=["recaptcha","hcaptcha","captcha"];return this.formState.fields.filter(n=>t&&n.id===t?!1:c.includes(n.type)).length<1}}class cc{initializeSettingsModal(){const t=document.querySelectorAll(".cfb-settings-tab"),c=document.querySelectorAll(".cfb-tab-content");t.forEach(r=>{r.addEventListener("click",l=>{const o=l.currentTarget.getAttribute("data-tab");t.forEach($=>{$.classList.remove("cfb:text-blue-600","cfb:border-blue-600","cfb:bg-blue-50","cfb-settings-tab-active"),$.classList.add("cfb:text-gray-500","cfb:hover:text-gray-700","cfb:hover:bg-gray-50")}),l.currentTarget.classList.remove("cfb:text-gray-500","cfb:hover:text-gray-700","cfb:hover:bg-gray-50"),l.currentTarget.classList.add("cfb:text-blue-600","cfb:border-blue-600","cfb:bg-blue-50","cfb-settings-tab-active"),c.forEach($=>{$.classList.add("cfb:hidden")});const b=document.querySelector(`.cfb-tab-${o}`);b&&b.classList.remove("cfb:hidden")})});const s=document.querySelectorAll('input[name="settings\\[actionOnSubmit\\]"]'),n=document.querySelector(".cfb-success-message-field"),i=document.querySelector(".cfb-redirect-url-field");s.forEach(r=>{r.addEventListener("change",l=>{const o=l.target.value;o==="message"?(n.style.display="block",i.style.display="none"):o==="redirect"&&(n.style.display="none",i.style.display="block")})}),this.initializeAdminNotifTab(),this.initializeIntegrationTab()}initializeIntegrationTab(){document.querySelectorAll("[data-integration]").forEach(t=>{t.addEventListener("click",c=>{c.preventDefault();const s=t.getAttribute("data-integration");document.querySelectorAll(".integration-settings").forEach(n=>{n.classList.add("cfb:hidden")}),document.getElementById(`integration-${s}`).classList.remove("cfb:hidden"),document.querySelectorAll("[data-integration]").forEach(n=>{n.classList.remove("cfb:bg-blue-100","cfb:text-blue-700")}),t.classList.add("cfb:bg-blue-100","cfb:text-blue-700")})})}initializeAdminNotifTab(){const t=this,c=document.getElementById("form-admin-notif-enabled");c.addEventListener("click",function(s){t.adminNotifCondition(c)}),t.adminNotifCondition(c)}adminNotifCondition(t){const s=t.getAttribute("aria-checked")==="true";document.querySelectorAll(".cfb-admin-notif").forEach(i=>{s===!1?i.style.display="none":i.style.display="block"})}constructor(t,c){this.formState=t,this.onSettingsUpdated=c,this.formSettingsModal=document.getElementById("main-settings-modal"),this.formSettingsButton=document.getElementById("main-settings-btn"),this.formSettings=document.getElementById("main-settings-form"),this.closeSettingModals=document.querySelectorAll(".cfb-close-main-settings-modal"),this.init(),this.initializeSettingsModal()}init(){this.formSettingsButton.addEventListener("click",()=>this.openSettingsModal()),this.formSettings.addEventListener("submit",t=>this.updateFormSetting(t)),this.closeSettingModals.forEach(t=>t.addEventListener("click",()=>this.closeSettingsModal())),this.formSettingsModal.addEventListener("click",t=>{t.target===this.formSettingsModal&&this.closeSettingsModal()})}openSettingsModal(){this.formSettingsModal.classList.remove("cfb:hidden")}closeSettingsModal(){this.formSettingsModal.classList.add("cfb:hidden")}updateFormSetting(t){t.preventDefault();const c=new FormData(t.target),s={};if(c.forEach((n,i)=>{const r=i.match(/^integrations\[(\w+)\]\[(\w+)\]$/);if(r){const o=r[1],b=r[2];s[o]||(s[o]={}),s[o][b]=n;return}const l=i.match(/^(\w+)\[(\w+)\]$/);if(l){const o=l[1],b=l[2];this.formState[o]||(this.formState[o]={}),this.formState[o][b]=n}else this.formState[i]=n}),Object.keys(s).length>0){this.formState.integrations={};for(const[n,i]of Object.entries(s))Object.keys(i).length>0&&(this.formState.integrations[n]=i)}console.log(this.formState),this.closeSettingsModal(),this.onSettingsUpdated&&this.onSettingsUpdated()}}const w=document.getElementById("preview-modal"),I=document.getElementById("preview-btn"),nc=document.getElementById("close-modal-btn"),sc=document.getElementById("preview-iframe"),R=document.querySelectorAll(".cfb-preview-switcher"),ic=document.getElementById("cfb-preview-container"),ac="cfb-preview-switcher cfb:hover:text-blue-400 cfb:text-blue-600 cfb:text-sm cfb:transition",rc="cfb-preview-switcher cfb:hover:text-blue-400 cfb:text-sm cfb:text-black cfb:transition",oc=e=>{const c=document.getElementById("csrf-input").value,s={form:e};fetch(Craft.getActionUrl("form-builder/forms/preview"),{method:"POST",headers:{"Content-Type":"application/json","X-CSRF-Token":c},body:JSON.stringify(s)}).then(n=>{if(!n.ok)throw new Error("Network response was not ok");return n.text()}).then(n=>{w.classList.remove("cfb:opacity-0","cfb:pointer-events-none"),w.classList.add("cfb:opacity-100","cfb:pointer-events-auto"),sc.srcdoc=n}).catch(n=>{Craft.cp.displayError("Failed to send preview request")})},lc=e=>{I==null||I.addEventListener("click",()=>oc(e)),nc.addEventListener("click",U),w.addEventListener("click",t=>{t.target===w&&U()}),R.forEach(t=>{t.addEventListener("click",c=>{R.forEach(n=>n.className=rc),t.className=ac;const s=t.dataset.device;ic.className=`cfb:preview-device-frame cfb:${s}`})})},U=()=>{w.classList.remove("cfb:opacity-100","cfb:pointer-events-auto"),w.classList.add("cfb:opacity-0","cfb:pointer-events-none")},bc=e=>{const c=document.getElementById("csrf-input").value,s={form:e};return fetch(Craft.getActionUrl("form-builder/forms/save"),{method:"POST",headers:{"Content-Type":"application/json","X-CSRF-Token":c,Accept:"application/json"},body:JSON.stringify(s)}).then(n).then(i).catch(r);async function n(o){const b=await o.json();if(!o.ok)throw l(b.message||"Unknown error",b);return b}function i(o){if(o.success===!1)throw l(o.message||"Unknown error",o);location.reload()}function r(o){throw Craft.cp.displayError(o.message),o}function l(o,b){const $=new Error(o);return $.data=b,$}};document.addEventListener("DOMContentLoaded",()=>{var n,i,r,l,o,b,$,T,A,M,N,q,P,j,z,O,D;const e=document.getElementById("form-container");let t={name:((n=window.FormBuilderData)==null?void 0:n.name)||"Form",handle:((i=window.FormBuilderData)==null?void 0:i.handle)||"",id:((r=window.FormBuilderData)==null?void 0:r.id)||null,settings:{orientation:((l=window.FormBuilderData)==null?void 0:l.settings.orientation)||"vertical",icons:((o=window.FormBuilderData)==null?void 0:o.settings.icons)||"",framework:((b=window.FormBuilderData)==null?void 0:b.settings.framework)||"bootstrap",class:(($=window.FormBuilderData)==null?void 0:$.settings.class)||"",collectIp:((T=window.FormBuilderData)==null?void 0:T.settings.collectIp)||!1,actionOnSubmit:((A=window.FormBuilderData)==null?void 0:A.settings.actionOnSubmit)||"message",successMessage:((M=window.FormBuilderData)==null?void 0:M.settings.successMessage)||"Thank you for submitting the form.",redirectUrl:((N=window.FormBuilderData)==null?void 0:N.settings.redirectUrl)||""},adminNotif:{enabled:((q=window.FormBuilderData)==null?void 0:q.adminNotif.enabled)||!1,subject:((P=window.FormBuilderData)==null?void 0:P.adminNotif.subject)||"",recipients:((j=window.FormBuilderData)==null?void 0:j.adminNotif.recipients)||"",message:((z=window.FormBuilderData)==null?void 0:z.adminNotif.message)||""},fields:((O=window.FormBuilderData)==null?void 0:O.fields)||[],integrations:((D=window.FormBuilderData)==null?void 0:D.integrations)||[]};const c=new tc(t,S=>{});new cc(t,()=>{c.renderForm(),c.renderSettings()}),c.setupEventListeners(),Zt(c,t,e),c.checkEmptyState(),c.renderForm(),c.renderSettings(),lc(t),document.getElementById("save-form").addEventListener("click",()=>{bc(t).then(S=>{console.log("Form saved successfully, formState updated:",S),c.renderForm(),c.renderSettings(),s(t.settings.name)}).catch(S=>{console.error("Failed to save form:",S)})});function s(S){const H=document.querySelector("h1, .page-title");H&&S&&(H.textContent=S),document.title=S}});

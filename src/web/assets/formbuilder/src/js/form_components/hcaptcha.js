@@ -1,11 +1,9 @@
 import {
-    renderSettingGroup,
-    renderCommonValidationSettings,
-    initCommonValidationSettings,
     initSettingGroupButton,
-    renderFieldHeader,
-    renderElementButtonHeader,
-    settingsInputListeners, renderAdvanceSettings
+    labelHandleListener,
+    renderAdvanceSettings,
+    renderSettingGroup,
+    settingsInputListeners
 } from '../utils.js';
 
 const config = {
@@ -41,8 +39,8 @@ const renderSettings = (field) => {
 };
 
 const initSettings = (updateFieldData) => {
-    settingsInputListeners(['handle'], updateFieldData);
     initSettingGroupButton();
+    labelHandleListener(updateFieldData);
 };
 
 export default {

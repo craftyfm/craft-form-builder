@@ -1,7 +1,7 @@
 import {
     escapeHtml,
-    initSettingGroupButton, renderAdvanceSettings,
-    renderElementButtonHeader,
+    initSettingGroupButton, labelHandleListener,
+    renderAdvanceSettings,
     renderSettingGroup,
     settingsInputListeners
 } from '../utils.js';
@@ -37,8 +37,9 @@ const renderSettings = (field) => {
 };
 
 const initSettings = (updateFieldData) => {
-    settingsInputListeners(['html', 'handle'], updateFieldData);
+    settingsInputListeners(['html'], updateFieldData);
     initSettingGroupButton();
+    labelHandleListener(updateFieldData);
 };
 
 export default {

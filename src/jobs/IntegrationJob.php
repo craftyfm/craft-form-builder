@@ -2,14 +2,8 @@
 
 namespace craftyfm\formbuilder\jobs;
 
-use Craft;
 use craft\queue\BaseJob;
 use craftyfm\formbuilder\FormBuilder;
-use craftyfm\formbuilder\models\Submission;
-use craftyfm\formbuilder\services\Submissions;
-use yii\base\Model;
-use yii\queue\Queue;
-use yii\base\InvalidConfigException;
 
 class IntegrationJob extends BaseJob
 {

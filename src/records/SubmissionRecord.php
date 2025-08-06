@@ -4,7 +4,6 @@ namespace craftyfm\formbuilder\records;
 
 use craft\db\ActiveRecord;
 use craftyfm\formbuilder\helpers\Table;
-use craftyfm\formbuilder\models\submission_fields\ScalarField;
 use DateTime;
 
 /**

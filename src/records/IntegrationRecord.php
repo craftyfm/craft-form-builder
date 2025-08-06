@@ -5,7 +5,6 @@ namespace craftyfm\formbuilder\records;
 use craft\db\ActiveRecord;
 use craftyfm\formbuilder\helpers\Table;
 use DateTime;
-use yii\db\ActiveQuery;
 
 /**
  * Form record

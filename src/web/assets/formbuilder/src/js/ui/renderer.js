@@ -1,4 +1,4 @@
-import { components } from '../form_components';
+import {components} from '../form_components';
 import {deepCopy, renderElementButtonHeader} from '../utils.js';
 import {handleDragEnd, handleDragStart} from "./dragDrop";
 import {IconifyPicker} from "./components/IconPicker";
@@ -146,11 +146,13 @@ export class Renderer {
         });
     }
 
-    updateFieldData = (attr, value,) => {
+    updateFieldData = (attr, value, renderForm = true) => {
         const element = this.formState.fields.find(el => el.id === this.selectedFieldId);
         if (element) {
             element[attr] = value;
-            this.renderForm();
+            if (renderForm) {
+                this.renderForm();
+            }
         }
     }
 
@@ -259,13 +261,32 @@ export class Renderer {
         return false;
     }
 
-     moveField = (from, to) => {
+    moveField = (from, to) => {
         if (to === null) {
             to = this.formState.fields.length;
         }
-        to = Math.max(to-1, 0);
-        [this.formState.fields[from], this.formState.fields[to]] = [this.formState.fields[to], this.formState.fields[from]];
+
+        // Clamp the `to` value
+        to = Math.max(Math.min(to, this.formState.fields.length), 0);
+
+        if (from === to || from < 0 || from >= this.formState.fields.length) {
+            return; // no need to move
+        }
+
+        const fields = this.formState.fields;
+
+        // Remove the item from the `from` index
+        const [movedItem] = fields.splice(from, 1);
+
+        // Insert it at the `to` index (adjust if needed after removal)
+        if (from < to) {
+            to--; // array is now one shorter
+        }
+
+        fields.splice(to, 0, movedItem);
+
         this.renderForm();
         this.renderSettings();
-    }
+    };
+
 }

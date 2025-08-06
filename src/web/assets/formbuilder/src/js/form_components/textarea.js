@@ -1,13 +1,14 @@
 import {
-    renderSettingGroup,
+    initCommonValidationSettings,
+    initSettingGroupButton,
+    labelHandleListener,
+    renderAdvanceSettings,
     renderCommonPropertySettings,
     renderCommonValidationSettings,
-    initCommonValidationSettings,
+    renderDescription,
     renderFieldHeader,
-    settingsInputListeners,
-    settingInputOptionsListeners,
-    initSettingGroupButton,
-    renderAdvanceSettings, renderDescription, autoGenerateHandleFromLabel
+    renderSettingGroup,
+    settingsInputListeners
 } from '../utils.js';
 
 const config = {
@@ -68,13 +69,13 @@ const renderSettings = (field) => {
 };
 
 const initSettings = (updateFieldData,) => {
-    settingsInputListeners(['label', 'handle', 'desc', 'placeholder'], updateFieldData);
+    settingsInputListeners(['desc', 'placeholder'], updateFieldData);
     document.getElementById('setting-rows')?.addEventListener('input', (e) => updateFieldData('rows', parseInt(e.target.value, 10)));
     initCommonValidationSettings(updateFieldData);
     document.getElementById('setting-minlength')?.addEventListener('input', (e) => updateFieldData('minlength', parseInt(e.target.value, 10)));
     document.getElementById('setting-maxlength')?.addEventListener('input', (e) => updateFieldData('maxlength', parseInt(e.target.value, 10)));
     initSettingGroupButton();
-    autoGenerateHandleFromLabel(updateFieldData);
+    labelHandleListener(updateFieldData);
 };
 
 export default {

@@ -2,7 +2,6 @@
 
 namespace craftyfm\formbuilder\models\form_fields;
 
-use craft\base\Model;
 use craft\helpers\App;
 use craftyfm\formbuilder\FormBuilder;
 use craftyfm\formbuilder\integrations\captcha\BaseCaptcha as BaseCaptchaIntegration;

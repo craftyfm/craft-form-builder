@@ -1,9 +1,4 @@
-import {
-    initSettingGroupButton,
-    renderAdvanceSettings,
-    renderElementButtonHeader,
-    renderSettingGroup
-} from '../utils.js';
+import {initSettingGroupButton, labelHandleListener, renderAdvanceSettings, renderSettingGroup} from '../utils.js';
 
 const config = {
     defaultData: {
@@ -56,11 +51,11 @@ const renderSettings = (field) => {
 };
 
 const initSettings = (updateFieldData) => {
-    document.getElementById('setting-handle')?.addEventListener('input', (e) => updateFieldData('handle', e.target.value));
     document.getElementById('setting-text')?.addEventListener('input', (e) => updateFieldData('text', e.target.value));
     document.getElementById('setting-level')?.addEventListener('change', (e) => updateFieldData('level', e.target.value));
     document.getElementById('setting-alignment')?.addEventListener('change', (e) => updateFieldData('alignment', e.target.value));
     initSettingGroupButton();
+    labelHandleListener(updateFieldData);
 };
 
 export default {

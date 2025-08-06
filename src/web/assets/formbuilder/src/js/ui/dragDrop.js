@@ -41,13 +41,13 @@ export const initDragDrop = (renderer, formState, formContainer) => {
             return;
         }
 
-        const scrollMargin = 100; // px
+        const scrollMargin = 200; // px
         const scrollSpeed = 20;
 
         if (e.clientY < scrollMargin) {
-            window.scrollBy(0, -scrollSpeed);
+            formContainer.scrollBy(0, -scrollSpeed);
         } else if (e.clientY > window.innerHeight - scrollMargin) {
-            window.scrollBy(0, scrollSpeed);
+            formContainer.scrollBy(0, scrollSpeed);
         }
 
         const afterElement = getDragAfterField(formContainer, e.clientY);

@@ -2,8 +2,6 @@
 
 namespace craftyfm\formbuilder\web\assets\formbuilder;
 use craft\web\AssetBundle;
-use craft\web\assets\cp\CpAsset;
-use craft\web\View;
 use yii\web\View as ViewAlias;
 
 class FormBuilderAsset extends AssetBundle
