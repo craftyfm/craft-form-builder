@@ -1,5 +1,6 @@
 {
   "name": "craftyfm/form-builder",
+  "description": "Form Builder",
   "type": "craft-plugin",
   "license": "proprietary",
   "require": {
@@ -17,7 +18,7 @@
   },
   "extra": {
     "handle": "form-builder",
-    "name": "form-builder",
+    "name": "Form Builder",
     "developer": "Craftyfm",
     "documentationUrl": "",
     "class": "craftyfm\\formbuilder\\FormBuilder"

@@ -1,4 +1,6 @@
-@import "tailwindcss";
+@import "tailwindcss/utilities.css";
+@import "tailwindcss/theme.css";
+@import "tailwindcss/preflight.css";
 @source "../../../../../../templates/_render/tailwind";
 @source inline("left", "end", "center", "justify");
 
