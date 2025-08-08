@@ -178,10 +178,10 @@ class Forms extends Component
      * @throws LoaderError
      * @throws \Exception
      */
-    public function renderFormByHandle($formHandle, $loadAsset = false): Markup
+    public function renderFormByHandle($formHandle): Markup
     {
         $form = $this->getFormByHandle($formHandle);
-        return $this->renderForm($form, $loadAsset);
+        return $this->renderForm($form);
     }
 
     /**
@@ -190,13 +190,13 @@ class Forms extends Component
      * @throws RuntimeError
      * @throws LoaderError
      */
-    public function renderForm(Form $form, $loadAsset = false): Markup
+    public function renderForm(Form $form): Markup
     {
         $routeParams = Craft::$app->getUrlManager()->getRouteParams();
         $submission = $routeParams['submission'] ?? new Submission($form);
         $view = Craft::$app->getView();
         return Template::raw($view->renderTemplate('form-builder/_render/index',
-            compact('form', 'submission', 'loadAsset'),
+            compact('form', 'submission'),
             View::TEMPLATE_MODE_CP));
     }
 

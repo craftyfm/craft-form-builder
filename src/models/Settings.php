@@ -11,6 +11,8 @@ use craft\models\Volume;
  */
 class Settings extends Model
 {
+    public const FRAMEWORK_BOOTSTRAP = 'bootstrap';
+    public const FRAMEWORK_TAILWIND = 'tailwind';
     /**
      * @var int|null The volume ID for file uploads
      */
@@ -40,6 +42,9 @@ class Settings extends Model
      * @var array Captcha configurations
      */
     public array $captchas = [];
+
+    public array $frameworks = [self::FRAMEWORK_BOOTSTRAP, self::FRAMEWORK_TAILWIND];
+
 
     /**
      * @inheritdoc
@@ -79,6 +84,7 @@ class Settings extends Model
     public function rules(): array
     {
         return [
+            [['frameworks'], 'required'],
             [['uploadVolumeId'], 'integer'],
             [['enableRateLimit'], 'boolean'],
             [['maxAttemptsPerIp', 'rateLimitTimeWindow'], 'integer', 'min' => 1],
@@ -102,6 +108,33 @@ class Settings extends Model
         ];
     }
 
+    private static array $map = [
+        self::FRAMEWORK_BOOTSTRAP => 'Bootstrap',
+        self::FRAMEWORK_TAILWIND => 'Tailwind',
+    ];
+    public function getAllowedFrameworkOptions(): array
+    {
+        $options = [];
+        foreach ($this->frameworks as $framework) {
+            $options[] = [
+                'value' => $framework,
+                'label' => self::$map[$framework],
+            ];
+        }
+        return $options;
+    }
+
+    public function getAvailableFrameworkOptions(): array
+    {
+        $options = [];
+        foreach (self::$map as $value => $label) {
+            $options[] = [
+                'value' => $value,
+                'label' => $label,
+            ];
+        }
+        return $options;
+    }
     /**
      * Get the upload volume
      */

@@ -1,4 +1,4 @@
-{% if loadAsset %}
+{% if loadAsset|default(false) or form.settings.outputFrameworkAssets%}
     {% do view.registerAssetBundle('craftyfm\\formbuilder\\web\\assets\\bootstrap\\BootstrapAsset') -%}
     {#{% do craft.app.view.registerJsFile('https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js') %}#}
 {% endif %}

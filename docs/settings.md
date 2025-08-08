@@ -20,6 +20,17 @@ To enable file upload fields in your forms:
 
 ---
 
+## 🗂 Frameworks
+
+Configure one or more frameworks to use.
+
+1. Go to **Settings → General**.
+2. Under **Frameworks**,
+3. Save the settings.
+
+> Currently only support bootstrap and tailwind.
+---
+
 ## 🛡️ Rate Limiting
 
 Prevent users from submitting forms too frequently:

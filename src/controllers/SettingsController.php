@@ -45,7 +45,7 @@ class SettingsController extends Controller
         if (!$settings->validate()) {
             Craft::$app->getSession()->setError("Couldn't save settings.");
 
-            return $this->renderTemplate('form-builder/settings/index', [
+            return $this->renderTemplate('form-builder/settings/general', [
                 'settings' => $settings,
                 'volumes' => Craft::$app->getVolumes()->getAllVolumes(),
             ]);

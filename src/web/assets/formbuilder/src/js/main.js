@@ -15,16 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
         name: window.FormBuilderData?.name || 'Form',
         handle: window.FormBuilderData?.handle || '',
         id: window.FormBuilderData?.id || null,
-        settings: {
-            orientation: window.FormBuilderData?.settings.orientation || 'vertical',
-            icons: window.FormBuilderData?.settings.icons || '',
-            framework: window.FormBuilderData?.settings.framework || 'bootstrap',
-            class: window.FormBuilderData?.settings.class || '',
-            collectIp: window.FormBuilderData?.settings.collectIp || false,
-            actionOnSubmit: window.FormBuilderData?.settings.actionOnSubmit || 'message',
-            successMessage: window.FormBuilderData?.settings.successMessage || 'Thank you for submitting the form.',
-            redirectUrl: window.FormBuilderData?.settings.redirectUrl || '',
-        },
+        settings: window.FormBuilderData?.settings,
         adminNotif: {
             enabled: window.FormBuilderData?.adminNotif.enabled || false,
             subject: window.FormBuilderData?.adminNotif.subject || '',

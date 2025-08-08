@@ -1,4 +1,4 @@
-{% if loadAsset %}
+{% if preview|default(false) or form.settings.outputFrameworkAssets %}
     {% do view.registerAssetBundle('craftyfm\\formbuilder\\web\\assets\\tailwind\\TailwindAsset') -%}
 {% endif %}
 {% set orientation = form.settings.orientation %}
