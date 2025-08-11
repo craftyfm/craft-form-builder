@@ -16,6 +16,7 @@ use craftyfm\formbuilder\FormBuilder;
 use craftyfm\formbuilder\helpers\Table;
 use craftyfm\formbuilder\integrations\base\BaseIntegration;
 use craftyfm\formbuilder\integrations\base\IntegrationInterface;
+use craftyfm\formbuilder\integrations\emailmarketing\ConstantContact;
 use craftyfm\formbuilder\integrations\webhooks\GenericWebhook;
 use craftyfm\formbuilder\records\IntegrationRecord;
 use Exception;
@@ -31,9 +32,15 @@ class Integrations extends Component
     public function getAllIntegrationTypes(): array
     {
         $integrationTypes = [];
+
+        $integrationTypes[BaseIntegration::TYPE_EMAIL_MARKETING] = [
+            ConstantContact::class,
+        ];
+
         $integrationTypes[BaseIntegration::TYPE_WEBHOOK] = [
             GenericWebhook::class,
         ];
+
         $integrationTypes[BaseIntegration::TYPE_MISC] = [
 
         ];
@@ -155,6 +162,19 @@ class Integrations extends Component
     public function getIntegrationById(int $id): ?IntegrationInterface
     {
         $record = IntegrationRecord::findOne(['id' => $id]);
+        if (!$record) {
+            return null;
+        }
+        return $this->constructIntegration($record->toArray());
+    }
+
+    /**
+     * @throws InvalidConfigException
+     * @throws MissingComponentException
+     */
+    public function getIntegrationByUid(string $uid): ?IntegrationInterface
+    {
+        $record = IntegrationRecord::findOne(['uid' => $uid]);
         if (!$record) {
             return null;
         }

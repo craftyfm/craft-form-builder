@@ -12,6 +12,7 @@ use Throwable;
 
 abstract class BaseIntegration extends SavableComponent implements IntegrationInterface
 {
+    public const TYPE_EMAIL_MARKETING = 'emailMarketing';
     public const TYPE_WEBHOOK = 'webhook';
     public const TYPE_MISC = 'miscellaneous';
 
@@ -98,8 +99,17 @@ abstract class BaseIntegration extends SavableComponent implements IntegrationIn
         } elseif ($this->getScenario() === self::SCENARIO_FORM_SETTINGS) {
             $rules = array_merge($rules,$this->defineFormSettingRules());
         }
-
         return $rules;
+    }
+
+    public function supportOauthConnection(): bool
+    {
+        return false;
+    }
+
+    public function supportAuthorize(): bool
+    {
+        return false;
     }
 
     protected function defineSettingRules(): array

@@ -194,7 +194,7 @@ class FormBuilder extends Plugin
                     $event->rules['form-builder/settings/integrations/<id:\d+>'] = 'form-builder/integration-settings/edit';
                 }
 
-
+                $event->rules['form-builder/integration/oauth-callback'] = 'form-builder/integration/oauth-callback';;
 
             }
         );

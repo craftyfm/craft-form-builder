@@ -2,12 +2,16 @@
 
 namespace craftyfm\formbuilder\controllers;
 
+use Craft;
 use craft\errors\MissingComponentException;
+use craft\errors\SiteNotFoundException;
+use craft\helpers\App;
 use craft\helpers\UrlHelper;
 use craft\web\Controller;
 use craftyfm\formbuilder\FormBuilder;
 use craftyfm\formbuilder\integrations\base\BaseIntegration;
 use craftyfm\formbuilder\integrations\base\IntegrationInterface;
+use craftyfm\formbuilder\integrations\emailmarketing\ConstantContact;
 use yii\base\InvalidConfigException;
 use yii\web\BadRequestHttpException;
 use yii\web\MethodNotAllowedHttpException;
@@ -171,6 +175,41 @@ class IntegrationSettingsController extends Controller
 
     }
 
+    /**
+     * @throws SiteNotFoundException
+     * @throws InvalidConfigException
+     * @throws MissingComponentException
+     * @throws BadRequestHttpException
+     */
+    public function actionAuthorize()
+    {
+        $integrationId = $this->request->getRequiredParam('id');
+
+        /** @var ConstantContact $integration */
+        $integration = FormBuilder::getInstance()->integrations->getIntegrationById($integrationId);
+
+        if (!$integration) {
+            throw new BadRequestHttpException('Integration not found');
+        }
+
+        if (!$integration->supportOauthConnection()) {
+            throw new BadRequestHttpException('Integration does not support OAuth');
+        }
+
+
+        $clientId = App::parseEnv( $integration->clientId);
+        $redirectUri = $integration->getCallbackUri();
+
+        $authUrl = $integration->getAuthorizationUrl() .'?'. http_build_query([
+                'client_id' => $clientId,
+                'redirect_uri' => $redirectUri,
+                'response_type' => 'code',
+                'scope' => 'contact_data offline_access',
+                'state' => $integration->uid
+            ]);
+
+        return $this->redirect($authUrl);
+    }
 }
 
 
