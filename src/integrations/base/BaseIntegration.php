@@ -5,10 +5,12 @@ namespace craftyfm\formbuilder\integrations\base;
 use Craft;
 use craft\base\SavableComponent;
 use craft\helpers\UrlHelper;
+use craftyfm\formbuilder\FormBuilder;
 use craftyfm\formbuilder\models\IntegrationResult;
 use craftyfm\formbuilder\models\Submission;
 use craftyfm\formbuilder\records\IntegrationRecord;
 use Throwable;
+use yii\db\Exception;
 
 abstract class BaseIntegration extends SavableComponent implements IntegrationInterface
 {
@@ -252,5 +254,13 @@ abstract class BaseIntegration extends SavableComponent implements IntegrationIn
     protected function performConnectionTest(): bool
     {
         return true;
+    }
+
+    /**
+     * @throws Exception
+     */
+    protected function saveMetadata(): void
+    {
+        FormBuilder::getInstance()->integrations->updateMetadata($this->id, $this->metadata);
     }
 }

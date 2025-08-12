@@ -207,16 +207,7 @@ trait Oauth2Trait
         return true;
     }
 
-    /**
-     * Create a reusable Guzzle client
-     */
-    protected function getHttpClient(): Client
-    {
-        return new Client([
-            'timeout' => 10,
-            'http_errors' => false,
-        ]);
-    }
+
 
     /**
      * Send an HTTP request with OAuth2 Bearer token handling.
@@ -230,21 +221,20 @@ trait Oauth2Trait
      * @throws GuzzleException
      */
     protected function sendOAuth2Request(
-        string $method,
-        string $url,
+        string $path,
+        string $method = 'GET',
         array  $payload = [],
         array  $headers = []
     ): ResponseInterface
     {
-        $client = $this->getHttpClient();
-
+        $client = $this->getApiClient();
         // First attempt
-        $response = $this->performOAuth2Request($client, $method, $url, $payload, $headers);
+        $response = $this->performOAuth2Request($client, $method, $path, $payload, $headers);
 
         // If unauthorized, try refreshing token and retry
         if ($response->getStatusCode() === 401) {
             $this->refreshAccessToken();
-            $response = $this->performOAuth2Request($client, $method, $url, $payload, $headers);
+            $response = $this->performOAuth2Request($client, $method, $path, $payload, $headers);
         }
 
         return $response;
@@ -256,14 +246,14 @@ trait Oauth2Trait
     private function performOAuth2Request(
         Client $client,
         string $method,
-        string $url,
+        string $path,
         array  $payload,
         array  $headers
     ): ResponseInterface
     {
         $options = [
             'headers' => array_merge([
-                'Authorization' => 'Bearer ' . $this->getAccessToken(),
+                'Authorization' => 'Bearer ' . $this->getToken()->accessToken,
                 'Accept' => 'application/json',
             ], $headers),
         ];
@@ -276,7 +266,26 @@ trait Oauth2Trait
             }
         }
 
-        return $client->request($method, $url, $options);
+        return $client->request($method, $path, $options);
     }
 
+    protected function getApiClient(): Client
+    {
+        return new Client([
+            'base_uri' => $this->getBaseApiUrl(),
+            'timeout' => 30,
+            'http_errors' => false,
+        ]);
+    }
+
+    /**
+     * Create a reusable Guzzle client
+     */
+    protected function getHttpClient(): Client
+    {
+        return new Client([
+            'timeout' => 10,
+            'http_errors' => false,
+        ]);
+    }
 }

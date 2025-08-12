@@ -8,11 +8,13 @@ use craft\web\Controller;
 use craft\web\Response;
 use craftyfm\formbuilder\FormBuilder;
 use craftyfm\formbuilder\integrations\base\BaseIntegration;
+use craftyfm\formbuilder\integrations\emailmarketing\BaseEmailMarketing;
 use craftyfm\formbuilder\models\oauth\Oauth2Trait;
 use GuzzleHttp\Exception\GuzzleException;
 use yii\base\Exception;
 use yii\base\InvalidConfigException;
 use yii\web\BadRequestHttpException;
+use yii\web\NotFoundHttpException;
 
 class IntegrationController extends Controller
 {
@@ -69,11 +71,32 @@ class IntegrationController extends Controller
 
     /**
      * @throws BadRequestHttpException
+     * @throws NotFoundHttpException
      */
-    public function actionGetLists()
+    public function actionGetLists(): \yii\web\Response
     {
         $this->requireAcceptsJson();
         $integrationId =  $this->request->getRequiredParam('integrationId');
+        $integration = FormBuilder::getInstance()->integrations->getIntegrationById($integrationId);
+
+        if (!$integration || !$integration->enabled) {
+            return $this->asFailure("Integration not found");
+        }
+
+        if (!($integration instanceof BaseEmailMarketing)) {
+            return $this->asFailure("Integration not found");
+        }
+
+        try {
+            $lists = $integration->getLists(true);
+        } catch (\Exception $e) {
+            return $this->asFailure($e->getMessage());
+
+        }
+
+        return $this->asJson([
+            'lists' => $lists
+        ]);
 
     }
 }

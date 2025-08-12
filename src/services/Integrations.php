@@ -169,17 +169,18 @@ class Integrations extends Component
         return $this->constructIntegration($record->toArray());
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws MissingComponentException
-     */
     public function getIntegrationById(int $id): ?IntegrationInterface
     {
         $record = IntegrationRecord::findOne(['id' => $id]);
         if (!$record) {
             return null;
         }
-        return $this->constructIntegration($record->toArray());
+        try {
+            return $this->constructIntegration($record->toArray());
+        } catch (Exception $e) {
+            FormBuilder::log($e->getMessage(), 'error');
+            return null;
+        }
     }
 
     /**
@@ -260,6 +261,13 @@ class Integrations extends Component
         ];
     }
 
+    /**
+     * @throws \yii\db\Exception
+     */
+    public function updateMetadata(int $integrationId, array $data ): void
+    {
+        Db::update(Table::INTEGRATIONS, ['metadata' => $data], ['id' => $integrationId]);
+    }
 
 
 }

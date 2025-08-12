@@ -4,12 +4,17 @@ namespace craftyfm\formbuilder\integrations\emailmarketing;
 
 use Craft;
 use craft\helpers\UrlHelper;
+use craftyfm\formbuilder\FormBuilder;
 use craftyfm\formbuilder\models\IntegrationResult;
 use craftyfm\formbuilder\models\oauth\Oauth2Trait;
+use craftyfm\formbuilder\models\ProviderField;
+use craftyfm\formbuilder\models\ProviderList;
 use craftyfm\formbuilder\models\Submission;
+use GuzzleHttp\Exception\GuzzleException;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
+use verbb\formie\models\IntegrationField;
 use yii\base\Exception;
 
 class ConstantContact extends BaseEmailMarketing
@@ -39,7 +44,7 @@ class ConstantContact extends BaseEmailMarketing
 
     public function getBaseApiUrl(): string
     {
-        return 'https://api.cc.email/' . self::$version;
+        return 'https://api.cc.email/' . self::$version . '/';
     }
 
     public function getBaseAuthUrl(): string
@@ -110,5 +115,67 @@ class ConstantContact extends BaseEmailMarketing
     public function getProviderHandle(): string
     {
         return  'constantContact';
+    }
+
+    public function fetchFields(): array
+    {
+        try {
+            $response = $this->sendOAuth2Request('contact_custom_fields', 'GET');
+            $body = json_decode($response->getBody()->getContents(), true);
+            $fields = [
+                new ProviderField(['handle' => 'email', 'label' => Craft::t('form-builder', 'Email'), 'required' => true]),
+                new ProviderField(['handle' => 'first_name', 'label' => Craft::t('form-builder', 'First Name')]),
+                new ProviderField(['handle' => 'last_name', 'label' => Craft::t('form-builder', 'Last Name')]),
+                new ProviderField(['handle' => 'job_title', 'label' => Craft::t('form-builder', 'Job Title')]),
+                new ProviderField(['handle' => 'company_name', 'label' => Craft::t('form-builder', 'Company Name')]),
+                new ProviderField(['handle' => 'phone_number', 'label' => Craft::t('form-builder', 'Phone Number')]),
+                new ProviderField(['handle' => 'anniversary', 'label' => Craft::t('form-builder', 'Anniversary')]),
+            ];
+
+            if (!isset($body['custom_fields'])) {
+                return $fields;
+            }
+
+            foreach ($body['custom_fields'] as $field) {
+                $fields[] = new ProviderField(['handle' => $field['custom_field_id'], 'label' => $field['label'], 'type' => $field['type']]);
+            }
+
+            return $fields;
+        } catch (\Exception|GuzzleException $e) {
+            FormBuilder::log($e->getMessage(), 'debug');
+            throw new Exception($e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
+
+    /**
+     * @throws Exception
+     * @return ProviderList[]
+     */
+    public function fetchLists(): array
+    {
+        try {
+            $response = $this->sendOAuth2Request(
+                'contact_lists',
+                'GET',
+                ['status' => 'active']
+            );
+            $body = json_decode($response->getBody()->getContents(), true);
+            $jsonLists = $body['lists'] ?? [];
+            $fields = $this->fetchFields();
+            $lists = [];
+            foreach ($jsonLists as $list) {
+                $lists[] = new ProviderList([
+                    'id' => $list['list_id'],
+                    'name' => $list['name'],
+                    'fields' => $fields,
+                ]);
+            }
+
+            return $lists;
+        } catch (\Exception|GuzzleException $e) {
+            FormBuilder::log($e->getMessage(), 'debug');
+            throw new Exception($e->getMessage(), $e->getCode(), $e);
+        }
     }
 }
