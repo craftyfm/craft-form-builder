@@ -4,6 +4,8 @@ namespace craftyfm\formbuilder\models\oauth;
 
 use Craft;
 use craft\helpers\App;
+use craft\helpers\DateTimeHelper;
+use craft\helpers\Db;
 use craft\helpers\UrlHelper;
 use craftyfm\formbuilder\FormBuilder;
 use GuzzleHttp\Client;
@@ -23,6 +25,7 @@ trait Oauth2Trait
     abstract public function getBaseAuthUrl(): string;
     abstract public function getBaseTokenUrl(): string;
 
+    abstract public function getProviderHandle(): string;
     public function getRedirectUri(): string
     {
         return UrlHelper::cpUrl('form-builder/integration/oauth-callback');
@@ -85,7 +88,7 @@ trait Oauth2Trait
      * @throws GuzzleException
      * @throws Exception
      */
-    public function fetchAccessToken(string $code): ?array
+    public function fetchAccessToken(string $code): bool
     {
         $client = $this->getHttpClient();
 
@@ -102,7 +105,10 @@ trait Oauth2Trait
 
             $data = json_decode($response->getBody()->getContents(), true);
 
-            return $this->storeTokenData($data);
+            if (isset($data['error'])) {
+                throw new Exception($data['error']);
+            }
+            return $this->storeToken($data);
         } catch (RequestException|Exception $e) {
             FormBuilder::log($e->getMessage(), 'error');
             throw $e;
@@ -145,24 +151,26 @@ trait Oauth2Trait
     /**
      * @throws Exception
      */
-    protected function storeTokenData(array $data): array
+    public function storeToken(array $data): bool
     {
-        if (!$this->id) {
+        if ($this->id == null) {
             throw new Exception("Integration need to be saved before authorized!");
         }
+        $expiresIn = isset($data['expires_in']) ? (int)$data['expires_in'] : 3600;
 
-        $token = FormBuilder::getInstance()->oauthToken->getOauthTokenForIntegration($this->id);
+        $token = new Token([
+            'accessToken'   => $data['access_token'] ?? '',
+            'refreshToken'  => $data['refresh_token'] ?? null,
+            'tokenType'     => $data['token_type'] ?? 'Bearer',
+            'dateExpired'   => date('Y-m-d H:i:s', time() + $expiresIn - 60), // if DB is DATETIME
+            'reference'     => $this->uid,
+            'provider'      => $this->getProviderHandle(), // short handle instead of full class name
+            'integrationId' => $this->id,
+            'scopes'        => $data['scope'] ?? '',
+        ]);
 
-        $this->tokenData = [
-            'access_token'  => $data['access_token'] ?? null,
-            'refresh_token' => $data['refresh_token'] ?? $this->tokenData['refresh_token'] ?? null,
-            'expires_at'    => time() + $expiresIn - 60, // refresh 1 min before expiry
-        ];
 
-        // Optional: save to DB here if needed
-        // $this->saveTokenToDatabase($this->tokenData);
-
-        return $this->tokenData;
+        return FormBuilder::getInstance()->oauthToken->saveOauthToken($token);
     }
 
     /**

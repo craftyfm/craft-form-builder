@@ -106,4 +106,9 @@ class ConstantContact extends BaseEmailMarketing
 
         return new IntegrationResult();
     }
+
+    public function getProviderHandle(): string
+    {
+        return  'constantContact';
+    }
 }

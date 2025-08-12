@@ -3,6 +3,7 @@
 namespace craftyfm\formbuilder\services;
 
 use craft\base\Component;
+use craft\helpers\Db;
 use craftyfm\formbuilder\models\oauth\Token;
 use craftyfm\formbuilder\records\IntegrationTokenRecord;
 use GuzzleHttp\Exception\RequestException;
@@ -30,16 +31,21 @@ class OauthToken extends Component
             return false;
         }
 
-        if ($token->id === null) {
-            $record = new IntegrationTokenRecord();
-        } else {
-            $record = IntegrationTokenRecord::findOne(['id' => $token->id]);
-            if (!$record) {
-                throw new Exception('Invalid Oauth Token ID: ' . $token->id);
-            }
-        }
+        $record = IntegrationTokenRecord::findOne([
+           'integrationId' => $token->integrationId
+        ]);
 
-        $record->setAttributes($token->toArray());
+        if (!$record) {
+            $record = new IntegrationTokenRecord();
+        }
+        $record->provider = $token->provider;
+        $record->reference = $token->reference;
+        $record->tokenType = $token->tokenType;
+        $record->accessToken = $token->accessToken;
+        $record->refreshToken = $token->refreshToken;
+        $record->dateExpired = Db::prepareDateForDb($token->dateExpired);
+        $record->scopes = $token->scopes;
+        $record->integrationId = $token->integrationId;
         return $record->save();
     }
 

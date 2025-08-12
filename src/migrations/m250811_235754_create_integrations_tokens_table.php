@@ -19,11 +19,12 @@ class m250811_235754_create_integrations_tokens_table extends Migration
         if (!$this->db->tableExists(Table::INTEGRATION_OAUTH_TOKEN)) {
             $this->createTable(Table::INTEGRATION_OAUTH_TOKEN, [
                 'id' => $this->primaryKey(),
-                'provider' => $this->string(50)->notNull(),
+                'provider' => $this->string()->null(),
                 'reference' => $this->string(100)->null(),
+                'tokenType' => $this->string(100)->null(),
                 'accessToken' => $this->text()->notNull(),
                 'refreshToken' => $this->text()->null(),
-                'expiresAt' => $this->dateTime()->null(),
+                'dateExpired' => $this->dateTime()->null(),
                 'scopes' => $this->text()->null(),
                 'integrationId' => $this->integer()->null(),
                 'dateCreated' => $this->dateTime()->notNull(),

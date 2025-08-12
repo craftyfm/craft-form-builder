@@ -12,8 +12,9 @@ use DateTime;
  * @property string $provider
  * @property string|null $reference
  * @property string $accessToken
+ * @property string $tokenType
  * @property string|null $refreshToken
- * @property DateTime|null $expiresAt
+ * @property DateTime|null $dateExpired
  * @property string|null $scopes
  * @property int|null $integrationId
  * @property DateTime $createdAt

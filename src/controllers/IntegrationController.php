@@ -10,6 +10,7 @@ use craftyfm\formbuilder\FormBuilder;
 use craftyfm\formbuilder\integrations\base\BaseIntegration;
 use craftyfm\formbuilder\models\oauth\Oauth2Trait;
 use GuzzleHttp\Exception\GuzzleException;
+use yii\base\Exception;
 use yii\base\InvalidConfigException;
 
 class IntegrationController extends Controller
@@ -20,6 +21,7 @@ class IntegrationController extends Controller
      * @throws GuzzleException
      * @throws InvalidConfigException
      * @throws MissingComponentException
+     * @throws Exception
      */
     public function actionOauthCallback(): ?\yii\web\Response
     {
