@@ -100,13 +100,12 @@ class FormsController extends Controller
             ]);
         }
         try {
-            $form = FormBuilder::getInstance()->forms->constructForms($rawData);
+            $form = FormBuilder::getInstance()->forms->constructFormsFromJson($rawData);
             if($form->uid == null) {
                 $form->authorId = $user->id;
             }
             FormBuilder::getInstance()->forms->saveForm($form);
         } catch (\Exception|Error $error) {
-
             FormBuilder::log($error, 'error');
             return $this->asFailure("Internal server error ",[
                 'success' => false,
@@ -160,7 +159,7 @@ class FormsController extends Controller
 
         $rawData = $request->getBodyParam('form');
 
-        $form = FormBuilder::getInstance()->forms->constructForms($rawData);
+        $form = FormBuilder::getInstance()->forms->constructFormsFromJson($rawData);
         $submission = new Submission($form);
         $form->uid = $formJson['uid'] ?? StringHelper::UUID();
         $this->view->on(View::EVENT_BEFORE_RENDER_TEMPLATE, function ($e) {

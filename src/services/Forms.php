@@ -113,7 +113,14 @@ class Forms extends Component
             $record->authorId = $data->authorId;
             $record->fields = $data->getFieldsAsArray();
             $record->settings = $data->settings->toArray();
-            $record->integrations = $data->getIntegrationsAsArray();
+
+            foreach ($data->integrations as $integration) {
+                $res = FormBuilder::getInstance()->formIntegrations->saveFormIntegration($data->id, $integration, false);
+                if(!$res) {
+                    throw new Exception("Failed to save integration {$integration->id}");
+                }
+            }
+
             if (!$record->validate()) {
                 Craft::error('Failed to save form: ' . json_encode($record->getErrors()), __METHOD__);
                 return null;
@@ -130,6 +137,7 @@ class Forms extends Component
             $transaction->commit();
         }catch (Throwable $e) {
             $transaction->rollBack();
+            FormBuilder::log($e->getMessage(), 'error');
             throw $e;
         }
         return $data;
@@ -204,7 +212,7 @@ class Forms extends Component
      * construct form model from using json data.
      * @throws \Exception
      */
-    public function constructForms(array $formJson): Form
+    public function constructFormsFromJson(array $formJson): Form
     {
 
         if (!empty($formJson['id'])) {
@@ -223,8 +231,8 @@ class Forms extends Component
             $form->setFields($this->_constructFormFields($formJson['fields'], $form));
         }
 
-        if(isset($formJson['integrations'])) {
-            $form->integrations = $this->_constructFormIntegrations($formJson['integrations']);
+        if (isset($formJson['integrations'])) {
+            $form->integrations = $this->_constructFormIntegrationsFromData($formJson['integrations']);
         }
 
         return $form;
@@ -318,11 +326,15 @@ class Forms extends Component
         $model->uid = $record->uid;
         $model->name = $record->name;
         $model->setFields($this->_constructFormFields($record['fields'] ?? [], $model, false));
-        $model->integrations = $this->_constructFormIntegrations($record['integrations'] ?? []);
+        $model->integrations = FormBuilder::getInstance()->formIntegrations->getIntegrationsForForm($record->id);
         return $model;
     }
 
-    private function _constructFormIntegrations(array $data): array
+    /**
+     * @throws MissingComponentException
+     * @throws InvalidConfigException
+     */
+    private function _constructFormIntegrationsFromData(array $data): array
     {
         $integrations = [];
         $activeIntegrations = FormBuilder::getInstance()->integrations->getEnabledIntegrations();

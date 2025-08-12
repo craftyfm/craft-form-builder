@@ -34,7 +34,7 @@
 {% endblock %}
 
 {% block actionButton %}
-    {% if integration.supportAuthorize() %}
+    {% if integration.supportOauth2Authorize() %}
         <a class="btn" href="{{ actionUrl('form-builder/integration-settings/authorize', {id: integration.id}) }}">
             Authorize
         </a>

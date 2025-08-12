@@ -23,6 +23,7 @@ abstract class BaseIntegration extends SavableComponent implements IntegrationIn
     public ?string $name = null;
     public ?string $handle = null;
     public ?string $type = null;
+    public array $metadata = [];
     public ?string $uid = null;
     public bool $enabled = true;
 
@@ -63,7 +64,7 @@ abstract class BaseIntegration extends SavableComponent implements IntegrationIn
                 $this->{$key} = $settings[$key];
             }
         }
-        if ($settings['enabled']) {
+        if (isset($settings['enabled'])) {
             $this->enabled = $settings['enabled'];
         }
     }
@@ -107,7 +108,7 @@ abstract class BaseIntegration extends SavableComponent implements IntegrationIn
         return false;
     }
 
-    public function supportAuthorize(): bool
+    public function supportOauth2Authorize(): bool
     {
         return false;
     }

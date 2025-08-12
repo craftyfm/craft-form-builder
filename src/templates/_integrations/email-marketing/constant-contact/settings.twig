@@ -2,7 +2,7 @@
 
 {{ forms.textField({
     label: 'Redirect URI',
-    value: integration.getCallbackUri(),
+    value: integration.getRedirectUri(),
     instructions: 'Put this URI in your Constant Contact application\'s redirect URI .',
     disabled: true
 }) }}

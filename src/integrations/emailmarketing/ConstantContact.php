@@ -5,6 +5,7 @@ namespace craftyfm\formbuilder\integrations\emailmarketing;
 use Craft;
 use craft\helpers\UrlHelper;
 use craftyfm\formbuilder\models\IntegrationResult;
+use craftyfm\formbuilder\models\oauth\Oauth2Trait;
 use craftyfm\formbuilder\models\Submission;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -13,9 +14,10 @@ use yii\base\Exception;
 
 class ConstantContact extends BaseEmailMarketing
 {
+    use Oauth2Trait;
     public ?string $clientId = null;
     public ?string $clientSecret = null;
-
+    protected static string $version = 'v3';
     protected function defineSettingAttributes(): array
     {
         $attributes = parent::defineSettingAttributes();
@@ -24,24 +26,40 @@ class ConstantContact extends BaseEmailMarketing
         return $attributes;
     }
 
-    public function getCallbackUri(): string
+    public function supportOauth2Authorize(): bool
     {
-        return UrlHelper::cpUrl('form-builder/integration/oauth-callback');
+        return true;
+
     }
 
-    public function getAuthorizationUrl(): string
+    public function supportOauthConnection(): bool
+    {
+        return true;
+    }
+
+    public function getBaseApiUrl(): string
+    {
+        return 'https://api.cc.email/' . self::$version;
+    }
+
+    public function getBaseAuthUrl(): string
     {
         return 'https://authz.constantcontact.com/oauth2/default/v1/authorize';
     }
 
-    public function supportAuthorize(): bool
+    public function getBaseTokenUrl(): string
     {
-        return true;
-
+        return 'https://authz.constantcontact.com/oauth2/default/v1/token';
     }
-    public function supportOauthConnection(): bool
+
+    public function getScopes(): string|array
     {
-        return true;
+        return 'contact_data offline_access';
+    }
+
+    public function getState(): ?string
+    {
+        return $this->uid;
     }
 
 
@@ -68,6 +86,20 @@ class ConstantContact extends BaseEmailMarketing
         return $rules;
     }
 
+    /**
+     * @throws SyntaxError
+     * @throws Exception
+     * @throws RuntimeError
+     * @throws LoaderError
+     */
+    public function getFormSettingsHtml(): string
+    {
+        $view = Craft::$app->getView();
+
+        return $view->renderTemplate('form-builder/_integrations/email-marketing/constant-contact/form-settings', [
+            'integration' => $this,
+        ]);
+    }
     protected function executeIntegration(Submission $submission): IntegrationResult
     {
         // TODO: Implement executeIntegration() method.

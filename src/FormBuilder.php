@@ -16,9 +16,11 @@ use craftyfm\formbuilder\fields\FormSelectField;
 use craftyfm\formbuilder\models\Settings;
 use craftyfm\formbuilder\services\CaptchaManager;
 use craftyfm\formbuilder\services\EmailNotification;
+use craftyfm\formbuilder\services\FormIntegrations;
 use craftyfm\formbuilder\services\Forms;
 use craftyfm\formbuilder\services\Icons;
 use craftyfm\formbuilder\services\Integrations;
+use craftyfm\formbuilder\services\OauthToken;
 use craftyfm\formbuilder\services\Submissions;
 use craftyfm\formbuilder\services\SubmissionStatuses;
 use craftyfm\formbuilder\services\Upload;
@@ -44,13 +46,15 @@ use yii\base\InvalidRouteException;
  * @property SubmissionStatuses $submissionStatuses
  * @property EmailNotification $emailNotification
  * @property Integrations $integrations
+ * @property OauthToken $oauthToken
+ * @property FormIntegrations $formIntegrations
  * @author craftyfm
  * @copyright craftyfm
  * @license https://craftcms.github.io/license/ Craft License
  */
 class FormBuilder extends Plugin
 {
-    public string $schemaVersion = '1.0.0';
+    public string $schemaVersion = '1.0.1';
     public bool $hasCpSettings = true;
     public bool $hasCpSection = true;
 
@@ -67,6 +71,8 @@ class FormBuilder extends Plugin
                 'submissionStatuses' => SubmissionStatuses::class,
                 'emailNotification' => EmailNotification::class,
                 'integrations' => Integrations::class,
+                'oauthToken' => OauthToken::class,
+                'formIntegrations' => FormIntegrations::class,
             ],
         ];
     }

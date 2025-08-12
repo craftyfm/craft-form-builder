@@ -12,6 +12,8 @@ use craftyfm\formbuilder\FormBuilder;
 use craftyfm\formbuilder\integrations\base\BaseIntegration;
 use craftyfm\formbuilder\integrations\base\IntegrationInterface;
 use craftyfm\formbuilder\integrations\emailmarketing\ConstantContact;
+use Exception;
+use Random\RandomException;
 use yii\base\InvalidConfigException;
 use yii\web\BadRequestHttpException;
 use yii\web\MethodNotAllowedHttpException;
@@ -37,7 +39,7 @@ class IntegrationSettingsController extends Controller
             $tableData[] = [
                 'id' => $integration->id,
                 'title' => $integration->name,
-                'type' => $integration->getType(),
+                'type' => $integration->getDisplayName(),
                 'url' => $integration->getCpEditUrl(),
                 'enabled' => $integration->enabled,
             ];
@@ -49,6 +51,11 @@ class IntegrationSettingsController extends Controller
 
     /**
      * Edit existing integration
+     * @param int|null $id
+     * @param IntegrationInterface|null $integration
+     * @return Response
+     * @throws InvalidConfigException
+     * @throws MissingComponentException
      * @throws NotFoundHttpException
      */
     public function actionEdit(int $id = null, IntegrationInterface $integration = null): Response
@@ -105,7 +112,7 @@ class IntegrationSettingsController extends Controller
      * @throws MethodNotAllowedHttpException
      * @throws MissingComponentException
      * @throws NotFoundHttpException
-     * @throws \Exception
+     * @throws Exception
      */
     public function actionSave(): ?Response
     {
@@ -176,12 +183,12 @@ class IntegrationSettingsController extends Controller
     }
 
     /**
-     * @throws SiteNotFoundException
      * @throws InvalidConfigException
      * @throws MissingComponentException
      * @throws BadRequestHttpException
+     * @throws RandomException
      */
-    public function actionAuthorize()
+    public function actionAuthorize(): Response
     {
         $integrationId = $this->request->getRequiredParam('id');
 
@@ -196,18 +203,8 @@ class IntegrationSettingsController extends Controller
             throw new BadRequestHttpException('Integration does not support OAuth');
         }
 
-
-        $clientId = App::parseEnv( $integration->clientId);
-        $redirectUri = $integration->getCallbackUri();
-
-        $authUrl = $integration->getAuthorizationUrl() .'?'. http_build_query([
-                'client_id' => $clientId,
-                'redirect_uri' => $redirectUri,
-                'response_type' => 'code',
-                'scope' => 'contact_data offline_access',
-                'state' => $integration->uid
-            ]);
-
+        $authUrl = $integration->getAuthUrl();
+//        dd($authUrl);
         return $this->redirect($authUrl);
     }
 }

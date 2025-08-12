@@ -159,6 +159,19 @@ class Integrations extends Component
      * @throws InvalidConfigException
      * @throws MissingComponentException
      */
+    public function getIntegrationByHandle(string $handle): ?IntegrationInterface
+    {
+        $record = IntegrationRecord::findOne(['handle' => $handle]);
+        if (!$record) {
+            return null;
+        }
+        return $this->constructIntegration($record->toArray());
+    }
+
+    /**
+     * @throws InvalidConfigException
+     * @throws MissingComponentException
+     */
     public function getIntegrationById(int $id): ?IntegrationInterface
     {
         $record = IntegrationRecord::findOne(['id' => $id]);
