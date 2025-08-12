@@ -38,6 +38,47 @@ class FormIntegrations extends Component
     }
 
     /**
+     * @throws InvalidConfigException
+     * @throws MissingComponentException
+     */
+    public function getIntegrationForForm(int $formId, int $integrationId): ?BaseIntegration
+    {
+        $res = (new Query())
+            ->select([
+                // Integration columns except dateCreated/dateUpdated
+                'i.id',
+                'i.name',
+                'i.handle',
+                'i.type',
+                'i.metadata',
+                'i.settings',
+                'i.enabled AS integrationEnabled',
+
+                // From formIntegration
+                'fi.enabled',
+                'fi.settings as formSettings',
+            ])
+            ->from(['i' => Table::INTEGRATIONS])
+            ->innerJoin(
+                ['fi' => Table::FORM_INTEGRATION],
+                '[[fi.integrationId]] = [[i.id]]',
+            )
+            ->where(['i.enabled' => true])
+            ->andWhere(['i.id' => $integrationId])  // Changed from i.integrationId to i.id
+            ->andWhere(['fi.formId' => $formId])    // Changed from i.formId to fi.formId
+            ->andWhere(['fi.enabled' => true])
+            ->one();
+
+        if (!$res) {
+            return null;
+        }
+        unset($res['integrationEnabled']);
+        $res['formSettings'] = $res['formSettings'] ? json_decode($res['formSettings'], true) : [];
+
+        return FormBuilder::getInstance()->integrations->constructIntegration($res);
+    }
+
+    /**
      * @throws Exception
      */
     public function saveFormIntegration(int $formId, BaseIntegration $integration, bool $runValidate = true): bool
@@ -53,7 +94,7 @@ class FormIntegrations extends Component
         }
 
         $record->enabled = $integration->enabled;
-        $record->settings = $integration->getSettings();
+        $record->settings = $integration->getFormSettings();
         return $record->save($runValidate);
     }
 
@@ -81,7 +122,7 @@ class FormIntegrations extends Component
                 '[[fi.integrationId]] = [[i.id]] AND [[fi.formId]] = :formId',
                 [':formId' => $formId]
             )
-            ->where(['i.enabled' => 1]);
+            ->where(['i.enabled' => true]);
     }
 
 }

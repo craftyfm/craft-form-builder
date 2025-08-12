@@ -8,17 +8,17 @@ use craftyfm\formbuilder\FormBuilder;
 class IntegrationJob extends BaseJob
 {
     public ?int $submissionId = null;
-    public string $integrationHandle = '';
+    public ?int $integrationId = null;
     /**
      */
     public function execute($queue): void
     {
 
-        if (!$this->submissionId) {
+        if ($this->submissionId == null) {
             return;
         }
 
-        if (!$this->integrationHandle) {
+        if ($this->integrationId == null) {
             return;
         }
 
@@ -28,16 +28,16 @@ class IntegrationJob extends BaseJob
             return;
         }
 
-        $integrations = $submission->getForm()->integrations;
-        if (!isset($integrations[$this->integrationHandle])) {
+        $integration = FormBuilder::getInstance()->formIntegrations->getIntegrationForForm($submission->getForm()->id, $this->integrationId);
+
+        if (!$integration) {
             return;
         }
-
-        $integration = $integrations[$this->integrationHandle];
 
         if(!$integration->enabled) {
             return;
         }
+
         FormBuilder::getInstance()->integrations->runIntegration($integration, $submission);
     }
 

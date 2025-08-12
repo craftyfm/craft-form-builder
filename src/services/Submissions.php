@@ -135,7 +135,7 @@ class Submissions extends Component
             if ($integration->enabled) {
                 Craft::$app->getQueue()->push(new IntegrationJob([
                     'submissionId' => $submission->id,
-                    'integrationHandle' => $integration->handle,
+                    'integrationId' => $integration->id,
                 ]));
             }
         }

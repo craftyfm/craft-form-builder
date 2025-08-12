@@ -12,6 +12,7 @@ use craftyfm\formbuilder\models\oauth\Oauth2Trait;
 use GuzzleHttp\Exception\GuzzleException;
 use yii\base\Exception;
 use yii\base\InvalidConfigException;
+use yii\web\BadRequestHttpException;
 
 class IntegrationController extends Controller
 {
@@ -64,5 +65,15 @@ class IntegrationController extends Controller
 
         $this->setSuccessFlash("Successful authorize");
         return $this->redirect($integration->getCpEditUrl());
+    }
+
+    /**
+     * @throws BadRequestHttpException
+     */
+    public function actionGetLists()
+    {
+        $this->requireAcceptsJson();
+        $integrationId =  $this->request->getRequiredParam('integrationId');
+
     }
 }

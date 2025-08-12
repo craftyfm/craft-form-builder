@@ -88,6 +88,7 @@ abstract class BaseIntegration extends SavableComponent implements IntegrationIn
     {
         return UrlHelper::cpUrl('form-builder/settings/integrations/' . $this->id);
     }
+
     /**
      * @inheritdoc
      */
@@ -101,11 +102,6 @@ abstract class BaseIntegration extends SavableComponent implements IntegrationIn
             $rules = array_merge($rules,$this->defineFormSettingRules());
         }
         return $rules;
-    }
-
-    public function supportOauthConnection(): bool
-    {
-        return false;
     }
 
     public function supportOauth2Authorize(): bool
@@ -205,7 +201,6 @@ abstract class BaseIntegration extends SavableComponent implements IntegrationIn
             return $result;
 
         } catch (Throwable $e) {
-
             Craft::error("Integration exception: {$this->getDisplayName()} - {$e->getMessage()}", __METHOD__);
 
             return IntegrationResult::error($e->getMessage(), $e);

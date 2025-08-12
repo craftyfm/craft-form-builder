@@ -4,6 +4,14 @@ import {MainSettingsManager} from './ui/mainSettingsManager.js';
 import {initDragDrop} from "./ui/dragDrop";
 import {registerPreviewEventListeners} from "./ui/preview";
 import {saveForm} from "./ui/saveForm";
+import IntegrationMappingManager from './ui/components/IntegrationMappingManager.js';
+
+if (typeof Craft.FormBuilder === typeof undefined) {
+    Craft.FormBuilder = {};
+}
+
+Craft.FormBuilder.IntegrationMappingManager = IntegrationMappingManager;
+
 
 document.addEventListener('DOMContentLoaded', () => {
     // Main containers
@@ -25,6 +33,14 @@ document.addEventListener('DOMContentLoaded', () => {
         fields:window.FormBuilderData?.fields || [],
         integrations:window.FormBuilderData?.integrations || [],
     };
+
+    Object.defineProperty(Craft.FormBuilder, 'formState', {
+        get() {
+            return formState;
+        },
+        configurable: false,
+        enumerable: true
+    });
 
     // Initialize the renderer
     const renderer = new Renderer(formState, (fieldId) => {

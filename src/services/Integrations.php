@@ -18,6 +18,7 @@ use craftyfm\formbuilder\integrations\base\BaseIntegration;
 use craftyfm\formbuilder\integrations\base\IntegrationInterface;
 use craftyfm\formbuilder\integrations\emailmarketing\ConstantContact;
 use craftyfm\formbuilder\integrations\webhooks\GenericWebhook;
+use craftyfm\formbuilder\models\Submission;
 use craftyfm\formbuilder\records\IntegrationRecord;
 use Exception;
 use Throwable;
@@ -194,7 +195,7 @@ class Integrations extends Component
         return $this->constructIntegration($record->toArray());
     }
 
-    public function runIntegration($integration, $submission): void
+    public function runIntegration(IntegrationInterface $integration, Submission $submission): void
     {
         $integration->execute($submission);
     }
