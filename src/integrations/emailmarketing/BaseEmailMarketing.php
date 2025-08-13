@@ -5,6 +5,7 @@ namespace craftyfm\formbuilder\integrations\emailmarketing;
 use craftyfm\formbuilder\integrations\base\BaseIntegration;
 use craftyfm\formbuilder\models\Form;
 use craftyfm\formbuilder\models\ProviderList;
+use craftyfm\formbuilder\models\Submission;
 use yii\db\Exception;
 
 abstract class BaseEmailMarketing extends BaseIntegration
@@ -32,7 +33,6 @@ abstract class BaseEmailMarketing extends BaseIntegration
     }
 
     /**
-     * @throws Exception
      */
     public function setFormSettings(array $settings): void
     {
@@ -116,5 +116,33 @@ abstract class BaseEmailMarketing extends BaseIntegration
         return $lists;
     }
 
+    /**
+     * @throws Exception
+     */
+    protected function getFieldMappingValues(Submission $submission): array
+    {
+        $currentList = $this->getCurrentList();
+        $currentIntegrationFields = $currentList->fields;
+        $values = [];
+
+        foreach ($currentIntegrationFields as $field) {
+            if (!isset($this->fieldMapping[$field->handle]) ) {
+                if ($field->required) {
+                    throw new Exception('Field is required');
+                }
+                continue;
+            }
+            $formFieldId = $this->fieldMapping[$field->handle];
+            $value = $submission->getSubmissionFieldValueById($formFieldId);
+            if ($field->required && empty($value)) {
+                throw new Exception('Field is required');
+            }
+            if (!empty($value)) {
+                $values[$field->handle] = $value;
+            }
+        }
+
+        return $values;
+    }
     abstract protected function fetchLists();
 }

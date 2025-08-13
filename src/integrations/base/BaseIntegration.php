@@ -4,10 +4,12 @@ namespace craftyfm\formbuilder\integrations\base;
 
 use Craft;
 use craft\base\SavableComponent;
+use craft\helpers\DateTimeHelper;
 use craft\helpers\UrlHelper;
 use craftyfm\formbuilder\FormBuilder;
 use craftyfm\formbuilder\models\Form;
 use craftyfm\formbuilder\models\IntegrationResult;
+use craftyfm\formbuilder\models\ProviderField;
 use craftyfm\formbuilder\models\Submission;
 use craftyfm\formbuilder\records\IntegrationRecord;
 use Throwable;
@@ -212,19 +214,17 @@ abstract class BaseIntegration extends SavableComponent implements IntegrationIn
 
             // Call the concrete implementation
             $result = $this->executeIntegration($submission);;
-
-
             // Log result
             if ($result->success) {
-                Craft::info("Integration executed successfully: {$this->getDisplayName()}", __METHOD__);
+                FormBuilder::log("Integration executed successfully: {$this->getDisplayName()}", 'info');
             } else {
-                Craft::error("Integration failed: {$this->getDisplayName()} - $result->message", __METHOD__);
+                FormBuilder::log("Integration failed: {$this->getDisplayName()} - $result->message", 'warning');
             }
 
             return $result;
 
         } catch (Throwable $e) {
-            Craft::error("Integration exception: {$this->getDisplayName()} - {$e->getMessage()}", __METHOD__);
+            FormBuilder::log("Integration exception: {$this->getDisplayName()} - {$e->getMessage()}", 'error');
 
             return IntegrationResult::error($e->getMessage(), $e);
         }
@@ -236,6 +236,30 @@ abstract class BaseIntegration extends SavableComponent implements IntegrationIn
     abstract protected function executeIntegration(Submission $submission): IntegrationResult;
 
 
+    /**
+     * @throws \Exception
+     */
+    protected function normalizeFieldValue(mixed $value, string $type): string|int
+    {
+
+        if ($type === ProviderField::TYPE_DATE) {
+            if ($date = DateTimeHelper::toDateTime($value)) {
+                return $date->format('Y-m-d');
+            }
+        }
+
+        if ($type === ProviderField::TYPE_DATETIME) {
+            if ($date = DateTimeHelper::toDateTime($value)) {
+                return $date->format('Y-m-d H:i:s');
+            }
+        }
+
+        if ($type === ProviderField::TYPE_INTEGER) {
+            return (int)$value;
+        }
+
+        return (string)$value;
+    }
 
     protected function generateSubmissionPayload(Submission $submission): array
     {

@@ -8,6 +8,7 @@ use craftyfm\formbuilder\FormBuilder;
 use craftyfm\formbuilder\models\form_fields\Base;
 use craftyfm\formbuilder\models\form_fields\BaseCaptcha;
 use craftyfm\formbuilder\models\form_fields\BaseInput;
+use craftyfm\formbuilder\models\submission_fields\BaseField;
 use craftyfm\formbuilder\models\submission_fields\ScalarField;
 use DateTime;
 use yii\base\UnknownPropertyException;
@@ -16,8 +17,6 @@ class Submission extends Model
 {
     const STATE_CREATE = 'create';
     const STATE_COMPLETE = 'complete';
-
-
 
     public ?int $id = null;
     public ?string $ipAddress = null;
@@ -35,7 +34,7 @@ class Submission extends Model
     private SubmissionStatus $status;
     private string $_state = Submission::STATE_CREATE;
 
-    /** @var ScalarField[] $_fields */
+    /** @var BaseField[] $_fields */
     private array $_fields = [];
     private Form $_form;
 
@@ -43,7 +42,6 @@ class Submission extends Model
     {
         $this->_form = $form;
 
-        /** @var Base $field */
         foreach ($this->_form->getFields() as $field) {
             if ($field instanceof BaseInput) {
                 $this->_fields[$field->handle] = $field->createSubmissionField();
@@ -70,6 +68,14 @@ class Submission extends Model
         return $this->_form;
     }
 
+    public function getSubmissionFieldValueById(string $fieldId): mixed
+    {
+        $field = $this->_form->getFieldById($fieldId);
+        if (!$field) {
+            return null;
+        }
+        return $this->_fields[$field->handle]->getValue();
+    }
     public function setSubmissionFieldValue(string $fieldName, mixed $value): void
     {
        if ($this->_state === Submission::STATE_CREATE) {
