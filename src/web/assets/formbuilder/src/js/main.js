@@ -5,12 +5,15 @@ import {initDragDrop} from "./ui/dragDrop";
 import {registerPreviewEventListeners} from "./ui/preview";
 import {saveForm} from "./ui/saveForm";
 import IntegrationMappingManager from './ui/components/IntegrationMappingManager.js';
+import OptInDropdown from "./ui/components/OptInDropdown";
 
 if (typeof Craft.FormBuilder === typeof undefined) {
     Craft.FormBuilder = {};
 }
 
 Craft.FormBuilder.IntegrationMappingManager = IntegrationMappingManager;
+Craft.FormBuilder.OptInDropdown = OptInDropdown;
+
 let formState = {
     name: window.FormBuilderData?.name || 'Form',
     handle: window.FormBuilderData?.handle || '',

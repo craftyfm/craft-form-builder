@@ -133,6 +133,9 @@ export default class IntegrationMappingManager {
         const formFields = this.globalFieldsVar.fields;
         if (!formFields) return [];
         return formFields.filter(opt => {
+            if (field.handle === '') {
+                return false;
+            }
             if (field.type === 'string') {
                 return ['text', 'url', 'textarea', 'email', 'phone'].includes(opt.type);
             } else if (field.type === 'date') {

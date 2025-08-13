@@ -118,6 +118,15 @@ class ConstantContact extends BaseEmailMarketing
     {
         $result = new IntegrationResult();
 
+        if ($this->optIn) {
+            $optInValue = $submission->getSubmissionFieldValueById($this->optIn);
+            if (!$optInValue) {
+                $result->success = false;
+                $result->message = Craft::t('form-builder', 'Opt-in field used but not chosen. Skipping.');
+                return $result;
+            }
+        }
+
         if (!$this->listId) {
             $result->success = false;
             $result->message = Craft::t('form-builder', 'No list selected.');

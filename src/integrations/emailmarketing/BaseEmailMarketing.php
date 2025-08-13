@@ -12,6 +12,7 @@ abstract class BaseEmailMarketing extends BaseIntegration
 {
     public array $fieldMapping = [];
     public ?string $listId = null;
+    public ?string $optIn = null;
 
     public function setMetadata(array $metadata): void
     {
@@ -29,15 +30,10 @@ abstract class BaseEmailMarketing extends BaseIntegration
         $attributes = parent::defineFormSettingAttributes();
         $attributes[] = 'listId';
         $attributes[] = 'fieldMapping';
+        $attributes[] = 'optIn';
         return $attributes;
     }
 
-    /**
-     */
-    public function setFormSettings(array $settings): void
-    {
-        parent::setFormSettings($settings);
-    }
     public function getTypeName(): string
     {
         return 'Email Marketing';

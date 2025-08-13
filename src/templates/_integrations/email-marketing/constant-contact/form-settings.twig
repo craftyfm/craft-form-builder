@@ -1,4 +1,15 @@
 <div class="cfb:mb-5 ">
+    <label for="optIn" class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700">
+        OptIn
+    </label>
+    <p class="cfb:mt-0 cfb:mb-2">Choose a field to opt-in to Constant Contact</p>
+    <div class="cfb:flex cfb:items-center" id="optInContainer">
+        <select id="optIn" name="optIn" class="cfb:w-64 cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-lg cfb:focus:ring-inset focus:cfb:outline-none focus:cfb:ring-1 focus:cfb:ring-blue-500 focus:cfb:border-blue-500">
+        </select>
+    </div>
+</div>
+
+<div class="cfb:mb-5 ">
     <label for="listId" class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700">
         List <span class="cfb:text-red-500 cfb:ml-1">*</span>
     </label>
@@ -27,7 +38,7 @@
 <script>
     const mappingFields = document.getElementById('{{ "mappingFields"|namespaceInputId }}');
     const listIdContainer = document.getElementById('{{ "listIdContainer"|namespaceInputId }}');
-
+    const optInEl = document.getElementById('{{ "optIn"|namespaceInputId }}');
     document.addEventListener('DOMContentLoaded', () => {
         new Craft.FormBuilder.IntegrationMappingManager({
             listDropdownContainer: listIdContainer,
@@ -38,6 +49,10 @@
             integrationHandle: '{{ integration.handle }}',
             selectedListId: '{{ integration.listId }}'
         } );
+
+        new Craft.FormBuilder.OptInDropdown(
+            optInEl,'{{ integration.handle }}'
+        )
     })
 
 </script>
