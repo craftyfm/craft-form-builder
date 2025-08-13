@@ -114,7 +114,6 @@ class Submissions extends Component
             return true;
 
         } catch (Exception|VolumeException| Throwable $e) {
-            dd($e->getMessage());;
             $transaction->rollBack();
             Craft::error('Error saving submission: ' . $e->getMessage(), __METHOD__);
             return false;

@@ -204,7 +204,6 @@ class IntegrationSettingsController extends Controller
         }
 
         $authUrl = $integration->getAuthUrl();
-//        dd($authUrl);
         return $this->redirect($authUrl);
     }
 }

@@ -3,6 +3,7 @@
 namespace craftyfm\formbuilder\controllers;
 
 use Craft;
+use craft\helpers\DateTimeHelper;
 use craft\helpers\Html;
 use craft\helpers\UrlHelper;
 use craft\web\Controller;
@@ -11,6 +12,7 @@ use craft\web\UploadedFile;
 use craftyfm\formbuilder\FormBuilder;
 use craftyfm\formbuilder\models\form_fields\Checkbox;
 use craftyfm\formbuilder\models\form_fields\Checkboxes;
+use craftyfm\formbuilder\models\form_fields\Date;
 use craftyfm\formbuilder\models\form_fields\Email;
 use craftyfm\formbuilder\models\form_fields\FileUpload;
 use craftyfm\formbuilder\models\form_fields\Number;
@@ -272,6 +274,7 @@ class SubmissionsController extends Controller
 
     /**
      * Sanitize field value based on field type
+     * @throws \Exception
      */
     private function sanitizeFieldValue(mixed $value, BaseField $field): mixed
     {
@@ -286,6 +289,8 @@ class SubmissionsController extends Controller
             case TextArea::$type:
                 // HTML encode to prevent XSS
                 return is_string($value) ? Html::encode(trim($value)) : $value;
+            case Date::$type:
+                return $value ? DateTimeHelper::toDateTime($value, false, false) : null;
             case Number::$type:
                 return intval($value);
             case Checkbox::$type:
@@ -299,8 +304,6 @@ class SubmissionsController extends Controller
 
                 $validValues = array_column($formField->options, 'value');
                 return in_array($value, $validValues, true) ? Html::encode($value) : null;
-
-
             case Checkboxes::$type:
                 // Ensure boolean or array of valid options
                 if (is_array($value)) {

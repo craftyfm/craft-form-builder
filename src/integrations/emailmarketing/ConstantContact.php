@@ -3,7 +3,6 @@
 namespace craftyfm\formbuilder\integrations\emailmarketing;
 
 use Craft;
-use craft\helpers\UrlHelper;
 use craftyfm\formbuilder\FormBuilder;
 use craftyfm\formbuilder\models\IntegrationResult;
 use craftyfm\formbuilder\models\oauth\Oauth2Trait;
@@ -14,7 +13,6 @@ use GuzzleHttp\Exception\GuzzleException;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
-use verbb\formie\models\IntegrationField;
 use yii\base\Exception;
 
 class ConstantContact extends BaseEmailMarketing
@@ -158,7 +156,6 @@ class ConstantContact extends BaseEmailMarketing
                     ];
                 }
             }
-
             $response = $this->sendOAuth2Request('contacts/sign_up_form', 'POST', $payload);
 
             if ($response->getStatusCode() >= 200 && $response->getStatusCode() < 300) {
@@ -202,7 +199,7 @@ class ConstantContact extends BaseEmailMarketing
                 new ProviderField(['handle' => 'job_title', 'label' => Craft::t('form-builder', 'Job Title')]),
                 new ProviderField(['handle' => 'company_name', 'label' => Craft::t('form-builder', 'Company Name')]),
                 new ProviderField(['handle' => 'phone_number', 'label' => Craft::t('form-builder', 'Phone Number')]),
-                new ProviderField(['handle' => 'anniversary', 'label' => Craft::t('form-builder', 'Anniversary')]),
+                new ProviderField(['handle' => 'anniversary', 'type' => ProviderField::TYPE_DATE, 'label' => Craft::t('form-builder', 'Anniversary') ]),
             ];
 
             if (!isset($body['custom_fields'])) {

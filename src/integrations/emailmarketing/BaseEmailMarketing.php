@@ -114,6 +114,7 @@ abstract class BaseEmailMarketing extends BaseIntegration
 
     /**
      * @throws Exception
+     * @throws \Exception
      */
     protected function getFieldMappingValues(Submission $submission): array
     {
@@ -134,7 +135,7 @@ abstract class BaseEmailMarketing extends BaseIntegration
                 throw new Exception('Field is required');
             }
             if (!empty($value)) {
-                $values[$field->handle] = $value;
+                $values[$field->handle] = $this->normalizeFieldValue($value, $field->type);
             }
         }
 

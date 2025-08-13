@@ -262,7 +262,7 @@ class Forms extends Component
         $perPage = max($perPage, 1);
         $offset = ($page - 1) * $perPage;
 
-        $query = FormRecord::find();
+        $query = FormRecord::find()->orderBy(['dateCreated' => SORT_DESC]);
         $total = $query->count();
 
         $records = $query
