@@ -31,6 +31,8 @@ class ConstantContact extends BaseEmailMarketing
         return $attributes;
     }
 
+
+
     public function supportOauth2Authorize(): bool
     {
         return true;

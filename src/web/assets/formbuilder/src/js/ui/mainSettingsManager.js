@@ -136,6 +136,7 @@ export class MainSettingsManager {
 
         this.formSettingsModal.addEventListener('click', (e) => {
             if (e.target === this.formSettingsModal) {
+                console.log('click');
                 this.closeSettingsModal();
             }
         });
@@ -167,16 +168,24 @@ export class MainSettingsManager {
 
         formData.forEach((value, key) => {
             // Match keys like: integrations[test][enabled]
-            const integrationMatch = key.match(/^integrations\[(\w+)\]\[(\w+)\]$/);
+            const integrationMatch = key.match(/^integrations(\[[^\]]+])+$/);
             if (integrationMatch) {
-                const integrationKey = integrationMatch[1];   // e.g. 'test'
-                const fieldKey = integrationMatch[2];         // e.g. 'enabled', 'webhookUrl'
+                // Extract all keys inside brackets (allow anything except closing bracket)
+                const keys = [...key.matchAll(/\[([^\]]+)]/g)].map(m => m[1]);
+
+                const integrationKey = keys[0];
 
                 if (!integrationBuffer[integrationKey]) {
                     integrationBuffer[integrationKey] = {};
                 }
 
-                integrationBuffer[integrationKey][fieldKey] = value;
+                let current = integrationBuffer[integrationKey];
+                for (let i = 1; i < keys.length - 1; i++) {
+                    if (!current[keys[i]]) current[keys[i]] = {};
+                    current = current[keys[i]];
+                }
+
+                current[keys[keys.length - 1]] = value;
                 return;
             }
 

@@ -1,55 +1,99 @@
 export default class IntegrationMappingManager {
-    constructor({ listDropdownEl, fieldMappingContainerEl, listEndpoint, globalFieldsVar }) {
-        if (!listDropdownEl || !fieldMappingContainerEl || !listEndpoint || !globalFieldsVar) {
+    constructor({ listDropdownContainer, fieldMappingContainerEl, listEndpoint, integrationHandle, selectedListId }) {
+        if (!listDropdownContainer || !fieldMappingContainerEl || !listEndpoint || !integrationHandle) {
             throw new Error("Missing required parameters.");
         }
 
-        this.listDropdownEl = listDropdownEl;
+        this.refreshBtn = listDropdownContainer.querySelector("button");
+        this.listDropdownEl = listDropdownContainer.querySelector("select");
         this.fieldMappingContainerEl = fieldMappingContainerEl;
         this.listEndpoint = listEndpoint;
-        this.globalFieldsVar = globalFieldsVar;
-
+        this.globalFieldsVar = Craft.FormBuilder.formState;
+        this.integrationHandle = integrationHandle;
+        this.selectedListId = selectedListId === undefined ? null : selectedListId;
+        this.lists = [];
         this.init();
     }
 
     async init() {
         await this.loadLists();
         this.listDropdownEl.addEventListener("change", () => {
+            this.selectedListId = this.listDropdownEl.value;
             this.generateFieldMapping();
         });
+        document.getElementById('main-settings-btn').addEventListener('click', () => {
+            this.generateFieldMapping();
+        })
+        this.refreshBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            await this.loadLists();
+        })
     }
 
-    async loadLists() {
-        try {
-            const res = await fetch(this.listEndpoint);
-            if (!res.ok) throw new Error(`Failed to load lists: ${res.statusText}`);
+    loading() {
+        this.refreshBtn.classList.add("cfb:loading");
+    }
 
-            const data = await res.json();
-            this.populateListDropdown(data);
-        } catch (err) {
-            console.error("Error loading lists:", err);
+    finishedLoading() {
+        if (this.refreshBtn.classList.contains("cfb:loading")) {
+            this.refreshBtn.classList.remove("cfb:loading");
         }
     }
 
-    populateListDropdown(lists) {
+    async loadLists() {
+        this.loading();
+        try {
+            const res = await fetch(this.listEndpoint, {
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (!res.ok) throw new Error(`Failed to load lists: ${res.statusText}`);
+
+            const data = await res.json();
+            this.lists = data.lists;
+            this.populateListDropdown();
+            if (this.selectedListId) {
+                this.generateFieldMapping();
+            }
+        } catch (err) {
+            console.error("Error loading lists:", err);
+        }
+
+        this.finishedLoading();
+    }
+
+    currentList() {
+        return this.lists.find(list => list.id === this.selectedListId);
+    }
+
+    populateListDropdown() {
         this.listDropdownEl.innerHTML = `<option value="">Select a list</option>`;
-        lists.forEach(item => {
+        this.lists.forEach(item => {
             const opt = document.createElement("option");
             opt.value = item.id;
             opt.textContent = item.name;
+            if (item.id === this.selectedListId) {
+                opt.selected = true;
+            }
             this.listDropdownEl.appendChild(opt);
         });
     }
 
+    generateFieldNameHandle(name) {
+        return 'integrations[' + this.integrationHandle + '][fieldMapping][' + name + ']';
+    }
     generateFieldMapping() {
         this.fieldMappingContainerEl.innerHTML = "";
+        this.fieldMappingContainerEl.className = "";
+        const currentList = this.currentList();
 
-        if (!window[this.globalFieldsVar] || !Array.isArray(window[this.globalFieldsVar])) {
-            console.warn(`Global variable ${this.globalFieldsVar} is missing or not an array.`);
-            return;
-        }
+        if (!currentList) return;
+        this.fieldMappingContainerEl.className = "cfb:border cfb:border-gray-200 cfb:rounded";
+        const currentFields = this.globalFieldsVar.integrations[this.integrationHandle].fieldMapping ?? {};
 
-        window[this.globalFieldsVar].forEach(field => {
+        currentList.fields.forEach(field => {
             const row = document.createElement("div");
             row.className = "cfb:grid cfb:grid-cols-2 cfb:border-b cfb:border-gray-100 cfb:hover:bg-gray-50 cfb:transition-colors";
 
@@ -61,14 +105,18 @@ export default class IntegrationMappingManager {
             selectCol.className = "cfb:px-6 cfb:py-2";
 
             const select = document.createElement("select");
-            select.id = `${field.name}Map`;
+            select.name = this.generateFieldNameHandle(field.handle);
             select.className = "cfb:px-3 cfb:py-2 cfb:w-64 cfb:border cfb:border-gray-300 cfb:rounded-lg focus:cfb:outline-none focus:cfb:ring-2 focus:cfb:ring-blue-500 focus:cfb:border-blue-500";
 
             select.innerHTML = `<option value="">Select an option</option>`;
-            (field.options || []).forEach(optData => {
+            const currentValue = currentFields[field.handle] ?? null;
+            (this.getFieldOptions(field)).forEach(optData => {
                 const opt = document.createElement("option");
-                opt.value = optData.value;
+                opt.value = optData.id;
                 opt.textContent = optData.label;
+                if (optData.id === currentValue) {
+                    opt.selected = true;
+                }
                 select.appendChild(opt);
             });
 
@@ -81,6 +129,18 @@ export default class IntegrationMappingManager {
         });
     }
 
+    getFieldOptions(field) {
+        const formFields = this.globalFieldsVar.fields;
+        if (!formFields) return [];
+        return formFields.filter(opt => {
+            if (field.type === 'string') {
+                return ['text', 'url', 'textarea', 'email', 'phone'].includes(opt.type);
+            } else if (field.type === 'date') {
+                return opt.type === 'date';
+            }
+            return false; // or true if you want to allow all others
+        });
+    }
     refreshLists() {
         return this.loadLists();
     }

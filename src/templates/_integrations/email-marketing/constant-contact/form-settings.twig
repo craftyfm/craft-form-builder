@@ -1,14 +1,11 @@
 <div class="cfb:mb-5 ">
-    <label for="framework" class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700">
+    <label for="listId" class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700">
         List <span class="cfb:text-red-500 cfb:ml-1">*</span>
     </label>
     <p class="cfb:mt-0 cfb:mb-2">Choose your Constant Contact list.</p>
-    <div class="cfb:flex cfb:items-center">
-        <select id="framework" name="settings[framework]" class="cfb:w-64 cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-lg cfb:focus:ring-inset focus:cfb:outline-none focus:cfb:ring-1 focus:cfb:ring-blue-500 focus:cfb:border-blue-500">
+    <div class="cfb:flex cfb:items-center" id="listIdContainer">
+        <select id="listId" name="listId" class="cfb:w-64 cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-lg cfb:focus:ring-inset focus:cfb:outline-none focus:cfb:ring-1 focus:cfb:ring-blue-500 focus:cfb:border-blue-500">
             <option value="">Select an list</option>
-            <option value="1">Option 1</option>
-            <option value="2">Option 2</option>
-            <option value="3">Option 3</option>
         </select>
         <button class="cfb:ml-1 cfb:inline-flex cfb:pt-3 cfb:iconify-[mdi--refresh] cfb:w-6 cfb:h-6">
         </button>
@@ -23,73 +20,24 @@
 
     <!-- Fixed Fields -->
     <div id="mappingFields"
-         class="cfb:border cfb:border-gray-200 cfb:rounded">
-        <!-- Email field -->
-        <div class="cfb:grid cfb:grid-cols-2 cfb:border-b cfb:border-gray-100 cfb:hover:bg-gray-50 cfb:transition-colors">
-            <div class="cfb:px-6 cfb:border-r cfb:border-gray-200 cfb:flex cfb:items-center">
-                <span class="cfb:text-gray-800">Email</span>
-                <span class="cfb:text-red-500 cfb:ml-1">*</span>
-            </div>
-            <div class="cfb:px-6 cfb:py-2">
-                <select id="emailMap" class="cfb:px-3 cfb:py-2 cfb:w-64 cfb:border cfb:border-gray-300 cfb:rounded-lg focus:cfb:outline-none focus:cfb:ring-2 focus:cfb:ring-blue-500 focus:cfb:border-blue-500">
-                    <option value="">Select an option</option>
-                    <option value="1">Option 1</option>
-                    <option value="2">Option 2</option>
-                    <option value="3">Option 3</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="cfb:grid cfb:grid-cols-2 cfb:border-b cfb:border-gray-100 cfb:hover:bg-gray-50 cfb:transition-colors">
-            <div class="cfb:px-6 cfb:border-r cfb:border-gray-200 cfb:flex cfb:items-center">
-                <span class="cfb:text-gray-800">Email</span>
-                <span class="cfb:text-red-500 cfb:ml-1">*</span>
-            </div>
-            <div class="cfb:px-6 cfb:py-2">
-                <select id="emailMap" class="cfb:px-3 cfb:py-2 cfb:w-64 cfb:border cfb:border-gray-300 cfb:rounded-lg focus:cfb:outline-none focus:cfb:ring-2 focus:cfb:ring-blue-500 focus:cfb:border-blue-500">
-                    <option value="">Select an option</option>
-                    <option value="1">Option 1</option>
-                    <option value="2">Option 2</option>
-                    <option value="3">Option 3</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="cfb:grid cfb:grid-cols-2 cfb:border-b cfb:border-gray-100 cfb:hover:bg-gray-50 cfb:transition-colors">
-            <div class="cfb:px-6 cfb:border-r cfb:border-gray-200 cfb:flex cfb:items-center">
-                <span class="cfb:text-gray-800">Email</span>
-                <span class="cfb:text-red-500 cfb:ml-1">*</span>
-            </div>
-            <div class="cfb:px-6 cfb:py-2">
-                <select id="emailMap" class="cfb:px-3 cfb:py-2 cfb:w-64 cfb:border cfb:border-gray-300 cfb:rounded-lg focus:cfb:outline-none focus:cfb:ring-2 focus:cfb:ring-blue-500 focus:cfb:border-blue-500">
-                    <option value="">Select an option</option>
-                    <option value="1">Option 1</option>
-                    <option value="2">Option 2</option>
-                    <option value="3">Option 3</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="cfb:grid cfb:grid-cols-2 cfb:border-b cfb:border-gray-100 cfb:hover:bg-gray-50 cfb:transition-colors">
-            <div class="cfb:px-6 cfb:border-r cfb:border-gray-200 cfb:flex cfb:items-center">
-                <span class="cfb:text-gray-800">Email</span>
-                <span class="cfb:text-red-500 cfb:ml-1">*</span>
-            </div>
-            <div class="cfb:px-6 cfb:py-2">
-                <select id="emailMap" class="cfb:px-3 cfb:py-2 cfb:w-64 cfb:border cfb:border-gray-300 cfb:rounded-lg focus:cfb:outline-none focus:cfb:ring-2 focus:cfb:ring-blue-500 focus:cfb:border-blue-500">
-                    <option value="">Select an option</option>
-                    <option value="1">Option 1</option>
-                    <option value="2">Option 2</option>
-                    <option value="3">Option 3</option>
-                </select>
-            </div>
-        </div>
+         class="">
     </div>
 </div>
 
 <script>
+    const mappingFields = document.getElementById('{{ "mappingFields"|namespaceInputId }}');
+    const listIdContainer = document.getElementById('{{ "listIdContainer"|namespaceInputId }}');
+
     document.addEventListener('DOMContentLoaded', () => {
-        console.log(getFormState);
+        new Craft.FormBuilder.IntegrationMappingManager({
+            listDropdownContainer: listIdContainer,
+            fieldMappingContainerEl: mappingFields,
+            listEndpoint: '{{ actionUrl('form-builder/integration/get-lists', {
+                'integrationId': integration.id
+            }) }}',
+            integrationHandle: '{{ integration.handle }}',
+            selectedListId: '{{ integration.listId }}'
+        } );
     })
 
 </script>

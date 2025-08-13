@@ -11,7 +11,28 @@ if (typeof Craft.FormBuilder === typeof undefined) {
 }
 
 Craft.FormBuilder.IntegrationMappingManager = IntegrationMappingManager;
+let formState = {
+    name: window.FormBuilderData?.name || 'Form',
+    handle: window.FormBuilderData?.handle || '',
+    id: window.FormBuilderData?.id || null,
+    settings: window.FormBuilderData?.settings,
+    adminNotif: {
+        enabled: window.FormBuilderData?.adminNotif.enabled || false,
+        subject: window.FormBuilderData?.adminNotif.subject || '',
+        recipients: window.FormBuilderData?.adminNotif.recipients || '',
+        message: window.FormBuilderData?.adminNotif.message || '',
+    },
+    fields:window.FormBuilderData?.fields || [],
+    integrations:window.FormBuilderData?.integrations || [],
+};
 
+Object.defineProperty(Craft.FormBuilder, 'formState', {
+    get() {
+        return formState;
+    },
+    configurable: false,
+    enumerable: true
+});
 
 document.addEventListener('DOMContentLoaded', () => {
     // Main containers
@@ -19,28 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let selectedFieldId = null;
 
-    let formState = {
-        name: window.FormBuilderData?.name || 'Form',
-        handle: window.FormBuilderData?.handle || '',
-        id: window.FormBuilderData?.id || null,
-        settings: window.FormBuilderData?.settings,
-        adminNotif: {
-            enabled: window.FormBuilderData?.adminNotif.enabled || false,
-            subject: window.FormBuilderData?.adminNotif.subject || '',
-            recipients: window.FormBuilderData?.adminNotif.recipients || '',
-            message: window.FormBuilderData?.adminNotif.message || '',
-        },
-        fields:window.FormBuilderData?.fields || [],
-        integrations:window.FormBuilderData?.integrations || [],
-    };
 
-    Object.defineProperty(Craft.FormBuilder, 'formState', {
-        get() {
-            return formState;
-        },
-        configurable: false,
-        enumerable: true
-    });
 
     // Initialize the renderer
     const renderer = new Renderer(formState, (fieldId) => {

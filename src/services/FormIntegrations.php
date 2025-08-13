@@ -8,6 +8,7 @@ use craft\errors\MissingComponentException;
 use craftyfm\formbuilder\FormBuilder;
 use craftyfm\formbuilder\helpers\Table;
 use craftyfm\formbuilder\integrations\base\BaseIntegration;
+use craftyfm\formbuilder\models\Form;
 use craftyfm\formbuilder\records\FormIntegration;
 use yii\base\InvalidConfigException;
 use yii\db\Exception;
@@ -81,15 +82,18 @@ class FormIntegrations extends Component
     /**
      * @throws Exception
      */
-    public function saveFormIntegration(int $formId, BaseIntegration $integration, bool $runValidate = true): bool
+    public function saveFormIntegration(Form $form, BaseIntegration $integration, bool $runValidate = true): bool
     {
+        $integration->normalizeFormSettings($form);
+
         $record = FormIntegration::findOne([
-            'formId' => $formId,
+            'formId' => $form->id,
             'integrationId' => $integration->id
         ]);
+
         if (!$record) {
             $record = new FormIntegration();
-            $record->formId = $formId;
+            $record->formId = $form->id;
             $record->integrationId = $integration->id;
         }
 

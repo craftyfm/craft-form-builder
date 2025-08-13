@@ -113,9 +113,8 @@ class Forms extends Component
             $record->authorId = $data->authorId;
             $record->fields = $data->getFieldsAsArray();
             $record->settings = $data->settings->toArray();
-
             foreach ($data->integrations as $integration) {
-                $res = FormBuilder::getInstance()->formIntegrations->saveFormIntegration($data->id, $integration, false);
+                $res = FormBuilder::getInstance()->formIntegrations->saveFormIntegration($data, $integration, false);
                 if(!$res) {
                     throw new Exception("Failed to save integration {$integration->id}");
                 }
@@ -232,7 +231,7 @@ class Forms extends Component
         }
 
         if (isset($formJson['integrations'])) {
-            $form->integrations = $this->_constructFormIntegrationsFromData($formJson['integrations']);
+            $form->integrations = $this->_constructFormIntegrationsFromData($formJson['integrations'], $form);
         }
 
         return $form;
@@ -334,14 +333,14 @@ class Forms extends Component
      * @throws MissingComponentException
      * @throws InvalidConfigException
      */
-    private function _constructFormIntegrationsFromData(array $data): array
+    private function _constructFormIntegrationsFromData(array $data, Form $form): array
     {
         $integrations = [];
         $activeIntegrations = FormBuilder::getInstance()->integrations->getEnabledIntegrations();
         foreach ($activeIntegrations as $integration) {
             $integration->enabled = false;
             if (isset($data[$integration->handle])) {
-                $integration->setFormSettings($data[$integration->handle]);
+                $integration->setFormSettings($data[$integration->handle], $form);
             }
             $integrations[$integration->handle] = $integration;
         }

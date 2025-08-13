@@ -12,4 +12,20 @@ class ProviderList  extends Model
 
     /** @var ProviderField[]  */
     public array $fields = [];
+
+    public function __construct($config = [])
+    {
+        if (isset($config['fields'])) {
+            $fields = [];
+            foreach ($config['fields'] as $field) {
+                if ($field instanceof ProviderField) {
+                    $fields[] = $field;
+                    continue;
+                }
+                $fields[] = new ProviderField($field);
+            }
+            $config['fields'] = $fields;
+        }
+        parent::__construct($config);
+    }
 }

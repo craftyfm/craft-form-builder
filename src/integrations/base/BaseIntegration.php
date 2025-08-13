@@ -6,6 +6,7 @@ use Craft;
 use craft\base\SavableComponent;
 use craft\helpers\UrlHelper;
 use craftyfm\formbuilder\FormBuilder;
+use craftyfm\formbuilder\models\Form;
 use craftyfm\formbuilder\models\IntegrationResult;
 use craftyfm\formbuilder\models\Submission;
 use craftyfm\formbuilder\records\IntegrationRecord;
@@ -29,6 +30,26 @@ abstract class BaseIntegration extends SavableComponent implements IntegrationIn
     public ?string $uid = null;
     public bool $enabled = true;
 
+    public function __construct($config = [])
+    {
+
+        if (isset($config['metadata'])) {
+            $this->setMetadata($config['metadata']);
+            unset($config['metadata']);
+        }
+//        unset($config['formSettings']);
+        parent::__construct($config);
+    }
+
+    public function setMetadata(array $metadata): void
+    {
+        $this->metadata = $metadata;
+    }
+
+    public function normalizeFormSettings(Form $form): void
+    {
+
+    }
     protected function defineSettingAttributes(): array
     {
         return ['name', 'handle'];

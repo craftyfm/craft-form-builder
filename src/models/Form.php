@@ -29,6 +29,8 @@ class Form extends Model
     /** @var IntegrationInterface[] $integrations */
     public array $integrations = [];
     public FormSettings $settings;
+
+    /** @var Base[] $_fields */
     private array $_fields = [];
     private EmailNotification $_adminNotif;
 //    private
@@ -66,6 +68,19 @@ class Form extends Model
     public function getFields(): array
     {
         return $this->_fields;
+    }
+
+    public function getFieldById(string $fieldId): ?Base
+    {
+        $matchedFields = array_filter($this->_fields, function ($field) use ($fieldId) {
+            return isset($field->id) && $field->id === $fieldId;
+        });
+        $field = reset($matchedFields);
+        if (!$field) {
+            return null;
+        }
+        return $field;
+
     }
 
     public function addFields(string $handle, Base $field): void
