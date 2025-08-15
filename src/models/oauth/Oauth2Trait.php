@@ -127,17 +127,13 @@ trait Oauth2Trait
 
     public function refreshAccessToken(): bool
     {
-        if (empty($this->tokenData['refresh_token'])) {
-            Craft::warning('No refresh token available.', __METHOD__);
-            return false;
-        }
         $token = $this->getToken();
         if (!$token) {
             FormBuilder::log('Token not available.', 'warning');
             return false;
         }
 
-        if (empty($token->refresh_token)) {
+        if (empty($token->refreshToken)) {
             FormBuilder::log('Token not available.', 'warning');
             return false;
         }
@@ -148,16 +144,18 @@ trait Oauth2Trait
             $response = $client->post($this->getBaseTokenUrl(), [
                 'form_params' => [
                     'grant_type' => 'refresh_token',
-                    'refresh_token' => $token->refresh_token,
+                    'refresh_token' => $token->refreshToken,
                     'client_id' => $this->getClientId(),
                     'client_secret' => $this->getClientSecret(),
                 ],
             ]);
 
             $data = json_decode($response->getBody()->getContents(), true);
-
             return $this->storeToken($data);
         } catch (RequestException|Exception $e) {
+            FormBuilder::log($e->getMessage(), 'error');
+            return false;
+        } catch (GuzzleException $e) {
             FormBuilder::log($e->getMessage(), 'error');
             return false;
         }
@@ -186,18 +184,18 @@ trait Oauth2Trait
             throw new Exception("Integration need to be saved before authorized!");
         }
         $expiresIn = isset($data['expires_in']) ? (int)$data['expires_in'] : 3600;
-
+        $now = DateTimeHelper::now();
+        $now->modify('+' . $expiresIn - 120 . ' seconds');
         $token = new Token([
             'accessToken' => $data['access_token'] ?? '',
             'refreshToken' => $data['refresh_token'] ?? null,
             'tokenType' => $data['token_type'] ?? 'Bearer',
-            'dateExpired' => date('Y-m-d H:i:s', time() + $expiresIn - 60), // if DB is DATETIME
+            'dateExpired' => $now, // if DB is DATETIME
             'reference' => $this->uid,
             'provider' => $this->getProviderHandle(), // short handle instead of full class name
             'integrationId' => $this->id,
             'scopes' => $data['scope'] ?? '',
         ]);
-
 
         $result = FormBuilder::getInstance()->oauthToken->saveOauthToken($token);
         if (!$result) {
@@ -208,16 +206,14 @@ trait Oauth2Trait
     }
 
 
-
     /**
      * Send an HTTP request with OAuth2 Bearer token handling.
      *
+     * @param string $path
      * @param string $method HTTP method (GET, POST, etc.)
-     * @param string $url The target URL
      * @param array $payload Optional request payload (form params, JSON, etc.)
      * @param array $headers Additional headers to merge
      * @return ResponseInterface
-     * @throws \Exception
      * @throws GuzzleException
      */
     protected function sendOAuth2Request(
@@ -228,6 +224,11 @@ trait Oauth2Trait
     ): ResponseInterface
     {
         $client = $this->getApiClient();
+
+        if ($this->_token->isExpired()) {
+            $this->refreshAccessToken();
+        }
+
         // First attempt
         $response = $this->performOAuth2Request($client, $method, $path, $payload, $headers);
 

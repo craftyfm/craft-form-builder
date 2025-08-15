@@ -30,7 +30,7 @@ class Token extends Model
 
         $now = new DateTime();
         // Add small buffer (60 seconds) to avoid edge-case failures
-        return $this->dateExpired <= $now->modify('+60 seconds');
+        return $this->dateExpired <= $now;
     }
 
     /**
@@ -65,4 +65,5 @@ class Token extends Model
         $rules[] = ['integrationId', 'required'];
         return $rules;
     }
+
 }
