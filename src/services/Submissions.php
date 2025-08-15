@@ -122,9 +122,11 @@ class Submissions extends Component
 
     public function processNotification(Submission $submission): void
     {
-        Craft::$app->getQueue()->push(new SendNotificationJob([
-            'submissionId' => $submission->id,
-        ]));
+        if ($submission->getForm()->getAdminNotif()->enabled) {
+            Craft::$app->getQueue()->push(new SendNotificationJob([
+                'submissionId' => $submission->id,
+            ]));
+        }
     }
 
     public function processIntegrations(Submission $submission): void
