@@ -1,0 +1,58 @@
+<div class="pane readable">
+
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:1rem;">
+        <h2 class="section-heading">Constant Contact Integration (API v3)</h2>
+    </div>
+
+    <p class="light">
+        Follow these steps to connect your forms with Constant Contact using API v3.
+    </p>
+
+    <hr>
+
+    <h3 class="heading">1) Create an Application in Constant Contact</h3>
+    <div class="instructions">
+        <ol>
+            <li>Go to the <a href="https://v3.developer.constantcontact.com/" rel="noopener" target="_blank">Constant Contact Developer Portal</a> and sign in.</li>
+            <li>Create a new application.</li>
+            <li>After creation, copy your <strong>Client ID</strong> and <strong>Client Secret</strong>.</li>
+        </ol>
+    </div>
+
+    <hr>
+
+    <h3 class="heading">2) Configure Plugin Settings</h3>
+    <div class="instructions">
+        <p>In your Craft CMS control panel, open <strong>Form Builder → Settings → Integrations → Constant Contact</strong> and enter your Client ID and Client Secret, then save it. You can do this in development environment.</p>
+    </div>
+
+    <hr>
+
+    <h3 class="heading">3) Set Redirect URI & Authorize</h3>
+    <div class="instructions">
+        <ol>
+            <li>Copy the Redirect URI shown in the plugin settings page and paste it into your Constant Contact application settings.</li>
+            <li><strong>Important:</strong> You must <u>save your plugin settings</u> before clicking Authorize.</li>
+            <li><strong>Important:</strong> If you deploy to production, you must <u>re-copy the Redirect URI from the production environment</u> and update it in your Constant Contact application settings. The Redirect URI must always match exactly.</li>
+            <li>Return here and click the <strong>Authorize</strong> button (top-right, next to Save).</li>
+            <li>You can test this step on a local environment, but authorization is <strong>required</strong> for production.</li>
+        </ol>
+    </div>
+
+
+
+    <hr>
+
+    <h3 class="heading">4) Map Lists & Test Forms</h3>
+    <div class="instructions">
+        <ol>
+            <li>Open your forms in the plugin and map fields to Constant Contact lists.</li>
+            <li>Save the form, then submit a test entry to confirm data flows into your Constant Contact account.</li>
+        </ol>
+    </div>
+
+    <div class="callout" style="margin:1rem 0; padding:.75rem 1rem; border-left:3px solid #4a90e2; background:#f8fafd;">
+        <p class="light">This integration supports <strong>Constant Contact API v3</strong> only.</p>
+    </div>
+
+</div>
