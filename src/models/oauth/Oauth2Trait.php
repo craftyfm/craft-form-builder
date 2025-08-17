@@ -225,7 +225,7 @@ trait Oauth2Trait
     {
         $client = $this->getApiClient();
 
-        if ($this->_token->isExpired()) {
+        if ($this->getToken()->isExpired()) {
             $this->refreshAccessToken();
         }
 
