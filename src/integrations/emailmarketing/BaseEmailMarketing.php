@@ -61,7 +61,11 @@ abstract class BaseEmailMarketing extends BaseIntegration
         $matchedList = array_filter($lists, function ($list) use ($listId) {
             return isset($list['id']) && $list['id'] === $listId;
         });
-        return reset($matchedList);
+        $list = reset($matchedList);
+        if (!$list) {
+            return null;
+        }
+        return $list;
     }
     /**
      * @throws Exception

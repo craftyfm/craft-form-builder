@@ -60,12 +60,13 @@ class FormsController extends Controller
         if (!$form) {
             throw new NotFoundHttpException('Form not found');
         }
-        $js = 'window.FormBuilderData = ' . json_encode($form->asArray(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . ';';
+        $js = 'window.FormBuilderData = ' . json_encode($form->mapArray(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . ';';
 
         Craft::$app->getView()->registerJs($js, \yii\web\View::POS_HEAD);
         $this->view->registerAssetBundle(FormBuilderAsset::class);
         $iconSets = FormBuilder::getInstance()->icons->listAvailableIconSets();
-        return $this->renderTemplate('form-builder/forms/edit', compact('iconSets', 'form'));
+        $emailTemplates = FormBuilder::getInstance()->emailTemplates->getAll();
+        return $this->renderTemplate('form-builder/forms/edit', compact('emailTemplates','iconSets', 'form'));
     }
 
 
@@ -122,7 +123,7 @@ class FormsController extends Controller
 
         $this->setSuccessFlash('Form saved successfully.');
         return $this->asJson(['success' => true, 'message' => 'Form saved successfully.',
-            'form' => $form->asArray(),
+            'form' => $form->mapArray(),
             'formUrl' => $form->getEditUrl()
         ]);
     }

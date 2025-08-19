@@ -173,9 +173,16 @@ class FormBuilder extends Plugin
     /**
      * Log plugin messages
      */
-    public static function log(string $message, int|string $level = LogLevel::INFO): void
+    public static function log(string $message, string $level = LogLevel::INFO): void
     {
-        Craft::getLogger()->log($message, $level, 'form-builder');
+        $logMap = [
+            LogLevel::INFO => LogLevel::INFO,
+            LogLevel::ERROR => LogLevel::ERROR,
+            LogLevel::WARNING => LogLevel::WARNING,
+            LogLevel::NOTICE => LogLevel::NOTICE,
+            LogLevel::DEBUG => LogLevel::DEBUG,
+        ];
+        Craft::getLogger()->log($message, $logMap[$level], 'form-builder');
     }
 
 

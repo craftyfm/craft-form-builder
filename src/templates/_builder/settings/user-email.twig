@@ -1,0 +1,52 @@
+<div class="cfb:grid cfb:grid-cols-1 lg:cfb:grid-cols-2 cfb:gap-6">
+    <div>
+        <label for="form-userNotifEnabled" class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">
+            Enabled
+        </label>
+        <div class="input ltr">
+            <button type="button" id="form-user-notif-enabled" class="lightswitch {{ form.userNotif.enabled ? 'on' }}" role="switch"
+                    aria-checked="{{ form.userNotif.enabled ? 'true' }}">
+                <div class="lightswitch-container" >
+                    <div class="handle"></div>
+                </div>
+                <input type="hidden" name="userNotif[enabled]" value="{{ form.userNotif.enabled ? '1' }}">    </button>
+        </div>
+    </div>
+
+    <div class="cfb-user-notif">
+        <label for="form-userEmail" class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">
+            Target Field <span class="cfb:text-red-500 cfb:ml-1">*</span>
+        </label>
+        <select id="form-userEmail" name="userNotif[recipients]"  class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-lg focus:cfb:outline-none focus:cfb:ring-2 focus:cfb:ring-blue-500 focus:cfb:border-blue-500">
+        </select>
+        <div class="cfb:font-light cfb:text-xs cfb:mt-1 cfb:mb-2 cfb:text-gray-500">Select email field as a recipient.</div>
+    </div>
+
+    <div class="cfb-user-notif">
+        <label for="form-userEmailSubject" class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">
+            Subject <span class="cfb:text-red-500 cfb:ml-1">*</span>
+        </label>
+        <input value="{{ form.userNotif.subject }}" type="text" id="form-userEmailSubject" name="userNotif[subject]" placeholder="Enter email subject..." class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-lg focus:cfb:outline-none focus:cfb:ring-2 focus:cfb:ring-blue-500 focus:cfb:border-blue-500">
+    </div>
+
+    <div class="cfb-user-notif">
+        <label for="form-userTemplate" class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">
+            Template<span class="cfb:text-red-500 cfb:ml-1">*</span>
+        </label>
+        <select id="form-userTemplate" name="userNotif[templateId]"  class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-lg focus:cfb:outline-none focus:cfb:ring-2 focus:cfb:ring-blue-500 focus:cfb:border-blue-500">
+            {% for emailTemplate in emailTemplates %}
+                <option value="{{ emailTemplate.id }}" {{ emailTemplate.id == form.userNotif.templateId }}>{{ emailTemplate.name }}</option>
+            {% endfor %}
+        </select>
+        <div class="cfb:font-light cfb:text-xs cfb:mt-1 cfb:mb-2 cfb:text-gray-500">Select the email template.</div>
+    </div>
+
+    <div class="cfb-user-notif">
+        <label for="form-userEmailMessage" class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">
+            Message <span class="cfb:text-red-500 cfb:ml-1">*</span>
+        </label>
+        <textarea rows="4" type="text" id="form-userEmailMessage" name="userNotif[message]" placeholder="Enter message..." class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-lg focus:cfb:outline-none focus:cfb:ring-2 focus:cfb:ring-blue-500 focus:cfb:border-blue-500">{{ form.userNotif.message }}</textarea>
+    </div>
+
+
+</div>

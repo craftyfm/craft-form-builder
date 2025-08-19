@@ -25,6 +25,13 @@ let formState = {
         recipients: window.FormBuilderData?.adminNotif.recipients || '',
         message: window.FormBuilderData?.adminNotif.message || '',
     },
+    userNotif: {
+        enabled: window.FormBuilderData?.userNotif.enabled || false,
+        subject: window.FormBuilderData?.userNotif.subject || '',
+        templateId: window.FormBuilderData?.userNotif.templateId || '',
+        recipients: window.FormBuilderData?.userNotif.recipients || '',
+        message: window.FormBuilderData?.userNotif.message || '',
+    },
     fields:window.FormBuilderData?.fields || [],
     integrations:window.FormBuilderData?.integrations || [],
 };
@@ -42,7 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const formContainer = document.getElementById('form-container');
 
     let selectedFieldId = null;
-
 
 
     // Initialize the renderer

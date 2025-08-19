@@ -16,6 +16,7 @@ use craftyfm\formbuilder\helpers\Table;
  * @property bool $enabled
  * @property string $type
  * @property string $uid
+ * @property int|mixed|null $templateId
  *
  */
 class EmailNotificationRecord extends ActiveRecord

@@ -15,8 +15,6 @@ export default class OptInDropdown {
 
         // Get available fields from global Craft variable
         const availableFields = this.globalVar.fields || [];
-        console.log(this.globalVar);
-        console.log(this.integrationHandle);
         // Get current selected from integrations
         const currentSelected = this.globalVar.integrations[this.integrationHandle]?.optIn || '';
         this.selectEl.innerHTML = `<option value="">Select an option</option>`;

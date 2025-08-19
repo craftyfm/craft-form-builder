@@ -6,7 +6,7 @@
             {% for integration in form.integrations %}
                 <li>
                     <button
-                            class="cfb:w-full cfb:flex cfb:items-center cfb:justify-between cfb:text-left cfb:font-bold cfb:px-3 cfb:py-2 cfb:rounded cfb:hover:bg-gray-100 cfb:focus:bg-gray-200"
+                            class="{{ loop.first ? 'cfb:bg-blue-100 cfb:text-blue-700' }} cfb:w-full cfb:flex cfb:items-center cfb:justify-between cfb:text-left cfb:font-bold cfb:px-3 cfb:py-2 cfb:rounded cfb:hover:bg-gray-100 cfb:focus:bg-gray-200"
                             data-integration="{{ integration.handle }}"
                     >
                         <span>{{ integration.name }}</span>

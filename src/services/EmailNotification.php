@@ -16,7 +16,7 @@ use yii\db\StaleObjectException;
 
 class EmailNotification extends Component
 {
-    public function getNotificationByFormId(int $formId, string $type = 'notification'): ?EmailNotificationModel
+    public function getNotificationByFormId(int $formId, string $type = EmailNotificationModel::TYPE_ADMIN): ?EmailNotificationModel
     {
         $record = EmailNotificationRecord::findOne(['formId' => $formId,  'type' => $type]);
         if (!$record) {
@@ -26,11 +26,14 @@ class EmailNotification extends Component
         return new EmailNotificationModel($record->toArray());
     }
 
-    public function getNotificationIdByFormId(int $formId, string $type = 'notification'): ?int
+    public function getNotificationIdByFormId(int $formId, string $type = EmailNotificationModel::TYPE_ADMIN): ?int
     {
         $record = EmailNotificationRecord::find()
             ->where(['formId' => $formId, 'type' => $type])
             ->select('id')->asArray()->one();
+        if (!$record) {
+            return null;
+        }
         return $record['id'];
     }
 
@@ -48,6 +51,7 @@ class EmailNotification extends Component
 
         $record->formId = $model->formId;
         $record->recipients = $model->recipients;
+        $record->templateId = $model->templateId;
         $record->message = $model->message;
         $record->subject = $model->subject;
         $record->enabled = $model->enabled;
@@ -83,10 +87,15 @@ class EmailNotification extends Component
         }
 
         $mailer = Craft::$app->getMailer();
+        $recipients = $model->getRecipients($submission);
+        if (!$recipients) {
+            return false;
+        }
         $message = $mailer->compose()
-            ->setTo(explode(',', $model->recipients))
+            ->setTo($recipients)
             ->setSubject($model->subject)
             ->setHtmlBody($model->getBodyHtml($submission));
+
 
         return $message->send();
     }

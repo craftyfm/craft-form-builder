@@ -1,0 +1,34 @@
+{% import "_includes/forms" as forms %}
+{% set notifications = [
+    {'name': 'Admin', 'handle': 'admin'},
+    {'name': 'User', 'handle': 'user'}
+] %}
+<div class="cfb-tab-content cfb-tab-notifications cfb:flex cfb:gap-4 cfb:hidden cfb:h-full">
+    <!-- Left Sidebar: Integration Tabs -->
+    <div class="cfb:w-2/12 cfb:border-r cfb:pr-4 cfb:h-full">
+        <ul class="cfb:space-y-2">
+            {% for notification in notifications %}
+                <li>
+                    <button
+                            class="{{ loop.first ? 'cfb:bg-blue-100 cfb:text-blue-700' }} cfb:w-full cfb:flex cfb:items-center cfb:justify-between cfb:text-left cfb:font-bold cfb:px-3 cfb:py-2 cfb:rounded cfb:hover:bg-gray-100 cfb:focus:bg-gray-200"
+                            data-notification="{{ notification.handle }}"
+                    >
+                        <span>{{ notification.name }}</span>
+                    </button>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Right Content: Integration Settings -->
+    <div class="cfb:w-10/12 cfb:overflow-y-auto">
+        <div class="notifications-settings cfb:ml-1 " id="notifications-admin">
+            <h3 class="cfb:text-lg cfb:font-semibold cfb:mb-2">Admin Notification</h3>
+            {% include 'form-builder/_builder/settings/admin-email' %}
+        </div>
+        <div class="notifications-settings cfb:ml-1 cfb:hidden " id="notifications-user">
+            <h3 class="cfb:text-lg cfb:font-semibold cfb:mb-2">User Notification</h3>
+            {% include 'form-builder/_builder/settings/user-email' %}
+        </div>
+    </div>
+</div>

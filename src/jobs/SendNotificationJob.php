@@ -18,19 +18,22 @@ class SendNotificationJob extends BaseJob
         if (!$this->submissionId) {
             return;
         }
-
         $submission = FormBuilder::getInstance()->submissions->getSubmissionById($this->submissionId);
 
         if (!$submission) {
             return;
         }
         $adminEmailNotif = $submission->getForm()->getAdminNotif();
-        if (!$adminEmailNotif->enabled || empty($adminEmailNotif->recipients)) {
-            return;
+        if ($adminEmailNotif->enabled && $adminEmailNotif->validate()) {
+            FormBuilder::getInstance()->emailNotification->sendNotification($adminEmailNotif, $submission);
         }
 
-        FormBuilder::getInstance()->emailNotification->sendNotification($adminEmailNotif, $submission);
+        $userEmailNotif = $submission->getForm()->getUserNotif();
 
+        if (!$userEmailNotif->enabled || !$userEmailNotif->validate()) {
+            return;
+        }
+        FormBuilder::getInstance()->emailNotification->sendNotification($userEmailNotif, $submission);
 
 
 

@@ -131,6 +131,11 @@ class Forms extends Component
             if (!FormBuilder::getInstance()->emailNotification->saveNotification($adminEmailNotif)) {
                 throw new Exception('Failed to save notification');
             }
+            $userEmailNotif = $data->getUserNotif();
+            $userEmailNotif->formId = $record->id;
+            if (!FormBuilder::getInstance()->emailNotification->saveNotification($userEmailNotif)) {
+                throw new Exception('Failed to save notification');
+            }
             $data->id = $record->id;
             $data->uid = $record->uid;
             $transaction->commit();
@@ -218,12 +223,19 @@ class Forms extends Component
             $formJson['adminNotif']['id'] = FormBuilder::getInstance()->emailNotification->getNotificationIdByFormId($formJson['id']);
         }
 
+        if (!empty($formJson['id'])) {
+            $formJson['userNotif']['id'] = FormBuilder::getInstance()->emailNotification->getNotificationIdByFormId($formJson['id'], \craftyfm\formbuilder\models\EmailNotification::TYPE_USER);
+        }
+
+        $userNotif = new \craftyfm\formbuilder\models\EmailNotification($formJson['userNotif'] ?? []);
+        $userNotif->type = \craftyfm\formbuilder\models\EmailNotification::TYPE_USER;
         $form = new Form([
             'name' => $formJson['name'] ?? null,
             'handle' => $formJson['handle'] ?? '',
             'id' => $formJson['id'] ?? null,
             'settings' => new FormSettings($formJson['settings'] ?? []),
             'adminNotif' => new \craftyfm\formbuilder\models\EmailNotification($formJson['adminNotif'] ?? []),
+            'userNotif' => $userNotif,
         ]);
 
         if (isset($formJson['fields'])) {
