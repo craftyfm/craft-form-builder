@@ -20,6 +20,11 @@
                     <span class="label">Statuses </span>
                 </a>
             </li>
+            <li>
+                <a class="has-badge {{ currentPage == 'email-templates' ? 'sel' }}" href="{{ cpUrl('form-builder/settings/email-templates') }}">
+                    <span class="label">Email Templates </span>
+                </a>
+            </li>
             <li class="heading"><span>Captcha</span></li>
             <li>
                 <a class="has-badge {{ currentPage == 'hcaptcha' ? 'sel' }}" href="{{ cpUrl('form-builder/settings/captcha/hcaptcha') }}">

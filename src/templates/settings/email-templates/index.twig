@@ -1,0 +1,51 @@
+{% extends "form-builder/settings/_layouts/base" %}
+{% do view.registerAssetBundle('craft\\web\\assets\\admintable\\AdminTableAsset') -%}
+{% set title = "Email Notification Templates" %}
+
+{% block actionButton %}
+    {% if craft.app.config.general.allowAdminChanges %}
+        <a href="{{ url('form-builder/settings/email-templates/new') }}" class="btn submit add icon">New Email Template</a>
+    {% endif %}
+{% endblock %}
+
+
+{% block content %}
+
+    <div id="template-admin-table"></div>
+    <script>
+        var tableData = {{ emailTemplates|json_encode|raw }}
+        {% if craft.app.config.general.allowAdminChanges %}
+            var deleteAction = "{{ actionUrl('form-builder/email-template/delete')  }}";
+        {% else %}
+            var deleteAction = null;
+        {% endif %}
+    </script>
+
+
+
+{% endblock %}
+
+{% js %}
+
+const columns = [
+    {
+        name: '__slot:title',
+        title: 'Name'
+    },
+    {
+        name: 'handle',
+        title: 'Handle'
+    },
+];
+
+new Craft.VueAdminTable({
+    columns: columns,
+    container: '#template-admin-table',
+    tableData: tableData,
+    deleteAction:deleteAction,
+    deleteFailMessage: 'Failed to delete template.',
+    deleteSuccessMessage: 'Template deleted.',
+    emptyMessage: 'No templates exist yet.',
+});
+
+{% endjs %}

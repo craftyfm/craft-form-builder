@@ -3,14 +3,20 @@
 namespace craftyfm\formbuilder\controllers;
 
 use Craft;
-use craft\errors\MissingComponentException;
+use craft\errors\BusyResourceException;
+use craft\errors\StaleResourceException;
 use craft\web\Controller;
 use craftyfm\formbuilder\FormBuilder;
 use craftyfm\formbuilder\models\SubmissionStatus;
+use yii\base\ErrorException;
+use yii\base\Exception;
+use yii\base\InvalidConfigException;
+use yii\base\NotSupportedException;
 use yii\web\BadRequestHttpException;
 use yii\web\MethodNotAllowedHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use yii\web\ServerErrorHttpException;
 
 ;
 
@@ -43,14 +49,18 @@ class SubmissionStatusController extends Controller
         ]);
     }
 
-    public function actionEdit(string $uid = null): Response
+    /**
+     * @throws NotFoundHttpException
+     */
+    public function actionEdit(string $uid = null, SubmissionStatus $status = null): Response
     {
         $service = FormBuilder::getInstance()->submissionStatuses;
 
-        $status = $uid ? ($service->getByUid($uid) ?? null) : new SubmissionStatus(['uid' => null]);
-
         if (!$status) {
-            throw new NotFoundHttpException('Status not found');
+            $status = $uid ? ($service->getByUid($uid) ?? null) : new SubmissionStatus(['uid' => null]);
+            if (!$status) {
+                throw new NotFoundHttpException('Status not found');
+            }
         }
 
         return $this->renderTemplate('form-builder/settings/statuses/_edit', [
@@ -60,14 +70,20 @@ class SubmissionStatusController extends Controller
     }
 
     /**
-     * @throws MissingComponentException
-     * @throws BadRequestHttpException
+     * @return Response|null
      * @throws MethodNotAllowedHttpException
+     * @throws BusyResourceException
+     * @throws StaleResourceException
+     * @throws ErrorException
+     * @throws Exception
+     * @throws InvalidConfigException
+     * @throws NotSupportedException
+     * @throws ServerErrorHttpException
      */
     public function actionSave(): ?Response
     {
         $this->requirePostRequest();
-        $request = Craft::$app->getRequest();
+        $request = $this->request;
 
         $id = $request->getBodyParam('id') ?? null;
 
@@ -83,7 +99,7 @@ class SubmissionStatusController extends Controller
         $service = FormBuilder::getInstance()->submissionStatuses;
 
         if (!$service->saveStatus($status)) {
-            return $this->asFailure("Could not save status.",
+            return $this->asFailure("Could not save status.", ['errors' => $service->getErrors()],
                 ['status' => $status, 'currentPage' => 'submission-status',]
             );
         }
@@ -95,7 +111,6 @@ class SubmissionStatusController extends Controller
     }
 
     /**
-     * @throws MissingComponentException
      * @throws BadRequestHttpException
      * @throws MethodNotAllowedHttpException
      */

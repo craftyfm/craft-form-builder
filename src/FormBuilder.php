@@ -16,6 +16,7 @@ use craftyfm\formbuilder\fields\FormSelectField;
 use craftyfm\formbuilder\models\Settings;
 use craftyfm\formbuilder\services\CaptchaManager;
 use craftyfm\formbuilder\services\EmailNotification;
+use craftyfm\formbuilder\services\EmailTemplates;
 use craftyfm\formbuilder\services\FormIntegrations;
 use craftyfm\formbuilder\services\Forms;
 use craftyfm\formbuilder\services\Icons;
@@ -48,13 +49,14 @@ use yii\base\InvalidRouteException;
  * @property Integrations $integrations
  * @property OauthToken $oauthToken
  * @property FormIntegrations $formIntegrations
+ * @property EmailTemplates $emailTemplates
  * @author craftyfm
  * @copyright craftyfm
  * @license https://craftcms.github.io/license/ Craft License
  */
 class FormBuilder extends Plugin
 {
-    public string $schemaVersion = '1.0.1';
+    public string $schemaVersion = '1.0.2';
     public bool $hasCpSettings = true;
     public bool $hasCpSection = true;
 
@@ -73,6 +75,7 @@ class FormBuilder extends Plugin
                 'integrations' => Integrations::class,
                 'oauthToken' => OauthToken::class,
                 'formIntegrations' => FormIntegrations::class,
+                'emailTemplates' => EmailTemplates::class,
             ],
         ];
     }
@@ -198,6 +201,10 @@ class FormBuilder extends Plugin
                     $event->rules['form-builder/settings/integrations'] = 'form-builder/integration-settings/index';
                     $event->rules['form-builder/settings/integrations/new'] = 'form-builder/integration-settings/edit';
                     $event->rules['form-builder/settings/integrations/<id:\d+>'] = 'form-builder/integration-settings/edit';
+
+                    $event->rules['form-builder/settings/email-templates'] = 'form-builder/email-template/index';
+                    $event->rules['form-builder/settings/email-templates/new'] = 'form-builder/email-template/edit';
+                    $event->rules['form-builder/settings/email-templates/<uid:{uid}>'] = 'form-builder/email-template/edit';
                 }
 
                 $event->rules['form-builder/integration/oauth-callback'] = 'form-builder/integration/oauth-callback';;

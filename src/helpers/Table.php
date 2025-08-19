@@ -11,4 +11,5 @@ abstract class Table
     public const INTEGRATIONS = '{{%formbuilder_integrations}}';
     public const INTEGRATION_OAUTH_TOKEN = '{{%formbuilder_integrations_tokens}}';
     public const FORM_INTEGRATION = '{{%formbuilder_form_integration}}';
+    public const EMAIL_TEMPLATES = '{{%formbuilder_email_templates}}';
 }

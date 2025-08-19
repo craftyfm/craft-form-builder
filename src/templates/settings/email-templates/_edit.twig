@@ -1,0 +1,65 @@
+{% extends "form-builder/settings/_layouts/base" %}
+{% import "_includes/forms" as forms %}
+
+{% set isNew = not emailTemplate.uid %}
+{% set title = isNew ? "New Template" : "Edit Template: " ~ emailTemplate.name %}
+
+{% if craft.app.config.general.allowAdminChanges %}
+    {% set readOnly = false %}
+{% else %}
+    {% set readOnly = true %}
+{% endif %}
+
+{% block content %}
+    {{ csrfInput() }}
+    {{ actionInput('form-builder/email-template/save') }}
+    {{ redirectInput('form-builder/settings/email-templates') }}
+
+    {% if not isNew %}
+        {{ hiddenInput('id', emailTemplate.id) }}
+    {% endif %}
+    {{ forms.textField({
+        first: true,
+        label: "Name"|t('app'),
+        id: 'name',
+        name: 'name',
+        value: emailTemplate.name,
+        autofocus: true,
+        required: true,
+        errors: emailTemplate.getErrors('name'),
+        data: {'error-key': 'name'},
+        disabled: readOnly
+    }) }}
+
+    {{ forms.textField({
+        label: "Handle"|t('app'),
+        id: 'handle',
+        name: 'handle',
+        class: 'code',
+        autocorrect: false,
+        autocapitalize: false,
+        value: emailTemplate.handle,
+        required: true,
+        errors: emailTemplate.getErrors('handle'),
+        data: {'error-key': 'handle'},
+        disabled: readOnly
+    }) }}
+
+    {{ forms.autosuggestField({
+        label: "HTML Email Template"|t('app'),
+        instructions: "The template form will use for HTML emails"|t('form-builder'),
+        id: 'template',
+        name: 'template',
+        suggestTemplates: true,
+        required: true,
+        value: emailTemplate.template,
+        errors: emailTemplate.getErrors('template'),
+        disabled: readOnly,
+    }) }}
+
+{% endblock %}
+
+
+{% if not emailTemplate.handle %}
+    {% js "new Craft.HandleGenerator('##{'name'|namespaceInputId}', '##{'handle'|namespaceInputId}');" %}
+{% endif %}
