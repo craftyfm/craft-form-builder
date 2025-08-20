@@ -9,6 +9,7 @@ use DateTime;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
+use Twig\Markup;
 use yii\base\Exception;
 
 class EmailNotification extends Model
@@ -59,7 +60,7 @@ class EmailNotification extends Model
                 $emailTemplate->template,
                 [
                     'submission' => $submission,
-                    'message' => $this->message,
+                    'message' => new Markup(nl2br($this->message), 'UTF-8'),
                     'subject' => $this->subject,
                 ],
                 View::TEMPLATE_MODE_SITE
