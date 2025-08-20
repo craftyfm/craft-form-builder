@@ -5,7 +5,7 @@
             <label for="framework" class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">
                 Framework <span class="cfb:text-red-500 cfb:ml-1">*</span>
             </label>
-            <select id="framework" name="settings[framework]" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-lg focus:cfb:outline-none focus:cfb:ring-2 focus:cfb:ring-blue-500 focus:cfb:border-blue-500">
+            <select required id="framework" name="settings[framework]" class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-lg focus:cfb:outline-none focus:cfb:ring-2 focus:cfb:ring-blue-500 focus:cfb:border-blue-500">
                {% for framework in settings.getAllowedFrameworkOptions() %}
                     <option value="{{ framework.value }}" {{ form.settings.framework == framework.value ? 'selected' }}>{{ framework.label }}</option>
                 {% endfor %}

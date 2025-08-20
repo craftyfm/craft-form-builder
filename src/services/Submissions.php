@@ -142,6 +142,7 @@ class Submissions extends Component
             }
         }
     }
+
     /**
      * Get table data with proper pagination and security
      * @throws \Exception

@@ -18,7 +18,7 @@
         <label for="form-adminEmail" class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">
             Recipients <span class="cfb:text-red-500 cfb:ml-1">*</span>
         </label>
-        <input value="{{ form.adminNotif.recipients }}" type="text" id="form-adminEmail" name="adminNotif[recipients]" placeholder="Enter valid email..." class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-lg focus:cfb:outline-none focus:cfb:ring-2 focus:cfb:ring-blue-500 focus:cfb:border-blue-500">
+        <input required value="{{ form.adminNotif.recipients }}" type="text" id="form-adminEmail" name="adminNotif[recipients]" placeholder="Enter valid email..." class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-lg focus:cfb:outline-none focus:cfb:ring-2 focus:cfb:ring-blue-500 focus:cfb:border-blue-500">
         <div class="cfb:font-light cfb:text-xs cfb:mt-1 cfb:mb-2 cfb:text-gray-500">Admin Email addresses to send the email notification. Separate multiple emails with a comma.</div>
     </div>
 
@@ -26,14 +26,14 @@
         <label for="form-adminEmailSubject" class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">
             Subject <span class="cfb:text-red-500 cfb:ml-1">*</span>
         </label>
-        <input value="{{ form.adminNotif.subject }}" type="text" id="form-adminEmailSubject" name="adminNotif[subject]" placeholder="Enter email subject..." class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-lg focus:cfb:outline-none focus:cfb:ring-2 focus:cfb:ring-blue-500 focus:cfb:border-blue-500">
+        <input required value="{{ form.adminNotif.subject }}" type="text" id="form-adminEmailSubject" name="adminNotif[subject]" placeholder="Enter email subject..." class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-lg focus:cfb:outline-none focus:cfb:ring-2 focus:cfb:ring-blue-500 focus:cfb:border-blue-500">
     </div>
 
     <div class="cfb-admin-notif">
         <label for="form-adminEmailMessage" class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">
             Message <span class="cfb:text-red-500 cfb:ml-1">*</span>
         </label>
-        <textarea type="text" id="form-adminEmailMessage" name="adminNotif[message]" placeholder="Enter message..." class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-lg focus:cfb:outline-none focus:cfb:ring-2 focus:cfb:ring-blue-500 focus:cfb:border-blue-500">{{ form.adminNotif.message }}</textarea>
+        <textarea required type="text" id="form-adminEmailMessage" name="adminNotif[message]" placeholder="Enter message..." class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-lg focus:cfb:outline-none focus:cfb:ring-2 focus:cfb:ring-blue-500 focus:cfb:border-blue-500">{{ form.adminNotif.message }}</textarea>
     </div>
 
 
