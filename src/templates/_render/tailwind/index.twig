@@ -4,33 +4,32 @@
 {% set orientation = form.settings.orientation %}
 {% set framework = form.settings.framework %}
 {% set iconSet = form.settings.icons %}
-
 {% set hasErrors = submission.hasErrors() %}
-{% if craft.app.session.hasFlash('success') %}
-    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-5" role="alert">
-        <span class="block sm:inline">{{  craft.app.session.getFlash('success') }}</span>
-    </div>
-{% endif %}
-{% if craft.app.session.hasFlash('error') %}
-<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-5" role="alert">
-    <strong class="font-bold">Error!</strong>
-    <   <span class="block sm:inline">{{  craft.app.session.getFlash('error') }}</span>
+
+<div id="wrapper-{{ form.uid }}">
+    {% if craft.app.session.hasFlash('form-builder-success') %}
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-5" role="alert">
+            <span class="block sm:inline"> {{ craft.app.session.getFlash('form-builder-success') }}</span>
+        </div>
+    {% endif %}
+    {% if craft.app.session.hasFlash('form-builder-error') %}
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-5" role="alert">
+            <span class="block sm:inline">  {{ craft.app.session.getFlash('form-builder-error') }}</span>
+        </div>
+    {% endif %}
+
+    <form id="{{ form.uid }}" method="POST" enctype="multipart/form-data" accept-charset="UTF-8"
+          class="{{ form.settings.class }}">
+        <input type="hidden" name="action" value="form-builder/submissions/submit">
+        <input type="hidden" name="formId" value="{{ form.id }}">
+        {{ redirectInput(craft.app.request.absoluteUrl ~ "#wrapper" ~ form.uid) }}
+        {{ csrfInput() }}
+        <div class="flex flex-col gap-5">
+            {% for field in form.fields %}
+                {% include "form-builder/_render/tailwind/" ~ 'components' ~ "/" ~ field.type %}
+            {% endfor %}
+        </div>
+    </form>
 </div>
-{% endif %}
-
-<form id="{{ form.uid }}" method="POST" enctype="multipart/form-data" accept-charset="UTF-8"
-      class="{{ form.settings.class }}">
-    <input type="hidden" name="action" value="form-builder/submissions/submit">
-    <input type="hidden" name="formId" value="{{ form.id }}">
-    {{ csrfInput() }}
-    <div class="flex flex-col gap-5">
-        {% for field in form.fields %}
-            {% include "form-builder/_render/tailwind/" ~ 'components' ~ "/" ~ field.type %}
-        {% endfor %}
-    </div>
-</form>
-
-
-
 
 
