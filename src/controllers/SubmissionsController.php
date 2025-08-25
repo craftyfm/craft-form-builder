@@ -3,6 +3,8 @@
 namespace craftyfm\formbuilder\controllers;
 
 use Craft;
+use craft\errors\MissingComponentException;
+use craft\helpers\DateTimeHelper;
 use craft\helpers\Html;
 use craft\helpers\UrlHelper;
 use craft\web\Controller;
@@ -11,6 +13,7 @@ use craft\web\UploadedFile;
 use craftyfm\formbuilder\FormBuilder;
 use craftyfm\formbuilder\models\form_fields\Checkbox;
 use craftyfm\formbuilder\models\form_fields\Checkboxes;
+use craftyfm\formbuilder\models\form_fields\Date;
 use craftyfm\formbuilder\models\form_fields\Email;
 use craftyfm\formbuilder\models\form_fields\FileUpload;
 use craftyfm\formbuilder\models\form_fields\Number;
@@ -214,18 +217,18 @@ class SubmissionsController extends Controller
         $this->validateSecurityChecks($submission, $this->request);
 
         if ($submission->hasErrors('rateLimit')) {
-            return $this->asFailure($submission->getFirstError('rateLimit'));
+            return $this->asSubmitError($submission->getFirstError('rateLimit'));
         }
 
         if ($submission->hasErrors('captcha')) {
-            return $this->asFailure($submission->getFirstError('captcha'));
+            return $this->asSubmitError($submission->getFirstError('captcha'));
         }
 
         // Save submission
         try {
             $saved = FormBuilder::getInstance()->submissions->saveSubmission($submission, false);
             if (!$saved) {
-                return $this->asFailure('Failed to save submission');
+                return $this->asSubmitError('Failed to save submission');
             }
 
             // Process integrations if needed
@@ -238,7 +241,8 @@ class SubmissionsController extends Controller
                 return $this->asJson([
                     'success' => true,
                     'message' => $successMessage,
-                    'submissionId' => $submission->id
+                    'submissionId' => $submission->id,
+                    'redirectUrl' => $form->settings->redirectUrl,
                 ]);
             }
 
@@ -247,13 +251,48 @@ class SubmissionsController extends Controller
             if ($form->settings->actionOnSubmit === FormSettings::ACTION_REDIRECT && $successUrl) {
                 return $this->redirect($successUrl);
             }
-            return $this->asSuccess($successMessage);
+            Craft::$app->getSession()->setFlash('form-builder-success', $successMessage);
+            return $this->redirectToPostedUrl();
 
 
         } catch (\Exception $e) {
             Craft::error('Form submission error: ' . $e->getMessage(), __METHOD__);
-            return $this->asFailure('An error occurred while processing your submission');
+            return $this->asSubmitError('An error occurred while processing your submission');
         }
+    }
+
+
+
+    /**
+     * @throws MissingComponentException
+     */
+    private function asSubmitError(
+        ?string $message = null,
+        array $data = [],
+        array $routeParams = [],
+    ): ?Response
+    {
+        if ($this->request->getAcceptsJson()) {
+            $this->response->setStatusCode(400);
+            return $this->asJson($data + array_filter([
+                    'message' => $message,
+                ]));
+        }
+
+        $this->setSubmitFormFlashError($message);
+        if (!empty($routeParams)) {
+            Craft::$app->getUrlManager()->setRouteParams($routeParams);
+        }
+
+        return null;
+    }
+
+    /**
+     * @throws MissingComponentException
+     */
+    private function setSubmitFormFlashError(string $message)
+    {
+        Craft::$app->getSession()->setFlash('form-builder-error', $message);;
     }
 
     /**
@@ -272,6 +311,7 @@ class SubmissionsController extends Controller
 
     /**
      * Sanitize field value based on field type
+     * @throws \Exception
      */
     private function sanitizeFieldValue(mixed $value, BaseField $field): mixed
     {
@@ -286,6 +326,8 @@ class SubmissionsController extends Controller
             case TextArea::$type:
                 // HTML encode to prevent XSS
                 return is_string($value) ? Html::encode(trim($value)) : $value;
+            case Date::$type:
+                return $value ? DateTimeHelper::toDateTime($value, false, false) : null;
             case Number::$type:
                 return intval($value);
             case Checkbox::$type:
@@ -299,8 +341,6 @@ class SubmissionsController extends Controller
 
                 $validValues = array_column($formField->options, 'value');
                 return in_array($value, $validValues, true) ? Html::encode($value) : null;
-
-
             case Checkboxes::$type:
                 // Ensure boolean or array of valid options
                 if (is_array($value)) {
@@ -427,6 +467,7 @@ class SubmissionsController extends Controller
     /**
      * Handle validation errors
      * @throws BadRequestHttpException
+     * @throws MissingComponentException
      */
     private function handleValidationErrors(Submission $submission, $request): ?Response
     {
@@ -438,6 +479,7 @@ class SubmissionsController extends Controller
             ]);
         }
 
+        $this->setSubmitFormFlashError('There was a problem submitting the form.');
         // For non-AJAX requests, redirect back with errors
         Craft::$app->getUrlManager()->setRouteParams([
             'submission' => $submission,
@@ -457,21 +499,4 @@ class SubmissionsController extends Controller
         }, $submission->getSubmissionFields());
     }
 
-    /**
-     * Process integrations (webhooks, etc.)
-     */
-    private function processIntegrations(Submission $submission): void
-    {
-        // Process integrations in background or queue
-        // This is where you'd call your FileMaker integration or other webhooks
-        try {
-            // Example: Queue job for processing integrations
-            // Craft::$app->getQueue()->push(new ProcessSubmissionIntegrations([
-            //     'submissionId' => $submission->id
-            // ]));
-        } catch (\Exception $e) {
-            // Log integration errors but don't fail the submission
-            Craft::error('Integration processing error: ' . $e->getMessage(), __METHOD__);
-        }
-    }
 }

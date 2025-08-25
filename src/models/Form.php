@@ -29,9 +29,13 @@ class Form extends Model
     /** @var IntegrationInterface[] $integrations */
     public array $integrations = [];
     public FormSettings $settings;
+
+    /** @var Base[] $_fields */
     private array $_fields = [];
     private EmailNotification $_adminNotif;
-//    private
+    private EmailNotification $_userNotif;
+
+
     public function __construct($config = [])
     {
         $parentConfig = [
@@ -45,6 +49,10 @@ class Form extends Model
 
         if (isset($config['adminNotif'])) {
             $this->setAdminNotif($config['adminNotif']);
+        }
+
+        if (isset($config['userNotif'])) {
+            $this->setUserNotif($config['userNotif']);
         }
 
         parent::__construct($parentConfig);
@@ -68,6 +76,19 @@ class Form extends Model
         return $this->_fields;
     }
 
+    public function getFieldById(string $fieldId): ?Base
+    {
+        $matchedFields = array_filter($this->_fields, function ($field) use ($fieldId) {
+            return isset($field->id) && $field->id === $fieldId;
+        });
+        $field = reset($matchedFields);
+        if (!$field) {
+            return null;
+        }
+        return $field;
+
+    }
+
     public function addFields(string $handle, Base $field): void
     {
         $this->_fields[$handle] = $field;
@@ -86,10 +107,7 @@ class Form extends Model
 
     public function setAdminNotif(EmailNotification $adminNotif): void
     {
-
         $this->_adminNotif = $adminNotif;
-        $this->_adminNotif->formId = $this->id;
-        $this->_adminNotif->type = 'notification';
     }
 
     public function getAdminNotif(): EmailNotification
@@ -98,7 +116,10 @@ class Form extends Model
             return $this->_adminNotif;
         }
         if ($this->id === null) {
-            $this->setAdminNotif(new EmailNotification());
+            $adminNotif = new EmailNotification();
+            $adminNotif->type = EmailNotification::TYPE_ADMIN;
+            $adminNotif->formId = $this->id;
+            $this->setAdminNotif($adminNotif);
             return $this->_adminNotif;
         }
         $emailNotif = FormBuilder::getInstance()->emailNotification->getNotificationByFormId($this->id);
@@ -109,6 +130,34 @@ class Form extends Model
         }
         return $this->_adminNotif;
     }
+
+    public function setUserNotif(EmailNotification $emailNotif): void
+    {
+        $this->_userNotif =  $emailNotif;
+    }
+
+    public function getUserNotif(): EmailNotification
+    {
+        if (isset($this->_userNotif)) {
+            return $this->_userNotif;
+        }
+        if ($this->id === null) {
+            $userNotif = new EmailNotification();
+            $userNotif->type = EmailNotification::TYPE_USER;
+            $userNotif->formId = $this->id;
+            $this->setUserNotif($userNotif);
+            return $this->_userNotif;
+        }
+        $emailNotif = FormBuilder::getInstance()->emailNotification->getNotificationByFormId($this->id, EmailNotification::TYPE_USER);
+        if (!$emailNotif) {
+            $this->setUserNotif(new EmailNotification());
+        } else {
+            $this->setUserNotif($emailNotif);
+        }
+        return $this->_userNotif;
+    }
+
+
 
     protected function defineRules(): array
     {
@@ -137,7 +186,7 @@ class Form extends Model
 
         return $rules;
     }
-    public function asArray(): array
+    public function mapArray(): array
     {
         return [
             'id' => $this->id,
@@ -145,6 +194,7 @@ class Form extends Model
             'handle' => $this->handle,
             'settings' => $this->settings->toArray(),
             'adminNotif' => $this->getAdminNotif()->toArray(),
+            'userNotif' => $this->getUserNotif()->toArray(),
             'fields' => $this->getFieldsAsArray(),
             'integrations' => $this->getIntegrationsAsArray(),
             'authorId' => $this->authorId,

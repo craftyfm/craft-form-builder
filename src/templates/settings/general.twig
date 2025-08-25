@@ -10,9 +10,6 @@
         <div class="fb-settings-container">
             <!-- File Upload Settings -->
             <div class="fb-settings-section">
-                <h2>{{ "File Upload Settings"|t('form-builder') }}</h2>
-                <p class="light">{{ "Configure how file uploads are handled in your forms."|t('form-builder') }}</p>
-
                 {{ forms.selectField({
                     label: "Upload Volume"|t('form-builder'),
                     instructions: "Choose the volume where uploaded files will be stored. If no volume is selected, file upload fields will be disabled."|t('form-builder'),
@@ -27,6 +24,30 @@
                     ),
                     warning: volumes|length == 0 ? "No volumes are available. Create a volume first to enable file uploads."|t('form-builder') : null
                 }) }}
+
+                {{ forms.checkboxSelectField({
+                    label: "Frameworks",
+                    instructions: "Please choose one or more of the frameworks.",
+                    id: 'frameworks',
+                    name: 'settings[frameworks]',
+                    options: settings.getAvailableFrameworkOptions() ,
+                    values: settings.frameworks,
+                    errors: settings.getErrors('frameworks'),
+                    data: {'error-key': 'frameworks'},
+                }) }}
+
+{#                <fieldset id="allowed-frameworks">#}
+{#                    {% for option in settings.getAvailableFrameworkOptions() %}#}
+{#                        {{ forms.checkboxField({#}
+{#                            label: option.label,#}
+{#                            id: 'allowedFrameworks-'~option.value,#}
+{#                            name: 'allowedFrameworks[]',#}
+{#                            value: option.value,#}
+{#                            checked: (option.value in settings.allowedFrameworks),#}
+{#                        }) }}#}
+{#                    {% endfor %}#}
+{#                    {{ forms.errorList(settings.getErrors('allowedFramework')) }}#}
+{#                </fieldset>#}
             </div>
 
             <!-- Rate Limiting Settings -->

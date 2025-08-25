@@ -20,13 +20,14 @@ class FormSettings extends Model
     // layouts
     public string $orientation = self::ORIENTATION_VERTICAL;
     public string $framework = self::FRAMEWORK_BOOTSTRAP;
+    public bool $outputFrameworkAssets = false;
     public string $icons = '';
     public string $class = '';
 
     // Action behavior
     public string $redirectUrl = '';
     public string $actionOnSubmit = self::ACTION_MESSAGE;
-    public string $successMessage = '';
+    public string $successMessage = 'Thank you for your submission!';
 
     public function __construct(array $data = [])
     {

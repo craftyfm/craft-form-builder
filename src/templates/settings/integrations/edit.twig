@@ -1,7 +1,8 @@
 {% extends "_layouts/cp" %}
 {% import "_includes/forms" as forms %}
 {% set title = not integration ? "Create Integration"|t : "Edit Integration: " ~ integration.name %}
- {% set readOnly = true %}
+{% set readOnly = true %}
+
 {% if craft.app.config.general.allowAdminChanges %}
     {% set fullPageForm = true %}
     {% set readOnly = false %}
@@ -28,8 +29,25 @@
         disabled: readOnly
     }) }}
 </div>
+
+
 {% endblock %}
 
+{% block actionButton %}
+    {% if integration.supportOauth2Authorize() %}
+        <a class="btn" href="{{ actionUrl('form-builder/integration-settings/authorize', {id: integration.id}) }}">
+            Authorize
+        </a>
+    {% endif %}
+    {% if craft.app.config.general.allowAdminChanges %}
+    <div id="action-buttons" class="flex">
+        <div class="btngroup" >
+            <button type="submit" class="btn submit">Save</button>
+            <button type="button" class="btn submit menubtn" aria-label="More actions" aria-controls="form-action-menu" data-disclosure-trigger="true" aria-expanded="false"></button>
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}
 {% block content %}
     {{ actionInput('form-builder/integration-settings/save') }}
     {{ redirectInput('form-builder/settings/integrations') }}

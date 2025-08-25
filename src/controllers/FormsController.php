@@ -60,12 +60,13 @@ class FormsController extends Controller
         if (!$form) {
             throw new NotFoundHttpException('Form not found');
         }
-        $js = 'window.FormBuilderData = ' . json_encode($form->asArray(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . ';';
+        $js = 'window.FormBuilderData = ' . json_encode($form->mapArray(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . ';';
 
         Craft::$app->getView()->registerJs($js, \yii\web\View::POS_HEAD);
         $this->view->registerAssetBundle(FormBuilderAsset::class);
         $iconSets = FormBuilder::getInstance()->icons->listAvailableIconSets();
-        return $this->renderTemplate('form-builder/forms/edit', compact('iconSets', 'form'));
+        $emailTemplates = FormBuilder::getInstance()->emailTemplates->getAll();
+        return $this->renderTemplate('form-builder/forms/edit', compact('emailTemplates','iconSets', 'form'));
     }
 
 
@@ -100,14 +101,13 @@ class FormsController extends Controller
             ]);
         }
         try {
-            $form = FormBuilder::getInstance()->forms->constructForms($rawData);
+            $form = FormBuilder::getInstance()->forms->constructFormsFromJson($rawData);
             if($form->uid == null) {
                 $form->authorId = $user->id;
             }
             FormBuilder::getInstance()->forms->saveForm($form);
         } catch (\Exception|Error $error) {
-
-            FormBuilder::log($error, 'error');
+            FormBuilder::log($error->getMessage(), 'error');
             return $this->asFailure("Internal server error ",[
                 'success' => false,
                 'message' => 'Internal server error.'
@@ -123,7 +123,7 @@ class FormsController extends Controller
 
         $this->setSuccessFlash('Form saved successfully.');
         return $this->asJson(['success' => true, 'message' => 'Form saved successfully.',
-            'form' => $form->asArray(),
+            'form' => $form->mapArray(),
             'formUrl' => $form->getEditUrl()
         ]);
     }
@@ -160,14 +160,14 @@ class FormsController extends Controller
 
         $rawData = $request->getBodyParam('form');
 
-        $form = FormBuilder::getInstance()->forms->constructForms($rawData);
+        $form = FormBuilder::getInstance()->forms->constructFormsFromJson($rawData);
         $submission = new Submission($form);
         $form->uid = $formJson['uid'] ?? StringHelper::UUID();
         $this->view->on(View::EVENT_BEFORE_RENDER_TEMPLATE, function ($e) {
             $e->sender->assetBundles = [];
         });
         return $this->renderTemplate('form-builder/_render/preview', [
-            'form' => $form, 'submission' => $submission, 'loadAsset' => true,
+            'form' => $form, 'submission' => $submission, 'preview' => true,
         ], View::TEMPLATE_MODE_CP);
     }
 

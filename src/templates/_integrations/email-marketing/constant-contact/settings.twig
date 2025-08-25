@@ -1,0 +1,31 @@
+{% import "_includes/forms" as forms %}
+
+{% include 'form-builder/_integrations/email-marketing/constant-contact/instructions.twig' %}
+{{ forms.textField({
+    label: 'Redirect URI',
+    value: integration.getRedirectUri(),
+    instructions: 'Put this URI in your Constant Contact application\'s redirect URI .',
+    readonly: true
+
+}) }}
+
+{{ forms.autosuggestField({
+    label: 'Client ID',
+    name: 'clientId',
+    value: integration.clientId,
+    instructions: 'Enter your API KEY / Client ID here.',
+    errors: integration.getErrors('clientId'),
+    required: true,
+    suggestEnvVars: true,
+}) }}
+
+{{ forms.autosuggestField({
+    label: 'Client Secret',
+    name: 'clientSecret',
+    value: integration.clientSecret,
+    instructions: 'Enter your client secret here.',
+    errors: integration.getErrors('clientSecret'),
+    required: true,
+    suggestEnvVars: true,
+}) }}
+

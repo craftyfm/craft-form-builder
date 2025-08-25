@@ -32,16 +32,6 @@ Use this when you know the form handle:
 {{ form }}
 ```
 
-You can also control whether to load the framework assets (CSS, JS):
-
-```twig
-{% set form = craft.formBuilder.renderForm('yourFormHandle', false) %}
-{{ form }}
-```
-
-* `true` : Loads CSS/JS assets.
-* `false`: (default) Skips asset loading.
-
 ---
 
 ### ✅ Option 2: Render via Field Selection
@@ -53,13 +43,3 @@ If you’ve added the **Form Select** field to an entry:
     {{ entry.form.render() }}
 {% endif %}
 ```
-
-Load with framework assets (bootstrap/tailwind):
-
-```twig
-{% if entry.form %}
-    {{ entry.form.render(true) }}
-{% endif %}
-```
-
-> This gives you full control over when the plugin’s assets are loaded in your templates.

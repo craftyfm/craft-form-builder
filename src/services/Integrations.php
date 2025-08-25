@@ -16,7 +16,9 @@ use craftyfm\formbuilder\FormBuilder;
 use craftyfm\formbuilder\helpers\Table;
 use craftyfm\formbuilder\integrations\base\BaseIntegration;
 use craftyfm\formbuilder\integrations\base\IntegrationInterface;
+use craftyfm\formbuilder\integrations\emailmarketing\ConstantContact;
 use craftyfm\formbuilder\integrations\webhooks\GenericWebhook;
+use craftyfm\formbuilder\models\Submission;
 use craftyfm\formbuilder\records\IntegrationRecord;
 use Exception;
 use Throwable;
@@ -31,9 +33,15 @@ class Integrations extends Component
     public function getAllIntegrationTypes(): array
     {
         $integrationTypes = [];
+
+        $integrationTypes[BaseIntegration::TYPE_EMAIL_MARKETING] = [
+            ConstantContact::class,
+        ];
+
         $integrationTypes[BaseIntegration::TYPE_WEBHOOK] = [
             GenericWebhook::class,
         ];
+
         $integrationTypes[BaseIntegration::TYPE_MISC] = [
 
         ];
@@ -152,16 +160,43 @@ class Integrations extends Component
      * @throws InvalidConfigException
      * @throws MissingComponentException
      */
-    public function getIntegrationById(int $id): ?IntegrationInterface
+    public function getIntegrationByHandle(string $handle): ?IntegrationInterface
     {
-        $record = IntegrationRecord::findOne(['id' => $id]);
+        $record = IntegrationRecord::findOne(['handle' => $handle]);
         if (!$record) {
             return null;
         }
         return $this->constructIntegration($record->toArray());
     }
 
-    public function runIntegration($integration, $submission): void
+    public function getIntegrationById(int $id): ?IntegrationInterface
+    {
+        $record = IntegrationRecord::findOne(['id' => $id]);
+        if (!$record) {
+            return null;
+        }
+        try {
+            return $this->constructIntegration($record->toArray());
+        } catch (Exception $e) {
+            FormBuilder::log($e->getMessage(), 'error');
+            return null;
+        }
+    }
+
+    /**
+     * @throws InvalidConfigException
+     * @throws MissingComponentException
+     */
+    public function getIntegrationByUid(string $uid): ?IntegrationInterface
+    {
+        $record = IntegrationRecord::findOne(['uid' => $uid]);
+        if (!$record) {
+            return null;
+        }
+        return $this->constructIntegration($record->toArray());
+    }
+
+    public function runIntegration(IntegrationInterface $integration, Submission $submission): void
     {
         $integration->execute($submission);
     }
@@ -226,6 +261,13 @@ class Integrations extends Component
         ];
     }
 
+    /**
+     * @throws \yii\db\Exception
+     */
+    public function updateMetadata(int $integrationId, array $data ): void
+    {
+        Db::update(Table::INTEGRATIONS, ['metadata' => $data], ['id' => $integrationId]);
+    }
 
 
 }

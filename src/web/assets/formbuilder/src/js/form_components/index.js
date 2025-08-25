@@ -16,9 +16,11 @@ import url from "./url";
 import phone from "./phone";
 import number from "./number";
 import checkbox from "./checkbox";
+import date from "./date";
 
 export const components = {
     text,
+    date,
     email,
     url,
     phone,

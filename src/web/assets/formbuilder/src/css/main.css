@@ -21,6 +21,20 @@
 
 }
 
+.cfb\:loading {
+    content: "";
+    display: inline-block;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-left: 0.25em;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
 .cfb\:delete-tooltip {
     position: absolute;
     bottom: 100%;           /* Position above the button */

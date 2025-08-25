@@ -2,12 +2,18 @@
 
 namespace craftyfm\formbuilder\controllers;
 
+use Craft;
 use craft\errors\MissingComponentException;
+use craft\errors\SiteNotFoundException;
+use craft\helpers\App;
 use craft\helpers\UrlHelper;
 use craft\web\Controller;
 use craftyfm\formbuilder\FormBuilder;
 use craftyfm\formbuilder\integrations\base\BaseIntegration;
 use craftyfm\formbuilder\integrations\base\IntegrationInterface;
+use craftyfm\formbuilder\integrations\emailmarketing\ConstantContact;
+use Exception;
+use Random\RandomException;
 use yii\base\InvalidConfigException;
 use yii\web\BadRequestHttpException;
 use yii\web\MethodNotAllowedHttpException;
@@ -33,7 +39,7 @@ class IntegrationSettingsController extends Controller
             $tableData[] = [
                 'id' => $integration->id,
                 'title' => $integration->name,
-                'type' => $integration->getType(),
+                'type' => $integration->getDisplayName(),
                 'url' => $integration->getCpEditUrl(),
                 'enabled' => $integration->enabled,
             ];
@@ -45,6 +51,11 @@ class IntegrationSettingsController extends Controller
 
     /**
      * Edit existing integration
+     * @param int|null $id
+     * @param IntegrationInterface|null $integration
+     * @return Response
+     * @throws InvalidConfigException
+     * @throws MissingComponentException
      * @throws NotFoundHttpException
      */
     public function actionEdit(int $id = null, IntegrationInterface $integration = null): Response
@@ -101,7 +112,7 @@ class IntegrationSettingsController extends Controller
      * @throws MethodNotAllowedHttpException
      * @throws MissingComponentException
      * @throws NotFoundHttpException
-     * @throws \Exception
+     * @throws Exception
      */
     public function actionSave(): ?Response
     {
@@ -171,6 +182,30 @@ class IntegrationSettingsController extends Controller
 
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws MissingComponentException
+     * @throws BadRequestHttpException
+     * @throws RandomException
+     */
+    public function actionAuthorize(): Response
+    {
+        $integrationId = $this->request->getRequiredParam('id');
+
+        /** @var ConstantContact $integration */
+        $integration = FormBuilder::getInstance()->integrations->getIntegrationById($integrationId);
+
+        if (!$integration) {
+            throw new BadRequestHttpException('Integration not found');
+        }
+
+        if (!$integration->supportOauthConnection()) {
+            throw new BadRequestHttpException('Integration does not support OAuth');
+        }
+
+        $authUrl = $integration->getAuthUrl();
+        return $this->redirect($authUrl);
+    }
 }
 
 

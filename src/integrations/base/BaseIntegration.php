@@ -4,14 +4,20 @@ namespace craftyfm\formbuilder\integrations\base;
 
 use Craft;
 use craft\base\SavableComponent;
+use craft\helpers\DateTimeHelper;
 use craft\helpers\UrlHelper;
+use craftyfm\formbuilder\FormBuilder;
+use craftyfm\formbuilder\models\Form;
 use craftyfm\formbuilder\models\IntegrationResult;
+use craftyfm\formbuilder\models\ProviderField;
 use craftyfm\formbuilder\models\Submission;
 use craftyfm\formbuilder\records\IntegrationRecord;
 use Throwable;
+use yii\db\Exception;
 
 abstract class BaseIntegration extends SavableComponent implements IntegrationInterface
 {
+    public const TYPE_EMAIL_MARKETING = 'emailMarketing';
     public const TYPE_WEBHOOK = 'webhook';
     public const TYPE_MISC = 'miscellaneous';
 
@@ -22,9 +28,30 @@ abstract class BaseIntegration extends SavableComponent implements IntegrationIn
     public ?string $name = null;
     public ?string $handle = null;
     public ?string $type = null;
+    public array $metadata = [];
     public ?string $uid = null;
     public bool $enabled = true;
 
+    public function __construct($config = [])
+    {
+
+        if (isset($config['metadata'])) {
+            $this->setMetadata($config['metadata']);
+            unset($config['metadata']);
+        }
+//        unset($config['formSettings']);
+        parent::__construct($config);
+    }
+
+    public function setMetadata(array $metadata): void
+    {
+        $this->metadata = $metadata;
+    }
+
+    public function normalizeFormSettings(Form $form): void
+    {
+
+    }
     protected function defineSettingAttributes(): array
     {
         return ['name', 'handle'];
@@ -62,7 +89,7 @@ abstract class BaseIntegration extends SavableComponent implements IntegrationIn
                 $this->{$key} = $settings[$key];
             }
         }
-        if ($settings['enabled']) {
+        if (isset($settings['enabled'])) {
             $this->enabled = $settings['enabled'];
         }
     }
@@ -86,6 +113,7 @@ abstract class BaseIntegration extends SavableComponent implements IntegrationIn
     {
         return UrlHelper::cpUrl('form-builder/settings/integrations/' . $this->id);
     }
+
     /**
      * @inheritdoc
      */
@@ -98,8 +126,12 @@ abstract class BaseIntegration extends SavableComponent implements IntegrationIn
         } elseif ($this->getScenario() === self::SCENARIO_FORM_SETTINGS) {
             $rules = array_merge($rules,$this->defineFormSettingRules());
         }
-
         return $rules;
+    }
+
+    public function supportOauth2Authorize(): bool
+    {
+        return false;
     }
 
     protected function defineSettingRules(): array
@@ -182,20 +214,17 @@ abstract class BaseIntegration extends SavableComponent implements IntegrationIn
 
             // Call the concrete implementation
             $result = $this->executeIntegration($submission);;
-
-
             // Log result
             if ($result->success) {
-                Craft::info("Integration executed successfully: {$this->getDisplayName()}", __METHOD__);
+                FormBuilder::log("Integration executed successfully: {$this->getDisplayName()}", 'info');
             } else {
-                Craft::error("Integration failed: {$this->getDisplayName()} - $result->message", __METHOD__);
+                FormBuilder::log("Integration failed: {$this->getDisplayName()} - $result->message", 'warning');
             }
 
             return $result;
 
         } catch (Throwable $e) {
-
-            Craft::error("Integration exception: {$this->getDisplayName()} - {$e->getMessage()}", __METHOD__);
+            FormBuilder::log("Integration exception: {$this->getDisplayName()} - {$e->getMessage()}", 'error');
 
             return IntegrationResult::error($e->getMessage(), $e);
         }
@@ -207,6 +236,30 @@ abstract class BaseIntegration extends SavableComponent implements IntegrationIn
     abstract protected function executeIntegration(Submission $submission): IntegrationResult;
 
 
+    /**
+     * @throws \Exception
+     */
+    protected function normalizeFieldValue(mixed $value, string $type): string|int
+    {
+
+        if ($type === ProviderField::TYPE_DATE) {
+            if ($date = DateTimeHelper::toDateTime($value)) {
+                return $date->format('Y-m-d');
+            }
+        }
+
+        if ($type === ProviderField::TYPE_DATETIME) {
+            if ($date = DateTimeHelper::toDateTime($value)) {
+                return $date->format('Y-m-d H:i:s');
+            }
+        }
+
+        if ($type === ProviderField::TYPE_INTEGER) {
+            return (int)$value;
+        }
+
+        return (string)$value;
+    }
 
     protected function generateSubmissionPayload(Submission $submission): array
     {
@@ -246,5 +299,13 @@ abstract class BaseIntegration extends SavableComponent implements IntegrationIn
     protected function performConnectionTest(): bool
     {
         return true;
+    }
+
+    /**
+     * @throws Exception
+     */
+    protected function saveMetadata(): void
+    {
+        FormBuilder::getInstance()->integrations->updateMetadata($this->id, $this->metadata);
     }
 }

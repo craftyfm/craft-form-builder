@@ -1,4 +1,4 @@
-{% if loadAsset %}
+{% if loadAsset|default(false) or form.settings.outputFrameworkAssets%}
     {% do view.registerAssetBundle('craftyfm\\formbuilder\\web\\assets\\bootstrap\\BootstrapAsset') -%}
     {#{% do craft.app.view.registerJsFile('https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js') %}#}
 {% endif %}
@@ -7,27 +7,28 @@
 {% set iconSet = form.settings.icons %}
 {% set hasErrors = submission.hasErrors() %}
 
-{% if craft.app.session.hasFlash('success') %}
-    <div class="alert alert-success" role="alert">
-        {{ craft.app.session.getFlash('success') }}
-    </div>
-{% endif %}
-{% if craft.app.session.hasFlash('error') %}
-    <div class="alert alert-danger" role="alert">
-        {{ craft.app.session.getFlash('error') }}
-    </div>
-{% endif %}
-<form id="{{ form.uid }}" method="POST" enctype="multipart/form-data" accept-charset="UTF-8"
-      class="{{ form.settings.class }} " >
-    <input type="hidden" name="action" value="form-builder/submissions/submit">
-    <input type="hidden" name="formId" value="{{ form.id }}">
-    {{ csrfInput() }}
-    {% for field in form.fields %}
-        {% include "form-builder/_render/bootstrap/" ~ 'components' ~ "/" ~ field.type %}
-    {% endfor %}
-</form>
-
-
+<div id="wrapper-{{ form.uid }}">
+    {% if craft.app.session.hasFlash('form-builder-success') %}
+        <div class="alert alert-success" role="alert">
+            {{ craft.app.session.getFlash('form-builder-success') }}
+        </div>
+    {% endif %}
+    {% if craft.app.session.hasFlash('form-builder-error') %}
+        <div class="alert alert-danger" role="alert">
+            {{ craft.app.session.getFlash('form-builder-error') }}
+        </div>
+    {% endif %}
+    <form id="{{ form.uid }}" method="POST" enctype="multipart/form-data" accept-charset="UTF-8"
+          class="{{ form.settings.class }} ">
+        <input type="hidden" name="action" value="form-builder/submissions/submit">
+        <input type="hidden" name="formId" value="{{ form.id }}">
+        {{ redirectInput(craft.app.request.absoluteUrl ~ "#wrapper" ~ form.uid) }}
+        {{ csrfInput() }}
+        {% for field in form.fields %}
+            {% include "form-builder/_render/bootstrap/" ~ 'components' ~ "/" ~ field.type %}
+        {% endfor %}
+    </form>
+</div>
 
 
 

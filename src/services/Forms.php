@@ -113,7 +113,13 @@ class Forms extends Component
             $record->authorId = $data->authorId;
             $record->fields = $data->getFieldsAsArray();
             $record->settings = $data->settings->toArray();
-            $record->integrations = $data->getIntegrationsAsArray();
+            foreach ($data->integrations as $integration) {
+                $res = FormBuilder::getInstance()->formIntegrations->saveFormIntegration($data, $integration, false);
+                if(!$res) {
+                    throw new Exception("Failed to save integration {$integration->id}");
+                }
+            }
+
             if (!$record->validate()) {
                 Craft::error('Failed to save form: ' . json_encode($record->getErrors()), __METHOD__);
                 return null;
@@ -125,11 +131,17 @@ class Forms extends Component
             if (!FormBuilder::getInstance()->emailNotification->saveNotification($adminEmailNotif)) {
                 throw new Exception('Failed to save notification');
             }
+            $userEmailNotif = $data->getUserNotif();
+            $userEmailNotif->formId = $record->id;
+            if (!FormBuilder::getInstance()->emailNotification->saveNotification($userEmailNotif)) {
+                throw new Exception('Failed to save notification');
+            }
             $data->id = $record->id;
             $data->uid = $record->uid;
             $transaction->commit();
         }catch (Throwable $e) {
             $transaction->rollBack();
+            FormBuilder::log($e->getMessage(), 'error');
             throw $e;
         }
         return $data;
@@ -178,10 +190,10 @@ class Forms extends Component
      * @throws LoaderError
      * @throws \Exception
      */
-    public function renderFormByHandle($formHandle, $loadAsset = false): Markup
+    public function renderFormByHandle($formHandle): Markup
     {
         $form = $this->getFormByHandle($formHandle);
-        return $this->renderForm($form, $loadAsset);
+        return $this->renderForm($form);
     }
 
     /**
@@ -190,13 +202,13 @@ class Forms extends Component
      * @throws RuntimeError
      * @throws LoaderError
      */
-    public function renderForm(Form $form, $loadAsset = false): Markup
+    public function renderForm(Form $form): Markup
     {
         $routeParams = Craft::$app->getUrlManager()->getRouteParams();
         $submission = $routeParams['submission'] ?? new Submission($form);
         $view = Craft::$app->getView();
         return Template::raw($view->renderTemplate('form-builder/_render/index',
-            compact('form', 'submission', 'loadAsset'),
+            compact('form', 'submission'),
             View::TEMPLATE_MODE_CP));
     }
 
@@ -204,27 +216,34 @@ class Forms extends Component
      * construct form model from using json data.
      * @throws \Exception
      */
-    public function constructForms(array $formJson): Form
+    public function constructFormsFromJson(array $formJson): Form
     {
 
         if (!empty($formJson['id'])) {
             $formJson['adminNotif']['id'] = FormBuilder::getInstance()->emailNotification->getNotificationIdByFormId($formJson['id']);
         }
 
+        if (!empty($formJson['id'])) {
+            $formJson['userNotif']['id'] = FormBuilder::getInstance()->emailNotification->getNotificationIdByFormId($formJson['id'], \craftyfm\formbuilder\models\EmailNotification::TYPE_USER);
+        }
+
+        $userNotif = new \craftyfm\formbuilder\models\EmailNotification($formJson['userNotif'] ?? []);
+        $userNotif->type = \craftyfm\formbuilder\models\EmailNotification::TYPE_USER;
         $form = new Form([
             'name' => $formJson['name'] ?? null,
             'handle' => $formJson['handle'] ?? '',
             'id' => $formJson['id'] ?? null,
             'settings' => new FormSettings($formJson['settings'] ?? []),
             'adminNotif' => new \craftyfm\formbuilder\models\EmailNotification($formJson['adminNotif'] ?? []),
+            'userNotif' => $userNotif,
         ]);
 
         if (isset($formJson['fields'])) {
             $form->setFields($this->_constructFormFields($formJson['fields'], $form));
         }
 
-        if(isset($formJson['integrations'])) {
-            $form->integrations = $this->_constructFormIntegrations($formJson['integrations']);
+        if (isset($formJson['integrations'])) {
+            $form->integrations = $this->_constructFormIntegrationsFromData($formJson['integrations'], $form);
         }
 
         return $form;
@@ -255,7 +274,7 @@ class Forms extends Component
         $perPage = max($perPage, 1);
         $offset = ($page - 1) * $perPage;
 
-        $query = FormRecord::find();
+        $query = FormRecord::find()->orderBy(['dateCreated' => SORT_DESC]);
         $total = $query->count();
 
         $records = $query
@@ -318,18 +337,22 @@ class Forms extends Component
         $model->uid = $record->uid;
         $model->name = $record->name;
         $model->setFields($this->_constructFormFields($record['fields'] ?? [], $model, false));
-        $model->integrations = $this->_constructFormIntegrations($record['integrations'] ?? []);
+        $model->integrations = FormBuilder::getInstance()->formIntegrations->getIntegrationsForForm($record->id);
         return $model;
     }
 
-    private function _constructFormIntegrations(array $data): array
+    /**
+     * @throws MissingComponentException
+     * @throws InvalidConfigException
+     */
+    private function _constructFormIntegrationsFromData(array $data, Form $form): array
     {
         $integrations = [];
         $activeIntegrations = FormBuilder::getInstance()->integrations->getEnabledIntegrations();
         foreach ($activeIntegrations as $integration) {
             $integration->enabled = false;
             if (isset($data[$integration->handle])) {
-                $integration->setFormSettings($data[$integration->handle]);
+                $integration->setFormSettings($data[$integration->handle], $form);
             }
             $integrations[$integration->handle] = $integration;
         }

@@ -114,7 +114,6 @@ class Submissions extends Component
             return true;
 
         } catch (Exception|VolumeException| Throwable $e) {
-            dd($e->getMessage());;
             $transaction->rollBack();
             Craft::error('Error saving submission: ' . $e->getMessage(), __METHOD__);
             return false;
@@ -123,9 +122,12 @@ class Submissions extends Component
 
     public function processNotification(Submission $submission): void
     {
-        Craft::$app->getQueue()->push(new SendNotificationJob([
-            'submissionId' => $submission->id,
-        ]));
+        if ($submission->getForm()->getAdminNotif()->enabled || $submission->getForm()->getUserNotif()->enabled) {
+            Craft::$app->getQueue()->push(new SendNotificationJob([
+                'submissionId' => $submission->id,
+            ]));
+        }
+
     }
 
     public function processIntegrations(Submission $submission): void
@@ -135,11 +137,12 @@ class Submissions extends Component
             if ($integration->enabled) {
                 Craft::$app->getQueue()->push(new IntegrationJob([
                     'submissionId' => $submission->id,
-                    'integrationHandle' => $integration->handle,
+                    'integrationId' => $integration->id,
                 ]));
             }
         }
     }
+
     /**
      * Get table data with proper pagination and security
      * @throws \Exception

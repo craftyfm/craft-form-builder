@@ -5,7 +5,7 @@
             <label for="form-name" class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">
                 Form Name <span class="cfb:text-red-500 cfb:ml-1">*</span>
             </label>
-            <input value="{{ form.name }}" type="text" id="form-name" name="name" placeholder="Enter form name..." class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-lg focus:cfb:outline-none focus:cfb:ring-2 focus:cfb:ring-blue-500 focus:cfb:border-blue-500">
+            <input required value="{{ form.name }}" type="text" id="form-name" name="name" placeholder="Enter form name..." class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-lg focus:cfb:outline-none focus:cfb:ring-2 focus:cfb:ring-blue-500 focus:cfb:border-blue-500">
         </div>
 
         <!-- Form Handler -->
@@ -13,8 +13,8 @@
             <label for="form-handle" class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">
                 Form Handle <span class="cfb:text-red-500 cfb:ml-1">*</span>
             </label>
-            <input value="{{ form.handle }}" pattern="[A-Za-z0-9]*" type="text" id="form-handle" name="handle" placeholder="Enter form handle..." class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-lg focus:cfb:outline-none focus:cfb:ring-2 focus:cfb:ring-blue-500 focus:cfb:border-blue-500">
-            <p class="cfb:font-light cfb:text-xs cfb:mt-1 cfb:mb-2 cfb:text-gray-500">Only letters and numbers allowed</p>
+            <input required value="{{ form.handle }}" pattern="[A-Za-z0-9]*" type="text" id="form-handle" name="handle" placeholder="Enter form handle..." class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-lg focus:cfb:outline-none focus:cfb:ring-2 focus:cfb:ring-blue-500 focus:cfb:border-blue-500">
+            <p class="cfb:font-light cfb:text-xs cfb:mt-1 cfb:mb-2 cfb:text-gray-500">Only letters and numbers allowed. Renaming this might cause form not working properly.</p>
         </div>
 
         <div>

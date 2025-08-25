@@ -33,7 +33,7 @@ Below are the available configuration options for each individual form:
     * **Tailwind CSS**
     * **Bootstrap**
 * This determines the default layout and class structure of your form and fields.
-
+* Configure to output the framework's assets (JS/CSS).
 ---
 
 ### 4. **Field Orientation**

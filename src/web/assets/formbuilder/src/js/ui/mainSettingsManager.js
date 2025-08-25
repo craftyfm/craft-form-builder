@@ -52,7 +52,8 @@ export class MainSettingsManager {
                 }
             });
         });
-        this.initializeAdminNotifTab();
+        this.initializeNotificationTab();
+        // this.initializeAdminNotifTab();
         this.initializeIntegrationTab();
     }
 
@@ -80,7 +81,32 @@ export class MainSettingsManager {
         });
 
     }
-    initializeAdminNotifTab() {
+    initializeNotificationTab() {
+        document.querySelectorAll('[data-notification]').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+
+                const selected = button.getAttribute('data-notification');
+
+                document.querySelectorAll('.notifications-settings').forEach(el => {
+                    el.classList.add('cfb:hidden');
+                });
+                document.getElementById(`notifications-${selected}`).classList.remove('cfb:hidden');
+
+                // Remove highlight from all buttons
+                document.querySelectorAll('[data-notification]').forEach(btn => {
+                    btn.classList.remove('cfb:bg-blue-100', 'cfb:text-blue-700');
+                });
+
+                // Add highlight to selected button
+                button.classList.add('cfb:bg-blue-100', 'cfb:text-blue-700');
+
+            });
+        });
+        this.initializeAdminNotif();
+        this.initializeUserNotif();
+    }
+    initializeAdminNotif() {
         const manager = this;
         const enabledButton = document.getElementById('form-admin-notif-enabled');
         enabledButton.addEventListener('click', function (e) {
@@ -100,6 +126,52 @@ export class MainSettingsManager {
                 elem.style.display = 'block';
             }
         })
+    }
+
+    initializeUserNotif() {
+        const manager = this;
+        const enabledButton = document.getElementById('form-user-notif-enabled');
+        enabledButton.addEventListener('click', function (e) {
+            manager.userNotifCondition(enabledButton);
+        });
+        manager.userNotifCondition(enabledButton)
+    }
+
+    userNotifCondition(enabledButton ) {
+        const value = enabledButton.getAttribute('aria-checked');
+        const isChecked = value === 'true';
+        const userNotifElements = document.querySelectorAll('.cfb-user-notif');
+        userNotifElements.forEach(elem => {
+            if (isChecked === false) {
+                elem.style.display = 'none';
+            } else {
+                elem.style.display = 'block';
+            }
+        })
+    }
+
+    renderUserNotifTargetField() {
+        const targetFieldEl = document.getElementById('form-userEmail');
+        const availableFields = this.formState.fields || [];
+        // Get current selected from integrations
+        const currentSelected = this.formState.userNotif.recipients || null;
+        console.log(availableFields)
+        targetFieldEl.innerHTML = `<option value="">Select an option</option>`;
+        // Populate dropdown
+        availableFields.forEach(field => {
+            if (field.type !== 'email' || field.handle === '') {
+                return;
+            }
+            const option = document.createElement('option');
+            option.value = field.id;
+            option.textContent = field.label;
+
+            if (field.id === currentSelected) {
+                option.selected = true;
+            }
+
+            targetFieldEl.appendChild(option);
+        });
     }
     /**
      * Creates a new main settings manager
@@ -146,6 +218,7 @@ export class MainSettingsManager {
      */
     openSettingsModal() {
         this.formSettingsModal.classList.remove('cfb:hidden');
+        this.renderUserNotifTargetField();
     }
 
     /**
@@ -167,16 +240,24 @@ export class MainSettingsManager {
 
         formData.forEach((value, key) => {
             // Match keys like: integrations[test][enabled]
-            const integrationMatch = key.match(/^integrations\[(\w+)\]\[(\w+)\]$/);
+            const integrationMatch = key.match(/^integrations(\[[^\]]+])+$/);
             if (integrationMatch) {
-                const integrationKey = integrationMatch[1];   // e.g. 'test'
-                const fieldKey = integrationMatch[2];         // e.g. 'enabled', 'webhookUrl'
+                // Extract all keys inside brackets (allow anything except closing bracket)
+                const keys = [...key.matchAll(/\[([^\]]+)]/g)].map(m => m[1]);
+
+                const integrationKey = keys[0];
 
                 if (!integrationBuffer[integrationKey]) {
                     integrationBuffer[integrationKey] = {};
                 }
 
-                integrationBuffer[integrationKey][fieldKey] = value;
+                let current = integrationBuffer[integrationKey];
+                for (let i = 1; i < keys.length - 1; i++) {
+                    if (!current[keys[i]]) current[keys[i]] = {};
+                    current = current[keys[i]];
+                }
+
+                current[keys[keys.length - 1]] = value;
                 return;
             }
 
@@ -207,7 +288,6 @@ export class MainSettingsManager {
                 }
             }
         }
-        console.log(this.formState);
         this.closeSettingsModal();
         if (this.onSettingsUpdated) {
             this.onSettingsUpdated();

@@ -4,6 +4,45 @@ import {MainSettingsManager} from './ui/mainSettingsManager.js';
 import {initDragDrop} from "./ui/dragDrop";
 import {registerPreviewEventListeners} from "./ui/preview";
 import {saveForm} from "./ui/saveForm";
+import IntegrationMappingManager from './ui/components/IntegrationMappingManager.js';
+import OptInDropdown from "./ui/components/OptInDropdown";
+
+if (typeof Craft.FormBuilder === typeof undefined) {
+    Craft.FormBuilder = {};
+}
+
+Craft.FormBuilder.IntegrationMappingManager = IntegrationMappingManager;
+Craft.FormBuilder.OptInDropdown = OptInDropdown;
+
+let formState = {
+    name: window.FormBuilderData?.name || 'Form',
+    handle: window.FormBuilderData?.handle || '',
+    id: window.FormBuilderData?.id || null,
+    settings: window.FormBuilderData?.settings,
+    adminNotif: {
+        enabled: window.FormBuilderData?.adminNotif.enabled || false,
+        subject: window.FormBuilderData?.adminNotif.subject || '',
+        recipients: window.FormBuilderData?.adminNotif.recipients || '',
+        message: window.FormBuilderData?.adminNotif.message || '',
+    },
+    userNotif: {
+        enabled: window.FormBuilderData?.userNotif.enabled || false,
+        subject: window.FormBuilderData?.userNotif.subject || '',
+        templateId: window.FormBuilderData?.userNotif.templateId || '',
+        recipients: window.FormBuilderData?.userNotif.recipients || '',
+        message: window.FormBuilderData?.userNotif.message || '',
+    },
+    fields:window.FormBuilderData?.fields || [],
+    integrations:window.FormBuilderData?.integrations || [],
+};
+
+Object.defineProperty(Craft.FormBuilder, 'formState', {
+    get() {
+        return formState;
+    },
+    configurable: false,
+    enumerable: true
+});
 
 document.addEventListener('DOMContentLoaded', () => {
     // Main containers
@@ -11,29 +50,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let selectedFieldId = null;
 
-    let formState = {
-        name: window.FormBuilderData?.name || 'Form',
-        handle: window.FormBuilderData?.handle || '',
-        id: window.FormBuilderData?.id || null,
-        settings: {
-            orientation: window.FormBuilderData?.settings.orientation || 'vertical',
-            icons: window.FormBuilderData?.settings.icons || '',
-            framework: window.FormBuilderData?.settings.framework || 'bootstrap',
-            class: window.FormBuilderData?.settings.class || '',
-            collectIp: window.FormBuilderData?.settings.collectIp || false,
-            actionOnSubmit: window.FormBuilderData?.settings.actionOnSubmit || 'message',
-            successMessage: window.FormBuilderData?.settings.successMessage || 'Thank you for submitting the form.',
-            redirectUrl: window.FormBuilderData?.settings.redirectUrl || '',
-        },
-        adminNotif: {
-            enabled: window.FormBuilderData?.adminNotif.enabled || false,
-            subject: window.FormBuilderData?.adminNotif.subject || '',
-            recipients: window.FormBuilderData?.adminNotif.recipients || '',
-            message: window.FormBuilderData?.adminNotif.message || '',
-        },
-        fields:window.FormBuilderData?.fields || [],
-        integrations:window.FormBuilderData?.integrations || [],
-    };
 
     // Initialize the renderer
     const renderer = new Renderer(formState, (fieldId) => {

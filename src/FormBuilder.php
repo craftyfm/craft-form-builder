@@ -16,9 +16,12 @@ use craftyfm\formbuilder\fields\FormSelectField;
 use craftyfm\formbuilder\models\Settings;
 use craftyfm\formbuilder\services\CaptchaManager;
 use craftyfm\formbuilder\services\EmailNotification;
+use craftyfm\formbuilder\services\EmailTemplates;
+use craftyfm\formbuilder\services\FormIntegrations;
 use craftyfm\formbuilder\services\Forms;
 use craftyfm\formbuilder\services\Icons;
 use craftyfm\formbuilder\services\Integrations;
+use craftyfm\formbuilder\services\OauthToken;
 use craftyfm\formbuilder\services\Submissions;
 use craftyfm\formbuilder\services\SubmissionStatuses;
 use craftyfm\formbuilder\services\Upload;
@@ -44,13 +47,16 @@ use yii\base\InvalidRouteException;
  * @property SubmissionStatuses $submissionStatuses
  * @property EmailNotification $emailNotification
  * @property Integrations $integrations
+ * @property OauthToken $oauthToken
+ * @property FormIntegrations $formIntegrations
+ * @property EmailTemplates $emailTemplates
  * @author craftyfm
  * @copyright craftyfm
  * @license https://craftcms.github.io/license/ Craft License
  */
 class FormBuilder extends Plugin
 {
-    public string $schemaVersion = '1.0.0';
+    public string $schemaVersion = '1.0.2';
     public bool $hasCpSettings = true;
     public bool $hasCpSection = true;
 
@@ -67,6 +73,9 @@ class FormBuilder extends Plugin
                 'submissionStatuses' => SubmissionStatuses::class,
                 'emailNotification' => EmailNotification::class,
                 'integrations' => Integrations::class,
+                'oauthToken' => OauthToken::class,
+                'formIntegrations' => FormIntegrations::class,
+                'emailTemplates' => EmailTemplates::class,
             ],
         ];
     }
@@ -164,9 +173,16 @@ class FormBuilder extends Plugin
     /**
      * Log plugin messages
      */
-    public static function log(string $message, int|string $level = LogLevel::INFO): void
+    public static function log(string $message, string $level = LogLevel::INFO): void
     {
-        Craft::getLogger()->log($message, $level, 'form-builder');
+        $logMap = [
+            LogLevel::INFO => LogLevel::INFO,
+            LogLevel::ERROR => LogLevel::ERROR,
+            LogLevel::WARNING => LogLevel::WARNING,
+            LogLevel::NOTICE => LogLevel::NOTICE,
+            LogLevel::DEBUG => LogLevel::DEBUG,
+        ];
+        Craft::getLogger()->log($message, $logMap[$level], 'form-builder');
     }
 
 
@@ -192,9 +208,13 @@ class FormBuilder extends Plugin
                     $event->rules['form-builder/settings/integrations'] = 'form-builder/integration-settings/index';
                     $event->rules['form-builder/settings/integrations/new'] = 'form-builder/integration-settings/edit';
                     $event->rules['form-builder/settings/integrations/<id:\d+>'] = 'form-builder/integration-settings/edit';
+
+                    $event->rules['form-builder/settings/email-templates'] = 'form-builder/email-template/index';
+                    $event->rules['form-builder/settings/email-templates/new'] = 'form-builder/email-template/edit';
+                    $event->rules['form-builder/settings/email-templates/<uid:{uid}>'] = 'form-builder/email-template/edit';
                 }
 
-
+                $event->rules['form-builder/integration/oauth-callback'] = 'form-builder/integration/oauth-callback';;
 
             }
         );

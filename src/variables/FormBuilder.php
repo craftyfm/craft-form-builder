@@ -18,8 +18,8 @@ class FormBuilder
      * @throws RuntimeError
      * @throws LoaderError
      */
-    public function renderForm($formHandle, $loadAsset = false): Markup
+    public function renderForm($formHandle): Markup
     {
-        return Plugin::getInstance()->forms->renderFormByHandle($formHandle, $loadAsset);
+        return Plugin::getInstance()->forms->renderFormByHandle($formHandle);
     }
 }

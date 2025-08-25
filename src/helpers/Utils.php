@@ -4,6 +4,7 @@ namespace craftyfm\formbuilder\helpers;
 
 use craftyfm\formbuilder\models\form_fields\Checkbox;
 use craftyfm\formbuilder\models\form_fields\Checkboxes;
+use craftyfm\formbuilder\models\form_fields\Date;
 use craftyfm\formbuilder\models\form_fields\Email;
 use craftyfm\formbuilder\models\form_fields\FileUpload;
 use craftyfm\formbuilder\models\form_fields\Hcaptcha;
@@ -45,10 +46,11 @@ class Utils
     public static function getFormFieldMap(): array
     {
         return [
-            Text::getType()        => Text::class,
+            Text::getType()         => Text::class,
             Number::getType()       => Number::class,
             Phone::getType()        => Phone::class,
             Email::getType()        => Email::class,
+            Date::getType()         => Date::class,
             Url::getType()          => Url::class,
             TextArea::getType()     => Textarea::class,
             Select::getType()       => Select::class,

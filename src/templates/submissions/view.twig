@@ -70,6 +70,15 @@
                 type: 'email',
                 readonly: true
             }) }}
+        {% elseif formField.type == 'date' %}
+            {{ forms.textField({
+                label: formField.label,
+                id: formField.handle,
+                name: formField.handle,
+                value: field,
+                type: 'date',
+                readonly: true
+            }) }}
         {% elseif formField.type == 'phone' %}
             {{ forms.textField({
                 label: formField.label,
