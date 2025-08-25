@@ -58,6 +58,89 @@ You can define **statuses** that reflect the state of each submission (e.g., pen
 > 🏷 This feature is useful for moderating or processing form submissions internally.
 
 
+Got it 👍
+Here’s a clean **Markdown documentation draft** for your Form Builder **Email Template** feature. I also improved your HTML example so it looks more like a proper, reusable template:
+
+---
+
+# 📧 Email Templates — Form Builder
+
+Email templates let you define the layout and content of messages sent from your forms. You can create reusable templates and attach them to form notifications.
+
+---
+
+## ➕ Adding a New Email Template
+
+1. Navigate to **Settings → Email Templates**.
+2. Click **Add New Template**.
+3. Fill in the following fields:
+
+   * **Title** → A descriptive name for your template.
+   * **Template Path** → The location of your email template file (e.g., `email/contact.html`).
+
+
+## 📝 Template Example
+
+Here’s a simple, improved example of an email template:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Email Notification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            background-color: #f9f9f9;
+            padding: 20px;
+        }
+        .container {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #777;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>You’ve got a new message</h2>
+        <div>{{ message }}</div>
+    </div>
+    <div class="footer">
+        This email was sent automatically from your website form.
+    </div>
+</body>
+</html>
+```
+
+
+## 🔑Template Variables
+
+* `{{ message }}` → The submitted message content.
+
+You can include this placeholder anywhere in your template to dynamically insert the user’s message.
+
+
+
+## Using the Template in a Form
+
+1. Go to your **Form** settings.
+2. Edit the **User Notification Template**.
+3. Select the email template you created.
+4. Save your form — it will now use your custom email template for notifications.
+
+
 ---
 
 ## 🤖 CAPTCHA Configuration

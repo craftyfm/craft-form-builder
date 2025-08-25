@@ -63,15 +63,24 @@ Below are the available configuration options for each individual form:
 
 ---
 
-### 7. **Admin Email Notification**
+### 7. ** Notification**
 
-Configure email notifications for each submission:
+You can configure email notifications for each form submission. There are two types:
 
-* **Recipients**: One or more email addresses (comma-separated).
+* **Admin Notification** → Sent to administrators.
+* **User Notification** → Sent to the form submitter.
+
+**Fields:**
+
+* **Recipients**:
+
+  * For Admin → One or more email addresses (comma-separated).
+  * For User → The form field containing the user’s email address.
 * **Subject**: The subject line for the email.
 * **Message Body**: The message content.
+* **Template** *(User only)*: Select a custom email template to format the message.
 
-> 🔗 At the end of the message, the plugin will automatically append a **submission URL** so you can quickly view the entry in the Control Panel.
+> ℹ️ For Admin notifications, a **submission URL** will automatically be appended at the end of the message so you can quickly view the entry in the Control Panel.
 
 ---
 

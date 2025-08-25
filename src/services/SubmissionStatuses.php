@@ -30,15 +30,6 @@ class SubmissionStatuses extends Component
 
     private ?MemoizableArray $_statuses = null;
 
-    public function init(): void
-    {
-        parent::init();
-
-        $projectConfig = Craft::$app->getProjectConfig();
-        $projectConfig->onAdd(self::CONFIG_KEY . '.{uid}', [$this, 'handleChangedStatus']);
-        $projectConfig->onUpdate(self::CONFIG_KEY . '.{uid}', [$this, 'handleChangedStatus']);
-        $projectConfig->onRemove(self::CONFIG_KEY . '.{uid}', [$this, 'handleDeletedStatus']);
-    }
 
     public function getAll(): MemoizableArray
     {
