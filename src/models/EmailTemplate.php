@@ -51,7 +51,6 @@ class EmailTemplate extends Model
             'name' => $this->name,
             'handle' => $this->handle,
             'template' => $this->template,
-            'uid' => $this->uid,
         ];
     }
 }

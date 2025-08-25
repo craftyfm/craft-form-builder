@@ -85,11 +85,7 @@ class FormBuilder extends Plugin
         parent::init();
 
         $this->attachEventHandlers();
-
-        Craft::$app->getProjectConfig()
-            ->onAdd(Integrations::CONFIG_KEY.'.{uid}', [$this->integrations, 'handleChangedIntegration'])
-            ->onUpdate(Integrations::CONFIG_KEY.'.{uid}', [$this->integrations, 'handleChangedIntegration'])
-            ->onRemove(Integrations::CONFIG_KEY.'.{uid}', [$this->integrations, 'handleDeletedIntegration']);
+        $this->_registerProjectConfig();
 
         // Any code that creates an element query or loads Twig should be deferred until
         // after Craft is fully initialized, to avoid conflicts with other plugins/modules
@@ -258,6 +254,24 @@ class FormBuilder extends Plugin
                 $event->types[] = FormSelectField::class;
             }
         );
+    }
+
+    private function _registerProjectConfig(): void
+    {
+        Craft::$app->getProjectConfig()
+            ->onAdd(Integrations::CONFIG_KEY.'.{uid}', [$this->integrations, 'handleChangedIntegration'])
+            ->onUpdate(Integrations::CONFIG_KEY.'.{uid}', [$this->integrations, 'handleChangedIntegration'])
+            ->onRemove(Integrations::CONFIG_KEY.'.{uid}', [$this->integrations, 'handleDeletedIntegration']);
+
+        Craft::$app->getProjectConfig()
+            ->onAdd(EmailTemplates::CONFIG_KEY.'.{uid}', [$this->emailTemplates, 'handleChangedTemplate'])
+            ->onUpdate(EmailTemplates::CONFIG_KEY.'.{uid}', [$this->emailTemplates, 'handleChangedTemplate'])
+            ->onRemove(EmailTemplates::CONFIG_KEY.'.{uid}', [$this->emailTemplates, 'handleDeletedTemplate']);
+
+        Craft::$app->getProjectConfig()
+            ->onAdd(SubmissionStatuses::CONFIG_KEY.'.{uid}', [$this->submissionStatuses, 'handleChangedStatus'])
+            ->onUpdate(SubmissionStatuses::CONFIG_KEY.'.{uid}', [$this->submissionStatuses, 'handleChangedStatus'])
+            ->onRemove(SubmissionStatuses::CONFIG_KEY.'.{uid}', [$this->submissionStatuses, 'handleDeletedStatus']);
     }
 
 

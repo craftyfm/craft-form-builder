@@ -258,7 +258,6 @@ class Integrations extends Component
             'type' => get_class($integration),
             'enabled' => $integration->enabled,
             'settings' => ProjectConfigHelper::packAssociativeArrays($integration->getSettings()),
-            'uid' =>  $integration->uid,
         ];
     }
 

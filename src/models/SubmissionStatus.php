@@ -36,8 +36,7 @@ class SubmissionStatus extends Model
             'handle' => $this->handle,
             'color' => $this->color,
             'description' => $this->description,
-            'isDefault' => $this->isDefault,
-            'uid' => $this->uid,
+            'isDefault' => $this->isDefault
         ];
     }
 }

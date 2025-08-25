@@ -24,16 +24,6 @@ class EmailTemplates extends Component
 {
     public const CONFIG_KEY = 'formBuilder.emailTemplates';
 
-    public function init(): void
-    {
-        parent::init();
-
-        $projectConfig = Craft::$app->getProjectConfig();
-        $projectConfig->onAdd(self::CONFIG_KEY . '.{uid}', [$this, 'handleChangedTemplate']);
-        $projectConfig->onUpdate(self::CONFIG_KEY . '.{uid}', [$this, 'handleChangedTemplate']);
-        $projectConfig->onRemove(self::CONFIG_KEY . '.{uid}', [$this, 'handleDeletedTemplate']);
-    }
-
     public function getAll(): array
     {
         $records = EmailTemplateRecord::find()->all();
@@ -112,7 +102,6 @@ class EmailTemplates extends Component
     {
         $uid = $event->tokenMatches[0];
         $data = $event->newValue;
-
         $record = EmailTemplateRecord::findOne(['uid' => $uid]);
         if (!$record) {
             $record = new EmailTemplateRecord();
