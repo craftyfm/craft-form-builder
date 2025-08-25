@@ -240,7 +240,7 @@ export class Renderer {
             }
 
             let newField = {
-                id: crypto.randomUUID(),
+                id: Craft.uuid(),
                 type: type,
                 ...deepCopy(component.config.defaultData),
             };
