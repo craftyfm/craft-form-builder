@@ -22,7 +22,7 @@
           class="{{ form.settings.class }} ">
         <input type="hidden" name="action" value="form-builder/submissions/submit">
         <input type="hidden" name="formId" value="{{ form.id }}">
-        {{ redirectInput(craft.app.request.absoluteUrl ~ "#wrapper" ~ form.uid) }}
+        {{ redirectInput(craft.app.request.absoluteUrl ~ "#wrapper-" ~ form.uid) }}
         {{ csrfInput() }}
         {% for field in form.fields %}
             {% include "form-builder/_render/bootstrap/" ~ 'components' ~ "/" ~ field.type %}
