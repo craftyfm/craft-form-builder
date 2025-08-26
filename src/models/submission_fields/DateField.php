@@ -29,7 +29,11 @@ class DateField extends BaseField
             $this->_value = $value;
             return;
         }
-       $this->_value = DateTimeHelper::toDateTime($value, false, false);
+        if (empty($value)) {
+            $this->_value = null;
+            return;
+        }
+        $this->_value = DateTimeHelper::toDateTime($value, false, false);
     }
 
     public function getValue(): ?DateTime
@@ -37,6 +41,9 @@ class DateField extends BaseField
         return $this->_value;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function setDraftValues($value): void
     {
         $this->setValue($value);

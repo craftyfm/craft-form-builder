@@ -9,7 +9,7 @@ import {
 const config = {
     defaultData: {
         handle: 'paragraph',
-        text: 'This is a paragraph of text. You can edit it in the settings panel.',
+        text: 'This is a paragraph of text.',
         alignment: 'start',
     },
 };
