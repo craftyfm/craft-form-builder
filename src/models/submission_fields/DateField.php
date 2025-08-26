@@ -41,6 +41,9 @@ class DateField extends BaseField
         return $this->_value;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function setDraftValues($value): void
     {
         $this->setValue($value);
