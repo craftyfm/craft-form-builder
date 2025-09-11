@@ -134,10 +134,13 @@ class FormBuilder extends Plugin
         $nav = parent::getCpNavItem();
         $nav['label'] = 'Form Builder'; // Label in the nav
         $nav['url'] = 'form-builder'; // Where it links to
-        $nav['subnav'] = [
-            'forms' => ['label' => 'Forms', 'url' => 'form-builder/forms'],
-            'submissions' => ['label' => 'Submissions', 'url' => 'form-builder/submissions'],
-        ];
+        $nav['subnav'] = [];
+        if (Craft::$app->getUser()->checkPermission('form-builder-manageForms')) {
+            $nav['subnav']["forms"] = ['label' => 'Forms', 'url' => 'form-builder/forms'];
+        }
+        if (Craft::$app->getUser()->checkPermission('form-builder-viewSubmissions')) {
+            $nav['subnav']["submissions"] = ['label' => 'Submissions', 'url' => 'form-builder/submissions'];
+        }
         if (Craft::$app->getUser()->getIsAdmin()) {
             $nav['subnav']['form-builder-settings'] = ['label' => 'Settings', 'url' => 'form-builder/settings/general'];
         }
@@ -188,7 +191,12 @@ class FormBuilder extends Plugin
             UrlManager::class,
             UrlManager::EVENT_REGISTER_CP_URL_RULES,
             function (RegisterUrlRulesEvent $event) {
-                $event->rules['form-builder'] = 'form-builder/forms/index';
+                if (Craft::$app->getUser()->checkPermission('form-builder-manageForms')) {
+                    $event->rules['form-builder'] = 'form-builder/forms/index';
+                } else {
+                    $event->rules['form-builder'] = 'form-builder/submissions/index';
+                }
+
                 $event->rules['form-builder/forms'] = 'form-builder/forms/index';
                 $event->rules['form-builder/forms/<id:\d+>'] = 'form-builder/forms/edit';
 
