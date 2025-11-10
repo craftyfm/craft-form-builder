@@ -3,6 +3,7 @@
 namespace craftyfm\formbuilder\variables;
 
 use craftyfm\formbuilder\FormBuilder as Plugin;
+use craftyfm\formbuilder\models\Form;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
@@ -21,5 +22,13 @@ class FormBuilder
     public function renderForm($formHandle): Markup
     {
         return Plugin::getInstance()->forms->renderFormByHandle($formHandle);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function getForm(string $formHandle): Form
+    {
+        return Plugin::getInstance()->forms->getFormByHandle($formHandle);
     }
 }

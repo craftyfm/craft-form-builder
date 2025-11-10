@@ -23,7 +23,7 @@ You can render a form in two ways:
 
 ---
 
-### ✅ Option 1: Render by Handle (Manual)
+###  Option 1: Render by Handle
 
 Use this when you know the form handle:
 
@@ -34,7 +34,7 @@ Use this when you know the form handle:
 
 ---
 
-### ✅ Option 2: Render via Field Selection
+###  Option 2: Render via Field Selection
 
 If you’ve added the **Form Select** field to an entry:
 
@@ -43,3 +43,66 @@ If you’ve added the **Form Select** field to an entry:
     {{ entry.form.render() }}
 {% endif %}
 ```
+Sure! Here's the **Markdown** version you can copy directly into your documentation (e.g. README or Craft CMS docs):
+
+---
+
+##  Option 3: Manual Render
+
+If you prefer to **manually render the form fields**, you can fetch the form using its handle and build your own HTML structure.
+
+```twig
+{% set form = craft.formBuilder.getForm('yourFormHandle') %}
+
+<form id="{{ form.uid }}" method="POST" enctype="multipart/form-data" accept-charset="UTF-8">
+    <input type="hidden" name="action" value="form-builder/submissions/submit">
+    <input type="hidden" name="formId" value="{{ form.id }}">
+    {{ redirectInput(craft.app.request.absoluteUrl ~ "#wrapper-" ~ form.uid) }}
+    {{ csrfInput() }}
+
+    {# Example fields #}
+    <div class="mb-4">
+        <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
+        <input
+            type="text"
+            id="firstName"
+            name="fields[firstName]"
+            class="mt-1 block w-full border rounded-md p-2"
+        >
+    </div>
+
+    <div class="mb-4">
+        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+        <input
+            type="email"
+            id="email"
+            name="fields[email]"
+            class="mt-1 block w-full border rounded-md p-2"
+        >
+    </div>
+
+    <div class="mb-4">
+        <label for="message" class="block text-sm font-medium text-gray-700">Message</label>
+        <textarea
+            id="message"
+            name="fields[message]"
+            class="mt-1 block w-full border rounded-md p-2"
+        ></textarea>
+    </div>
+
+    <button type="submit" class="px-4 py-2 bg-[#115045] text-white rounded-md">
+        Submit
+    </button>
+</form>
+```
+
+### Explanation
+
+* **`craft.formBuilder.getForm('yourFormHandle')`** — Retrieves the form by handle.
+* **Hidden inputs** (`action`, `formId`, `redirectInput`, `csrfInput`) are required for proper form submission.
+* **Custom fields** use the `fields[fieldHandle]` naming convention.
+* This approach gives you **full control** over layout and styling — ideal for custom designs or Tailwind-based UIs.
+
+---
+
+Would you like me to include **Option 1** and **Option 2** in the same markdown for a complete section (so all rendering options are shown together)?
