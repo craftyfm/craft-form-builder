@@ -27,7 +27,7 @@ class FormBuilder
     /**
      * @throws \Exception
      */
-    public function getForm(string $formHandle): Form
+    public function getForm(string $formHandle): ?Form
     {
         return Plugin::getInstance()->forms->getFormByHandle($formHandle);
     }
