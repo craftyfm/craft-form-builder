@@ -236,6 +236,7 @@ class Install extends Migration
         $this->dropTableIfExists(Table::FORMS);
         $this->dropTableIfExists(Table::INTEGRATION_OAUTH_TOKEN);
         $this->dropTableIfExists(Table::FORM_INTEGRATION);
+        $this->dropTableIfExists(Table::EMAIL_TEMPLATES);
         return true;
     }
 }
