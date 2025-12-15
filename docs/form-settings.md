@@ -1,4 +1,4 @@
-# 📝 How to Use the Form Builder
+#  How to Use the Form Builder
 
 Each form created with the **Form Builder** plugin comes with customizable settings to control appearance, behavior, email notifications, and integrations.
 
@@ -6,7 +6,7 @@ You can configure these settings by editing a form inside the plugin’s control
 
 ---
 
-## ⚙️ Per-Form Settings
+##  Per-Form Settings
 
 Below are the available configuration options for each individual form:
 
@@ -15,7 +15,7 @@ Below are the available configuration options for each individual form:
 * **Name**: The display name of the form.
 * **Handle**: A unique identifier used for rendering the form in templates.
 
-> ⚠️ **Do not change the handle** after the form has been created, as it may break your form rendering or submissions.
+>  **Do not change the handle** after the form has been created, as it may break your form rendering or submissions.
 
 ---
 
@@ -80,7 +80,7 @@ You can configure email notifications for each form submission. There are two ty
 * **Message Body**: The message content.
 * **Template** *(User only)*: Select a custom email template to format the message.
 
-> ℹ️ For Admin notifications, a **submission URL** will automatically be appended at the end of the message so you can quickly view the entry in the Control Panel.
+>  For Admin notifications, a **submission URL** will automatically be appended at the end of the message so you can quickly view the entry in the Control Panel.
 
 ---
 

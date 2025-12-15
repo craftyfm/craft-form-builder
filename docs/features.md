@@ -1,10 +1,10 @@
-# ✨ Features
+# Features
 
 The **Form Builder** plugin by CraftyFM offers a flexible and developer-friendly way to create and manage forms within Craft CMS. Here's what you can expect:
 
 ---
 
-## 🧩 Field Types
+## Field Types
 
 Build forms using a wide variety of field types to cover most use cases:
 
@@ -18,7 +18,7 @@ Build forms using a wide variety of field types to cover most use cases:
 * **Checkboxes**
 * **Submit Button**
 
-### 📄 Content Fields
+### Content Fields
 
 * **Title Field** – Add titles h1 - h5.
 * **Image Field** – Display image inside your form layout
@@ -27,7 +27,7 @@ Build forms using a wide variety of field types to cover most use cases:
 
 ---
 
-## 🛡️ CForm Protection
+## 🛡 CForm Protection
 
 Keep your forms secure and abuse-resistant with built-in protective features:
     
@@ -42,7 +42,7 @@ Keep your forms secure and abuse-resistant with built-in protective features:
 
 ---
 
-## 🎨 Layout Styling
+##  Layout Styling
 
 Customize your form appearance with layout presets and utility classes:
 
@@ -51,7 +51,7 @@ Customize your form appearance with layout presets and utility classes:
 
 ---
 
-## 📧 Admin Email Notifications
+##  Admin Email Notifications
 
 Automatically notify admins when a form is submitted.
 
