@@ -1,10 +1,10 @@
-# 🧾 How to Render the Form
+#  How to Render the Form
 
 The **Form Builder** plugin integrates seamlessly with Craft CMS, allowing you to select and render forms using custom fields or template code.
 
 ---
 
-## 🧱 Form Selection via Custom Field
+## Form Selection via Custom Field
 
 This plugin provides a **custom field type** to easily select and render a form on entries or other elements.
 
@@ -17,7 +17,7 @@ This plugin provides a **custom field type** to easily select and render a form 
 
 ---
 
-## 🖼 Rendering the Form in Templates
+## Rendering the Form in Templates
 
 You can render a form in two ways:
 
@@ -66,7 +66,7 @@ If you prefer to **manually render the form fields**, you can fetch the form usi
         <input
             type="text"
             id="firstName"
-            name="fields[firstName]"
+            name="firstName"
             class="mt-1 block w-full border rounded-md p-2"
         >
     </div>
@@ -76,7 +76,7 @@ If you prefer to **manually render the form fields**, you can fetch the form usi
         <input
             type="email"
             id="email"
-            name="fields[email]"
+            name="email"
             class="mt-1 block w-full border rounded-md p-2"
         >
     </div>
@@ -85,7 +85,7 @@ If you prefer to **manually render the form fields**, you can fetch the form usi
         <label for="message" class="block text-sm font-medium text-gray-700">Message</label>
         <textarea
             id="message"
-            name="fields[message]"
+            name="message"
             class="mt-1 block w-full border rounded-md p-2"
         ></textarea>
     </div>

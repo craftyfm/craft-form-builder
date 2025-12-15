@@ -1,19 +1,19 @@
-# 📦 Installation and Requirements
+#  Installation and Requirements
 
 The **Form Builder** plugin by CraftyFM allows you to create customizable forms in Craft CMS with advanced settings for layout, emails, icons, and more.
 
-## 🛠 Requirements
+##  Requirements
 
 Make sure your environment meets the following minimum requirements:
 
 * **PHP**: `^8.2`
 * **Craft CMS**: `^5.0.0`
 
-> ⚠️ This plugin is only compatible with Craft CMS 5 and above.
+> ️ This plugin is only compatible with Craft CMS 5 and above.
 
 ---
 
-## 📥 Installation
+##  Installation
 
 You can install the plugin via Composer.
 
@@ -37,7 +37,7 @@ php craft plugin/install form-builder
 
 ---
 
-## ✅ Verifying Installation
+##  Verifying Installation
 
 After installation:
 
