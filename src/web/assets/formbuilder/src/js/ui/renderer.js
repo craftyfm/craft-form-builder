@@ -97,7 +97,7 @@ export class Renderer {
         if (selectedField) {
             const component = components[selectedField.type];
             if (component && component.renderSettings) {
-                this.settingsContainer.innerHTML = component.renderSettings(selectedField, this.formState);
+                this.settingsContainer.innerHTML = `<div class="cfb:mb-4 cfb:inline-flex cfb:items-center cfb:rounded-full cfb:bg-gray-100 cfb:px-2.5 cfb:py-0.5 cfb:text-xs cfb:font-medium cfb:text-gray-700 cfb:capitalize">${selectedField.type}</div>` + component.renderSettings(selectedField, this.formState);
                 if (component.initSettings) {
                     component.initSettings(this.updateFieldData, this);
                 }
@@ -246,7 +246,7 @@ export class Renderer {
             };
             
             // Generate unique handle if the component has a handle
-            if (component.config.defaultData.handle !== undefined || component.config.defaultData.handle !== '') {
+            if (component.config.defaultData.handle !== undefined && component.config.defaultData.handle !== '') {
                 newField.handle = this.generateUniqueHandle(component.config.defaultData.handle);
             }
             
