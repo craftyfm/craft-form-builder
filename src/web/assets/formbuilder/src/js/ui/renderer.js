@@ -246,7 +246,7 @@ export class Renderer {
             };
             
             // Generate unique handle if the component has a handle
-            if (component.config.defaultData.handle !== undefined || component.config.defaultData.handle !== '') {
+            if (component.config.defaultData.handle !== undefined && component.config.defaultData.handle !== '') {
                 newField.handle = this.generateUniqueHandle(component.config.defaultData.handle);
             }
             

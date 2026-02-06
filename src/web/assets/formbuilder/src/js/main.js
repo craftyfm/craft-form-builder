@@ -77,15 +77,15 @@ document.addEventListener('DOMContentLoaded', () => {
         saveForm(formState)
             .then((updatedFormState) => {
                 // FormState has been updated, now refresh any UI that depends on it
-                console.log('Form saved successfully, formState updated:', updatedFormState);
+                // console.log('Form saved successfully, formState updated:', updatedFormState);
                 
                 // Re-render components that might depend on the updated formState
-                renderer.renderForm();
-                renderer.renderSettings();
+                // renderer.renderForm();
+                // renderer.renderSettings();
                 
                 // Update any other components that might need refreshing
                 // For example, if you have breadcrumbs or page title that show form name:
-                updatePageTitle(formState.settings.name);
+                // updatePageTitle(formState.settings.name);
             })
             .catch((error) => {
                 console.error('Failed to save form:', error);
