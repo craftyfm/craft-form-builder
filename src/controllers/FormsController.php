@@ -167,7 +167,7 @@ class FormsController extends Controller
             $e->sender->assetBundles = [];
         });
         return $this->renderTemplate('form-builder/_render/preview', [
-            'form' => $form, 'submission' => $submission, 'preview' => true,
+            'form' => $form, 'submission' => $submission, 'loadAsset' => true,
         ], View::TEMPLATE_MODE_CP);
     }
 
