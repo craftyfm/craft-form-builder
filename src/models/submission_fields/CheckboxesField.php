@@ -16,7 +16,13 @@ class CheckboxesField extends BaseField
         if (!is_array($value)) {
             $value = [];
         }
-        $this->_values = $value;
+        // Older submissions were stored with HTML entities baked in; decode them here so both
+        // legacy and current data match against option values consistently. No-op for current
+        // submissions, which are no longer pre-encoded before saving.
+        $this->_values = array_map(
+            fn($v) => is_string($v) ? html_entity_decode($v, ENT_QUOTES) : $v,
+            $value
+        );
     }
 
     public function getValue(): array

@@ -5,7 +5,6 @@ namespace craftyfm\formbuilder\controllers;
 use Craft;
 use craft\errors\MissingComponentException;
 use craft\helpers\DateTimeHelper;
-use craft\helpers\Html;
 use craft\helpers\UrlHelper;
 use craft\web\Controller;
 use craft\web\Request;
@@ -373,8 +372,8 @@ class SubmissionsController extends Controller
             case Url::$type:
             case Phone::$type:
             case TextArea::$type:
-                // HTML encode to prevent XSS
-                return is_string($value) ? Html::encode(trim($value)) : $value;
+                // Store the raw value; HTML-encoding happens once, at display time.
+                return is_string($value) ? trim($value) : $value;
             case Date::$type:
                 return $value ? DateTimeHelper::toDateTime($value, false, false) : null;
             case Number::$type:
@@ -389,20 +388,20 @@ class SubmissionsController extends Controller
                 }
 
                 $validValues = array_column($formField->options, 'value');
-                return in_array($value, $validValues, true) ? Html::encode($value) : null;
+                return in_array($value, $validValues, true) ? $value : null;
             case Checkboxes::$type:
                 // Ensure boolean or array of valid options
                 if (is_array($value)) {
-                    return array_map(fn($v) => Html::encode($v), $value);
+                    return $value;
                 }
                 return [];
-                
+
             case FileUpload::$type:
                 // Handle file uploads
                 return $this->handleFileUpload($formField->handle);
-                
+
             default:
-                return is_string($value) ? Html::encode($value) : $value;
+                return $value;
         }
     }
 
