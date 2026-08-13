@@ -123,9 +123,24 @@ Here’s a simple, improved example of an email template:
 
 ## Template Variables
 
-* `{{ message }}` → The submitted message content.
+* `{{ message }}` → The notification's resolved Message content (see **Inserting Form Data** below).
+* `{{ subject }}` → The notification's resolved Subject.
+* `{{ submission }}` → The full `Submission` object, if you need to access anything not covered above.
 
-You can include this placeholder anywhere in your template to dynamically insert the user’s message.
+You can include these placeholders anywhere in your template to dynamically insert content.
+
+---
+
+## Inserting Form Data into a Notification
+
+In a form's **Admin Notification** or **User Notification** settings, the Subject and Message fields support tokens that get replaced with the actual submitted data before the email is sent:
+
+* `{fieldHandle}` → inserts a single field's submitted value, e.g. `{email}` or `{message}` (matching that field's handle on the form).
+* `{submission}` → inserts every submitted field as a `Label: value` list.
+
+For example, if your form has a field handled `message`, typing `Message: {message}` in the notification's Message field will insert the submitter's actual message — including into `{{ message }}` in a custom email template, since that Twig variable always holds the *resolved* text.
+
+> Field-handle tokens are resolved first, so if a form field happens to be handled `submission`, `{submission}` will insert that field's value instead of the full-form summary.
 
 
 

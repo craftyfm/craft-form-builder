@@ -93,7 +93,7 @@ class EmailNotification extends Component
         }
         $message = $mailer->compose()
             ->setTo($recipients)
-            ->setSubject($model->subject)
+            ->setSubject($model->getResolvedSubject($submission))
             ->setHtmlBody($model->getBodyHtml($submission));
 
 

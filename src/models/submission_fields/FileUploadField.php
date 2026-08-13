@@ -171,4 +171,9 @@ class FileUploadField extends BaseField
         }
         return $encode ? json_encode($payload) : $payload;
     }
+
+    public function getDisplayValue(): string
+    {
+        return implode(', ', array_map(fn(Asset $asset) => $asset->filename, $this->getValue()));
+    }
 }

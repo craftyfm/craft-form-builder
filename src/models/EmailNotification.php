@@ -3,6 +3,7 @@
 namespace craftyfm\formbuilder\models;
 
 use craft\base\Model;
+use craft\helpers\Html;
 use craft\web\View;
 use craftyfm\formbuilder\FormBuilder;
 use DateTime;
@@ -36,6 +37,21 @@ class EmailNotification extends Model
         return explode(',', $this->recipients);
     }
 
+    /**
+     * Replace {handle} tokens with individual submitted field values, and {submission} with
+     * a "Label: value" summary of every submitted field.
+     */
+    public function resolveTokens(string $text, Submission $submission): string
+    {
+        $tokens = [];
+        foreach ($submission->getFieldDisplayValues() as $handle => $value) {
+            $tokens['{' . $handle . '}'] = $value;
+        }
+        $text = strtr($text, $tokens);
+
+        return str_replace('{submission}', $submission->getFormattedSummary(), $text);
+    }
+
     public function defineRules(): array
     {
         $rules = [];
@@ -54,14 +70,16 @@ class EmailNotification extends Model
      */
     public function getBodyHtml(Submission $submission): string
     {
+        $message = $this->resolveTokens($this->message, $submission);
+
         if ($this->type === self::TYPE_USER) {
             $emailTemplate = FormBuilder::getInstance()->emailTemplates->getById($this->templateId);
             return \Craft::$app->getView()->renderTemplate(
                 $emailTemplate->template,
                 [
                     'submission' => $submission,
-                    'message' => new Markup(nl2br($this->message), 'UTF-8'),
-                    'subject' => $this->subject,
+                    'message' => new Markup(nl2br(Html::encode($message)), 'UTF-8'),
+                    'subject' => $this->getResolvedSubject($submission),
                 ],
                 View::TEMPLATE_MODE_SITE
             );
@@ -71,9 +89,14 @@ class EmailNotification extends Model
             "form-builder/_email-notification/$this->type",
             [
                 'submission' => $submission,
-                'message' => $this->message,
-                'subject' => $this->subject,
+                'message' => $message,
+                'subject' => $this->getResolvedSubject($submission),
             ]
         );
+    }
+
+    public function getResolvedSubject(Submission $submission): string
+    {
+        return $this->resolveTokens($this->subject ?? '', $submission);
     }
 }

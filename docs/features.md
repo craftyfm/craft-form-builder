@@ -51,11 +51,9 @@ Customize your form appearance with layout presets and utility classes:
 
 ---
 
-##  Admin Email Notifications
+##  Email Notifications
 
-Automatically notify admins when a form is submitted.
+Automatically notify admins and/or the form submitter when a form is submitted.
 
-
----
-
-Let me know when you're ready to move on to **Section 3: How to Configure Settings**, or if you'd like to include screenshots, links, or more field types.
+* Insert submitted form data directly into the email subject/body using tokens like `{email}` or `{submission}` — see [Notification](form-settings.md#7-notification) in the form settings docs.
+* If an admin email fails to send, it can be resent from the submission's detail page in the Control Panel.

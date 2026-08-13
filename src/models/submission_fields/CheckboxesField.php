@@ -48,4 +48,9 @@ class CheckboxesField extends BaseField
     {
         return $encode ? json_encode($this->getValue()) : $this->getValue();
     }
+
+    public function getDisplayValue(): string
+    {
+        return implode(', ', $this->getValue());
+    }
 }

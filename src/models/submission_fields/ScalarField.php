@@ -39,4 +39,9 @@ class ScalarField extends BaseField
     {
         return $encode ? json_encode($this->getValue()) : $this->getValue();
     }
+
+    public function getDisplayValue(): string
+    {
+        return (string)$this->_value;
+    }
 }

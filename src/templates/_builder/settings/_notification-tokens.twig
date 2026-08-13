@@ -1,0 +1,4 @@
+<div class="cfb:font-light cfb:text-xs cfb:mt-1 cfb:mb-2 cfb:text-gray-500">
+    Use <code>{submission}</code> to print every submitted field, or insert a single field's value with its handle, e.g.
+    {% for field in form.getFields() %}<code>{{ '{' }}{{ field.handle }}{{ '}' }}</code>{{ not loop.last ? ', ' }}{% endfor %}.
+</div>

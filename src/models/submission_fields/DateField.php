@@ -54,4 +54,9 @@ class DateField extends BaseField
         $value = $this->getValue()->format('Y-m-d');
         return $encode ? json_encode($value) : $value;
     }
+
+    public function getDisplayValue(): string
+    {
+        return (string)$this;
+    }
 }
