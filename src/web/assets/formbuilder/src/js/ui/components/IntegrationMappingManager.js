@@ -1,5 +1,5 @@
 export default class IntegrationMappingManager {
-    constructor({ listDropdownContainer, fieldMappingContainerEl, listEndpoint, integrationHandle, selectedListId }) {
+    constructor({ listDropdownContainer, fieldMappingContainerEl, listEndpoint, integrationHandle, selectedListId, enabled }) {
         if (!listDropdownContainer || !fieldMappingContainerEl || !listEndpoint || !integrationHandle) {
             throw new Error("Missing required parameters.");
         }
@@ -11,12 +11,15 @@ export default class IntegrationMappingManager {
         this.globalFieldsVar = Craft.FormBuilder.formState;
         this.integrationHandle = integrationHandle;
         this.selectedListId = selectedListId === undefined ? null : selectedListId;
+        this.enabled = enabled !== false;
         this.lists = [];
         this.init();
     }
 
     async init() {
-        await this.loadLists();
+        if (this.enabled) {
+            await this.loadLists();
+        }
         this.listDropdownEl.addEventListener("change", () => {
             this.selectedListId = this.listDropdownEl.value;
             this.generateFieldMapping();
@@ -26,6 +29,7 @@ export default class IntegrationMappingManager {
         })
         this.refreshBtn.addEventListener('click', async (e) => {
             e.preventDefault();
+            if (!this.enabled) return;
             await this.loadLists();
         })
     }
@@ -41,6 +45,11 @@ export default class IntegrationMappingManager {
     }
 
     async loadLists() {
+        if (!this.enabled) {
+            this.listDropdownEl.innerHTML = `<option value="">Enable this integration to load lists</option>`;
+            return;
+        }
+
         this.loading();
         try {
             const res = await fetch(this.listEndpoint, {
@@ -49,9 +58,10 @@ export default class IntegrationMappingManager {
                 }
             });
 
-            if (!res.ok) throw new Error(`Failed to load lists: ${res.statusText}`);
-
             const data = await res.json();
+
+            if (!res.ok) throw new Error(data.message || `Failed to load lists: ${res.statusText}`);
+
             this.lists = data.lists;
             this.populateListDropdown();
             if (this.selectedListId) {
@@ -59,6 +69,9 @@ export default class IntegrationMappingManager {
             }
         } catch (err) {
             console.error("Error loading lists:", err);
+            if (typeof Craft !== 'undefined' && Craft.cp && typeof Craft.cp.displayError === 'function') {
+                Craft.cp.displayError(err.message);
+            }
         }
 
         this.finishedLoading();

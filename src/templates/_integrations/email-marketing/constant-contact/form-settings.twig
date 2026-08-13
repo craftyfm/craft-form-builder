@@ -47,7 +47,8 @@
                 'integrationId': integration.id
             }) }}',
             integrationHandle: '{{ integration.handle }}',
-            selectedListId: '{{ integration.listId }}'
+            selectedListId: '{{ integration.listId }}',
+            enabled: {{ integration.enabled ? 'true' : 'false' }}
         } );
 
         new Craft.FormBuilder.OptInDropdown(

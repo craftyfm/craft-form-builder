@@ -215,6 +215,7 @@ trait Oauth2Trait
      * @param array $headers Additional headers to merge
      * @return ResponseInterface
      * @throws GuzzleException
+     * @throws Exception
      */
     protected function sendOAuth2Request(
         string $path,
@@ -225,7 +226,12 @@ trait Oauth2Trait
     {
         $client = $this->getApiClient();
 
-        if ($this->getToken()->isExpired()) {
+        $token = $this->getToken();
+        if (!$token) {
+            throw new Exception('This integration is not authorized yet. Please connect it before using this feature.');
+        }
+
+        if ($token->isExpired()) {
             $this->refreshAccessToken();
         }
 

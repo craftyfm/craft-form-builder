@@ -89,9 +89,9 @@ class IntegrationController extends Controller
 
         try {
             $lists = $integration->getLists(true);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
+            FormBuilder::log($e->getMessage(), 'error');
             return $this->asFailure($e->getMessage());
-
         }
 
         return $this->asJson([

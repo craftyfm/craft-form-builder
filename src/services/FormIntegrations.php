@@ -84,7 +84,9 @@ class FormIntegrations extends Component
      */
     public function saveFormIntegration(Form $form, BaseIntegration $integration, bool $runValidate = true): bool
     {
-        $integration->normalizeFormSettings($form);
+        if ($integration->enabled) {
+            $integration->normalizeFormSettings($form);
+        }
 
         $record = FormIntegration::findOne([
             'formId' => $form->id,
