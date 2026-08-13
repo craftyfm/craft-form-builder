@@ -4,6 +4,7 @@ namespace craftyfm\formbuilder\services;
 
 use Craft;
 use craft\base\Component;
+use craftyfm\formbuilder\FormBuilder;
 use craftyfm\formbuilder\models\EmailNotification as EmailNotificationModel;
 use craftyfm\formbuilder\models\Submission;
 use craftyfm\formbuilder\records\EmailNotificationRecord;
@@ -75,28 +76,43 @@ class EmailNotification extends Component
      * @param Submission $submission
      * @return bool
      * @throws InvalidConfigException
-     * @throws LoaderError
-     * @throws RuntimeError
-     * @throws SyntaxError
-     * @throws \yii\base\Exception
      */
     public function sendNotification(EmailNotificationModel $model, Submission $submission): bool
     {
-        if (!$model->enabled || empty($model->recipients)) {
+        if (!$model->enabled) {
+            FormBuilder::log("Notification for submission #{$submission->id} not sent: notification is disabled.", 'info');
+            return false;
+        }
+
+        if (empty($model->recipients)) {
+            FormBuilder::log("Notification for submission #{$submission->id} not sent: no recipients configured.", 'info');
             return false;
         }
 
         $mailer = Craft::$app->getMailer();
         $recipients = $model->getRecipients($submission);
         if (!$recipients) {
+            FormBuilder::log("Notification for submission #{$submission->id} not sent: could not resolve any recipient address (recipients setting: {$model->recipients}).", 'info');
             return false;
         }
+
+        try {
+            $body = $model->getBodyHtml($submission);
+        } catch (LoaderError|RuntimeError|SyntaxError|\yii\base\Exception $e) {
+            FormBuilder::log("Notification for submission #{$submission->id} not sent: failed to render the email body ({$e->getMessage()}).", 'error');
+            return false;
+        }
+
         $message = $mailer->compose()
             ->setTo($recipients)
             ->setSubject($model->getResolvedSubject($submission))
-            ->setHtmlBody($model->getBodyHtml($submission));
+            ->setHtmlBody($body);
 
+        $sent = $message->send();
+        if (!$sent) {
+            FormBuilder::log("Notification for submission #{$submission->id} failed to send via the mailer.", 'info');
+        }
 
-        return $message->send();
+        return $sent;
     }
 }

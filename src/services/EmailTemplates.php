@@ -34,8 +34,11 @@ class EmailTemplates extends Component
         return $emailTemplates;
     }
 
-    public function getById(int $id): ?EmailTemplateModel
+    public function getById(?int $id): ?EmailTemplateModel
     {
+        if ($id === null) {
+            return null;
+        }
         $record = EmailTemplateRecord::findOne(['id' => $id]);
         if (!$record) {
             return null;
