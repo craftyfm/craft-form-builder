@@ -22,7 +22,10 @@ class ScalarField extends BaseField
 
     public function setValue($value): void
     {
-        $this->_value = $value;
+        // Older submissions were stored with HTML entities baked in (e.g. "&#039;"); decode
+        // them here so both legacy and current data end up as the same raw value. This is a
+        // no-op for current submissions, which are no longer pre-encoded before saving.
+        $this->_value = is_string($value) ? html_entity_decode($value, ENT_QUOTES) : $value;
     }
 
     public function getValue(): ?string
