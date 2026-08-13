@@ -52,12 +52,19 @@ class EmailNotification extends Model
         return str_replace('{submission}', $submission->getFormattedSummary(), $text);
     }
 
+    public function rules(): array
+    {
+        return $this->defineRules();
+    }
+
     public function defineRules(): array
     {
         $rules = [];
-        $rules[] = [['recipients', 'subject', 'message'], 'required'];
-        if ($this->type === self::TYPE_USER) {
-            $rules[] = [['templateId'], 'required'];
+        if ($this->enabled) {
+            $rules[] = [['recipients', 'subject', 'message'], 'required'];
+            if ($this->type === self::TYPE_USER) {
+                $rules[] = [['templateId'], 'required'];
+            }
         }
         return $rules;
     }
@@ -74,6 +81,9 @@ class EmailNotification extends Model
 
         if ($this->type === self::TYPE_USER) {
             $emailTemplate = FormBuilder::getInstance()->emailTemplates->getById($this->templateId);
+            if (!$emailTemplate) {
+                throw new Exception('No email template is selected for this User Notification. Choose one in the form\'s User Notification settings.');
+            }
             return \Craft::$app->getView()->renderTemplate(
                 $emailTemplate->template,
                 [
