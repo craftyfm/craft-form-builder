@@ -19,6 +19,8 @@ export default class IntegrationMappingManager {
     async init() {
         if (this.enabled) {
             await this.loadLists();
+        } else {
+            this.listDropdownEl.innerHTML = `<option value="">Enable this integration to load lists</option>`;
         }
         this.listDropdownEl.addEventListener("change", () => {
             this.selectedListId = this.listDropdownEl.value;
@@ -29,7 +31,6 @@ export default class IntegrationMappingManager {
         })
         this.refreshBtn.addEventListener('click', async (e) => {
             e.preventDefault();
-            if (!this.enabled) return;
             await this.loadLists();
         })
     }
@@ -45,11 +46,6 @@ export default class IntegrationMappingManager {
     }
 
     async loadLists() {
-        if (!this.enabled) {
-            this.listDropdownEl.innerHTML = `<option value="">Enable this integration to load lists</option>`;
-            return;
-        }
-
         this.loading();
         try {
             const res = await fetch(this.listEndpoint, {
