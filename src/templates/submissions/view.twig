@@ -248,4 +248,19 @@
         </div>
     </div>
 
+    {% if adminNotifEnabled and currentUser.can('form-builder-updateSubmissions') %}
+        <div class="meta">
+            <div class="field">
+                <div class="heading">
+                    <label class="">Resend Admin Email</label>
+                </div>
+                <div class="input ltr">
+                    <a class="btn small" href="{{ actionUrl('form-builder/submissions/resend-admin-notification', {id: submission.id}) }}">
+                        Resend
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
 {% endblock %}

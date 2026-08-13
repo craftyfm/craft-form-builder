@@ -45,9 +45,10 @@
             fieldMappingContainerEl: mappingFields,
             listEndpoint: '{{ actionUrl('form-builder/integration/get-lists', {
                 'integrationId': integration.id
-            }) }}',
+            })|raw }}',
             integrationHandle: '{{ integration.handle }}',
-            selectedListId: '{{ integration.listId }}'
+            selectedListId: '{{ integration.listId }}',
+            enabled: {{ integration.enabled ? 'true' : 'false' }}
         } );
 
         new Craft.FormBuilder.OptInDropdown(

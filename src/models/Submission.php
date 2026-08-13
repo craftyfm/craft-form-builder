@@ -98,6 +98,30 @@ class Submission extends Model
 
 
     }
+
+    /**
+     * Field handle => human-readable value, used for {handle} email placeholder replacement.
+     */
+    public function getFieldDisplayValues(): array
+    {
+        $values = [];
+        foreach ($this->_fields as $handle => $field) {
+            $values[$handle] = $field->getDisplayValue();
+        }
+        return $values;
+    }
+
+    /**
+     * Plain-text "Label: value" summary of every submitted field, used for the {submission} email placeholder.
+     */
+    public function getFormattedSummary(): string
+    {
+        $lines = [];
+        foreach ($this->_fields as $field) {
+            $lines[] = $field->getFormField()->label . ': ' . $field->getDisplayValue();
+        }
+        return implode("\n", $lines);
+    }
     public function setStatus(SubmissionStatus $status): void
     {
         $this->status = $status;

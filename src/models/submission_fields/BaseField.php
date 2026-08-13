@@ -29,6 +29,11 @@ abstract class BaseField extends Model
 
     abstract public function getValueAsJson($encode = false);
 
+    /**
+     * Human-readable, plain-text representation of the value, used for email placeholder replacement.
+     */
+    abstract public function getDisplayValue(): string;
+
 
 
 }

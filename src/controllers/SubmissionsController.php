@@ -112,7 +112,8 @@ class SubmissionsController extends Controller
         }
         return $this->renderTemplate('form-builder/submissions/view', [
             'submission' => $submission,
-            'setStatuses' => $setStatuses
+            'setStatuses' => $setStatuses,
+            'adminNotifEnabled' => $submission->getForm()->getAdminNotif()->enabled,
 
         ]);
     }
@@ -169,6 +170,54 @@ class SubmissionsController extends Controller
         }
         $this->setFailFlash('Failed to update submission status.');
         return $this->redirect(UrlHelper::actionUrl('form-builder/submissions/view', ['id' => $submission->id]));
+    }
+
+    /**
+     * @throws ForbiddenHttpException
+     * @throws BadRequestHttpException
+     */
+    public function actionResendAdminNotification(): Response
+    {
+        $this->requirePermission('form-builder-updateSubmissions');
+        $id = $this->request->getRequiredParam('id');
+
+        $submission = FormBuilder::getInstance()->submissions->getSubmissionById($id);
+        if (!$submission) {
+            throw new BadRequestHttpException('Submission not found');
+        }
+
+        $adminNotif = $submission->getForm()->getAdminNotif();
+        if (!$adminNotif->enabled) {
+            return $this->resendAdminNotificationResponse($submission, false, 'Admin notification is not enabled for this form.');
+        }
+
+        try {
+            $sent = FormBuilder::getInstance()->emailNotification->sendNotification($adminNotif, $submission);
+        } catch (Throwable $e) {
+            FormBuilder::log($e->getMessage(), 'error');
+            return $this->resendAdminNotificationResponse($submission, false, $e->getMessage());
+        }
+
+        return $this->resendAdminNotificationResponse(
+            $submission,
+            $sent,
+            $sent ? 'Admin notification resent successfully.' : 'Failed to resend admin notification.'
+        );
+    }
+
+    private function resendAdminNotificationResponse(Submission $submission, bool $success, string $message): Response
+    {
+        $redirectUrl = UrlHelper::actionUrl('form-builder/submissions/view', ['id' => $submission->id]);
+
+        if ($success) {
+            return $this->asSuccess($message, [], $redirectUrl);
+        }
+
+        if ($this->request->getAcceptsJson()) {
+            return $this->asFailure($message);
+        }
+        $this->setFailFlash($message);
+        return $this->redirect($redirectUrl);
     }
 
     /**

@@ -29,11 +29,12 @@
         <input required value="{{ form.adminNotif.subject }}" type="text" id="form-adminEmailSubject" name="adminNotif[subject]" placeholder="Enter email subject..." class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-lg focus:cfb:outline-none focus:cfb:ring-2 focus:cfb:ring-blue-500 focus:cfb:border-blue-500">
     </div>
 
-    <div class="cfb-admin-notif">
+    <div class="cfb-admin-notif cfb:lg:col-span-2">
         <label for="form-adminEmailMessage" class="cfb:block cfb:text-sm cfb:font-medium cfb:text-gray-700 cfb:mb-2">
             Message <span class="cfb:text-red-500 cfb:ml-1">*</span>
         </label>
         <textarea required type="text" id="form-adminEmailMessage" name="adminNotif[message]" placeholder="Enter message..." class="cfb:w-full cfb:px-3 cfb:py-2 cfb:border cfb:border-gray-300 cfb:rounded-lg focus:cfb:outline-none focus:cfb:ring-2 focus:cfb:ring-blue-500 focus:cfb:border-blue-500">{{ form.adminNotif.message }}</textarea>
+        {% include "form-builder/_builder/settings/_notification-tokens" %}
     </div>
 
 

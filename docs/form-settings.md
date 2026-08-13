@@ -82,6 +82,19 @@ You can configure email notifications for each form submission. There are two ty
 
 >  For Admin notifications, a **submission URL** will automatically be appended at the end of the message so you can quickly view the entry in the Control Panel.
 
+#### Inserting Submitted Form Data
+
+Both the **Subject** and **Message Body** fields accept tokens that get replaced with the actual submitted data when the email is sent:
+
+* `{fieldHandle}` — inserts a single field's submitted value. For example, if your form has a field handled `email`, typing `{email}` inserts what the submitter entered there.
+* `{submission}` — inserts every submitted field as a `Label: value` list, so you don't have to reference each field individually.
+
+Every field's handle available on the current form is listed under the Message Body field as a reminder. See [`settings.md`](settings.md) for how these tokens also flow into a custom User Notification email template.
+
+#### Resending an Admin Notification
+
+If a submission's admin email failed to send (e.g. the integration wasn't authorized yet, or a mail server hiccup), open that submission from **Form Builder → Submissions** and use the **Resend Admin Email** button in the sidebar. It's only shown when the form's Admin Notification is enabled.
+
 ---
 
 ### 8. **Integrations**
