@@ -91,7 +91,8 @@ class EmailNotification extends Model
                 'submission' => $submission,
                 'message' => $message,
                 'subject' => $this->getResolvedSubject($submission),
-            ]
+            ],
+            View::TEMPLATE_MODE_CP
         );
     }
 
