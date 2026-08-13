@@ -109,10 +109,24 @@ class SubmissionsController extends Controller
                 ];
             }
         }
+        $activeIntegrations = [];
+        foreach ($submission->getForm()->integrations as $integration) {
+            if ($integration->enabled) {
+                $activeIntegrations[] = [
+                    'name' => $integration->name,
+                    'url' => UrlHelper::actionUrl('form-builder/submissions/resend-integration', [
+                        'id' => $submission->id,
+                        'integrationId' => $integration->id,
+                    ]),
+                ];
+            }
+        }
+
         return $this->renderTemplate('form-builder/submissions/view', [
             'submission' => $submission,
             'setStatuses' => $setStatuses,
             'adminNotifEnabled' => $submission->getForm()->getAdminNotif()->enabled,
+            'activeIntegrations' => $activeIntegrations,
 
         ]);
     }
@@ -187,24 +201,53 @@ class SubmissionsController extends Controller
 
         $adminNotif = $submission->getForm()->getAdminNotif();
         if (!$adminNotif->enabled) {
-            return $this->resendAdminNotificationResponse($submission, false, 'Admin notification is not enabled for this form.');
+            return $this->submissionActionResponse($submission, false, 'Admin notification is not enabled for this form.');
         }
 
         try {
             $sent = FormBuilder::getInstance()->emailNotification->sendNotification($adminNotif, $submission);
         } catch (Throwable $e) {
             FormBuilder::log($e->getMessage(), 'error');
-            return $this->resendAdminNotificationResponse($submission, false, $e->getMessage());
+            return $this->submissionActionResponse($submission, false, $e->getMessage());
         }
 
-        return $this->resendAdminNotificationResponse(
+        return $this->submissionActionResponse(
             $submission,
             $sent,
             $sent ? 'Admin notification resent successfully.' : 'Failed to resend admin notification.'
         );
     }
 
-    private function resendAdminNotificationResponse(Submission $submission, bool $success, string $message): Response
+    /**
+     * @throws ForbiddenHttpException
+     * @throws BadRequestHttpException
+     */
+    public function actionResendIntegration(): Response
+    {
+        $this->requirePermission('form-builder-updateSubmissions');
+        $id = $this->request->getRequiredParam('id');
+        $integrationId = $this->request->getRequiredParam('integrationId');
+
+        $submission = FormBuilder::getInstance()->submissions->getSubmissionById($id);
+        if (!$submission) {
+            throw new BadRequestHttpException('Submission not found');
+        }
+
+        $integration = FormBuilder::getInstance()->formIntegrations->getIntegrationForForm($submission->getForm()->id, $integrationId);
+        if (!$integration || !$integration->enabled) {
+            return $this->submissionActionResponse($submission, false, 'Integration is not active for this form.');
+        }
+
+        $result = $integration->execute($submission);
+
+        return $this->submissionActionResponse(
+            $submission,
+            $result->success,
+            $result->success ? "{$integration->name} integration resent successfully." : "Failed to resend {$integration->name} integration: {$result->message}"
+        );
+    }
+
+    private function submissionActionResponse(Submission $submission, bool $success, string $message): Response
     {
         $redirectUrl = UrlHelper::actionUrl('form-builder/submissions/view', ['id' => $submission->id]);
 

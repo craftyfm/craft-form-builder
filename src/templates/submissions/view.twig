@@ -16,6 +16,12 @@
     margin-bottom: 0.25rem;
 }
 
+.cfb-resend-integrations {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
 {% endcss %}
 
 {% block actionButton %}
@@ -258,6 +264,23 @@
                     <a class="btn small" href="{{ actionUrl('form-builder/submissions/resend-admin-notification', {id: submission.id}) }}">
                         Resend
                     </a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if activeIntegrations and currentUser.can('form-builder-updateSubmissions') %}
+        <div class="meta">
+            <div class="field">
+                <div class="heading">
+                    <label class="">Resend Integrations</label>
+                </div>
+                <div class="input ltr cfb-resend-integrations">
+                    {% for integration in activeIntegrations %}
+                        <a class="btn small" href="{{ integration.url }}">
+                            Resend {{ integration.name }}
+                        </a>
+                    {% endfor %}
                 </div>
             </div>
         </div>
