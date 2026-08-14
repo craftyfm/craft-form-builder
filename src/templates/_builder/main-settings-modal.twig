@@ -3,6 +3,7 @@
     { label: 'Layout & Style', icon: 'cfb:iconify-[mdi--palette]', tab: 'layout' },
     { label: 'Submit Behavior', icon: 'cfb:iconify-[mdi--check-circle]', tab: 'behavior' },
     { label: 'Notifications', icon: 'cfb:iconify-[mdi--email]', tab: 'notifications' },
+    { label: 'Submission Table', icon: 'cfb:iconify-[mdi--table]', tab: 'submission-table' },
 ] %}
 {% if form.integrations %}
     {% set tabs = tabs|merge([
@@ -42,6 +43,7 @@
                 <!-- Submit Behavior Tab Content -->
                 {% include 'form-builder/_builder/settings/behavior' %}
                 {% include 'form-builder/_builder/settings/notifications' %}
+                {% include 'form-builder/_builder/settings/submission-table' %}
 {#                {% include 'form-builder/_builder/settings/admin-email' %}#}
                 {% include 'form-builder/_builder/settings/integrations' %}
 

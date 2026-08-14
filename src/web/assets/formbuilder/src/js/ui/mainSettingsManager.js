@@ -1,3 +1,11 @@
+import {getDragAfterField} from '../utils.js';
+
+const DRAGGING_CLASS = 'cfb-column-row-dragging';
+
+// Keys and translated titles come from the server (FormSettings::builtInColumns).
+const builtInColumns = () =>
+    Object.entries(window.FormBuilderBuiltInColumns || {}).map(([key, title]) => ({key, title}));
+
 /**
  * Manages main settings functionality for the form builder
  */
@@ -173,6 +181,94 @@ export class MainSettingsManager {
             targetFieldEl.appendChild(option);
         });
     }
+    renderSubmissionTableColumnsField() {
+        const container = document.getElementById('form-submission-table-columns');
+        if (!container) {
+            return;
+        }
+
+        const builtIn = builtInColumns();
+        const selected = this.formState.settings?.submissionTableColumns || [];
+        // An empty selection means the form still shows the built-in defaults.
+        const effective = selected.length ? selected : builtIn.map(column => column.key);
+
+        const options = [
+            ...builtIn,
+            ...(this.formState.fields || [])
+                .filter(field => field.isSubmissionField && field.handle !== '')
+                .map(field => ({key: field.id, title: field.label || field.handle})),
+        ];
+
+        // Selected columns lead, in their configured order, so the list doubles as the
+        // column order. Sorting is stable, so everything else keeps its natural order.
+        const rank = option => {
+            const index = effective.indexOf(option.key);
+            return index === -1 ? Infinity : index;
+        };
+        options.sort((a, b) => rank(a) - rank(b));
+
+        container.innerHTML = '';
+        options.forEach(option => {
+            const row = document.createElement('div');
+            row.className = 'cfb-column-row cfb:flex cfb:items-center cfb:gap-2 cfb:px-2 cfb:py-1 cfb:border cfb:border-gray-200 cfb:rounded cfb:bg-white';
+            row.draggable = true;
+
+            const handle = document.createElement('span');
+            handle.className = 'cfb:iconify-[mdi--drag] cfb:text-gray-400 cfb:cursor-move';
+
+            const label = document.createElement('label');
+            label.className = 'cfb:flex cfb:items-center cfb:gap-2 cfb:text-sm cfb:text-gray-700 cfb:flex-1';
+
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.name = 'settings[submissionTableColumns][]';
+            checkbox.value = option.key;
+            checkbox.checked = effective.includes(option.key);
+
+            const text = document.createElement('span');
+            text.textContent = option.title;
+
+            label.appendChild(checkbox);
+            label.appendChild(text);
+            row.appendChild(handle);
+            row.appendChild(label);
+            container.appendChild(row);
+        });
+
+        this.initSubmissionTableColumnsDragDrop(container);
+    }
+
+    /**
+     * Makes the column rows re-orderable. Row order is the column order: the settings form
+     * is read in DOM order, so moving a row is all it takes to move the column.
+     */
+    initSubmissionTableColumnsDragDrop(container) {
+        // Delegated, so the rows can be rebuilt on every modal open without rebinding.
+        if (container.dataset.dragInitialized) {
+            return;
+        }
+        container.dataset.dragInitialized = 'true';
+
+        container.addEventListener('dragstart', (e) => {
+            e.target.closest('.cfb-column-row')?.classList.add(DRAGGING_CLASS);
+        });
+
+        container.addEventListener('dragend', (e) => {
+            e.target.closest('.cfb-column-row')?.classList.remove(DRAGGING_CLASS);
+        });
+
+        container.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            const draggedRow = container.querySelector(`.${DRAGGING_CLASS}`);
+            if (!draggedRow) {
+                return;
+            }
+
+            const afterElement = getDragAfterField(container, e.clientY, `.cfb-column-row:not(.${DRAGGING_CLASS})`);
+            container.insertBefore(draggedRow, afterElement ?? null);
+        });
+    }
+
     /**
      * Creates a new main settings manager
      * @param {Object} formState - The form state object
@@ -219,6 +315,7 @@ export class MainSettingsManager {
     openSettingsModal() {
         this.formSettingsModal.classList.remove('cfb:hidden');
         this.renderUserNotifTargetField();
+        this.renderSubmissionTableColumnsField();
     }
 
     /**
@@ -238,7 +335,22 @@ export class MainSettingsManager {
 
         const integrationBuffer = {};
 
+        // Array-style keys (settings[submissionTableColumns][]) are read from the DOM rather
+        // than from FormData, which omits unchecked boxes entirely — an emptied selection has
+        // to reach formState as an empty array, not as a missing key.
+        e.target.querySelectorAll('[name$="][]"]').forEach(input => {
+            const [, parentKey, childKey] = input.name.match(/^(\w+)\[(\w+)]\[]$/) ?? [];
+            if (parentKey) {
+                this.formState[parentKey] = this.formState[parentKey] || {};
+                this.formState[parentKey][childKey] = formData.getAll(input.name);
+            }
+        });
+
         formData.forEach((value, key) => {
+            if (key.endsWith('[]')) {
+                return;
+            }
+
             // Match keys like: integrations[test][enabled]
             const integrationMatch = key.match(/^integrations(\[[^\]]+])+$/);
             if (integrationMatch) {

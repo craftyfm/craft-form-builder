@@ -27,31 +27,17 @@
     <script>
         var currentFormId = {{ currentFormId ? currentFormId : null|json_encode|raw }};
         var deleteAction = "{{ currentUser.can('form-builder-deleteSubmissions') ? actionUrl('form-builder/submissions/delete') : "" }}";
+        var submissionColumns = {{ submissionColumns|json_encode|raw }};
     </script>
 {% endblock %}
 
 {% js %}
-const columns = [
-    {
-        name: 'title',
-        title: 'Title',
-        callback: function(value) {
-            if (value) {
-                return `<a href="${value.url}">${value.html}</a>`;
-            }
-
-            return '';
-        }
-    },
-    {
-        name: 'formName',
-        title: 'Form'
-    },
-    {
-        name: 'dateCreated',
-        title: 'Date Submitted'
-    },
-];
+// Cell values arrive render-ready from Submissions::getTableData (the admin table renders
+// them as HTML), so no per-column callback is needed here.
+const columns = submissionColumns.map(column => ({
+    name: column.key,
+    title: column.title,
+}));
 
 new Craft.VueAdminTable({
 

@@ -73,17 +73,9 @@ class Forms extends Component
     /**
      * Saves a form (insert or update).
      *
-     * @param array $data {
-     *     @var int|null $id
-     *     @var string $name
-     *     @var string|null $orientation
-     *     @var string|null $framework
-     *     @var string|null $icons
-     *     @var string|null $class
-     *     @var array|null $fields
-     * }
+     * @param Form $data
      *
-     * @return FormRecord|null
+     * @return Form|null
      * @throws Throwable
      * @throws MissingComponentException
      * @throws Exception
@@ -112,6 +104,7 @@ class Forms extends Component
             $record->handle = $data->handle;
             $record->authorId = $data->authorId;
             $record->fields = $data->getFieldsAsArray();
+            $data->settings->submissionTableColumns = $this->_pruneSubmissionTableColumns($data);
             $record->settings = $data->settings->toArray();
             foreach ($data->integrations as $integration) {
                 $res = FormBuilder::getInstance()->formIntegrations->saveFormIntegration($data, $integration, false);
@@ -339,6 +332,20 @@ class Forms extends Component
         $model->setFields($this->_constructFormFields($record['fields'] ?? [], $model, false));
         $model->integrations = FormBuilder::getInstance()->formIntegrations->getIntegrationsForForm($record->id);
         return $model;
+    }
+
+    /**
+     * Drops any configured submission table column that no longer refers to an
+     * existing field, so the stored settings can never outlive a deleted field.
+     */
+    private function _pruneSubmissionTableColumns(Form $form): array
+    {
+        $valid = array_merge(
+            array_keys(FormSettings::builtInColumns()),
+            array_filter(array_column($form->getFields(), 'id')),
+        );
+
+        return array_values(array_intersect($form->settings->submissionTableColumns, $valid));
     }
 
     /**

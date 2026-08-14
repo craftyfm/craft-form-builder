@@ -117,8 +117,8 @@ export const renderDescription = (element) => {
 };
 
 
-export const getDragAfterField = (container, y) => {
-    const draggableFields = [...container.querySelectorAll('.form-field-wrapper')];
+export const getDragAfterField = (container, y, selector = '.form-field-wrapper') => {
+    const draggableFields = [...container.querySelectorAll(selector)];
 
     return  draggableFields.reduce((closest, child) => {
         const box = child.getBoundingClientRect();

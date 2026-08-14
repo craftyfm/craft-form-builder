@@ -21,6 +21,10 @@
 
 }
 
+.cfb-column-row-dragging {
+    opacity: 0.5;
+}
+
 .cfb\:loading {
     content: "";
     display: inline-block;

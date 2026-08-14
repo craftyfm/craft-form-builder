@@ -49,10 +49,13 @@ class SubmissionsController extends Controller
         $formsService = FormBuilder::getInstance()->forms;
         $allForms = $formsService->getAllForms();
 
+        $submissionsService = FormBuilder::getInstance()->submissions;
+
         if (!$handle) {
             return $this->renderTemplate('form-builder/submissions/index', [
                 'forms' => $allForms,
                 'currentFormId' => null,
+                'submissionColumns' => $submissionsService->resolveColumns(),
             ]);
         }
 
@@ -64,6 +67,7 @@ class SubmissionsController extends Controller
         return $this->renderTemplate('form-builder/submissions/index', [
             'forms' => $allForms,
             'currentFormId' => $form->id,
+            'submissionColumns' => $submissionsService->resolveColumns($form),
         ]);
     }
 
@@ -80,7 +84,9 @@ class SubmissionsController extends Controller
         $formId = $this->request->getQueryParam('formId');
         $page = intval($this->request->getQueryParam('page'));
         $perPage = intval($this->request->getQueryParam('per_page'));
-        $submissions = FormBuilder::getInstance()->submissions->getTableData($formId !== null ? intval($formId) : null, $page, $perPage);
+        $formId = $formId !== null ? intval($formId) : null;
+
+        $submissions = FormBuilder::getInstance()->submissions->getTableData($formId, $page, $perPage);
         return $this->asJson($submissions);
     }
 
