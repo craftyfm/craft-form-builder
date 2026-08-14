@@ -5,12 +5,17 @@ namespace craftyfm\formbuilder\services;
 use Craft;
 use craft\base\Component;
 use craft\errors\VolumeException;
+use craft\helpers\Html;
 use craft\helpers\UrlHelper;
 use craftyfm\formbuilder\events\SubmissionEvent;
 use craftyfm\formbuilder\FormBuilder;
 use craftyfm\formbuilder\jobs\IntegrationJob;
 use craftyfm\formbuilder\jobs\SendNotificationJob;
+use craftyfm\formbuilder\models\Form;
+use craftyfm\formbuilder\models\form_fields\BaseInput;
+use craftyfm\formbuilder\models\FormSettings;
 use craftyfm\formbuilder\models\Submission;
+use craftyfm\formbuilder\models\submission_fields\BaseField;
 use craftyfm\formbuilder\models\submission_fields\FileUploadField;
 use craftyfm\formbuilder\records\SubmissionRecord;
 use DateTime;
@@ -21,6 +26,9 @@ class Submissions extends Component
 {
     public const EVENT_BEFORE_SUBMISSION_SAVED = 'beforeSubmissionSaved';
     public const EVENT_AFTER_SUBMISSION_SAVED = 'afterSubmissionSaved';
+
+    /** Always-rendered action column; never stored in the form's column settings. */
+    private const COLUMN_VIEW = 'view';
     /**
      * Get submission by ID
      */
@@ -144,6 +152,40 @@ class Submissions extends Component
     }
 
     /**
+     * Resolves the ordered submission table columns for a form, falling back to the
+     * built-in columns when the form has no column configuration yet.
+     *
+     * @return array<int, array{key: string, title: string}>
+     */
+    public function resolveColumns(?Form $form = null): array
+    {
+        $builtInTitles = FormSettings::builtInColumns();
+
+        $keys = $form?->settings->submissionTableColumns ?? [];
+        if (!$keys) {
+            $keys = array_keys($builtInTitles);
+        }
+
+        $columns = [];
+        foreach ($keys as $key) {
+            if (isset($builtInTitles[$key])) {
+                $columns[] = ['key' => $key, 'title' => $builtInTitles[$key]];
+                continue;
+            }
+            $field = $form?->getFieldById($key);
+            if ($field instanceof BaseInput) {
+                $columns[] = ['key' => $key, 'title' => $field->label ?: $field->handle];
+            }
+        }
+
+        // Not configurable: without it, deselecting the title column would leave no way
+        // to open a submission. Header is blank, as is conventional for an action column.
+        $columns[] = ['key' => self::COLUMN_VIEW, 'title' => ''];
+
+        return $columns;
+    }
+
+    /**
      * Get table data with proper pagination and security
      * @throws \Exception
      */
@@ -186,22 +228,34 @@ class Submissions extends Component
         $nextPageUrl = $page < $lastPage ? UrlHelper::url($baseUrl, array_merge($params, ['page' => $page + 1])) : null;
         $prevPageUrl = $page > 1 ? UrlHelper::url($baseUrl, array_merge($params, ['page' => $page - 1])) : null;
 
+        $form = $formId ? FormBuilder::getInstance()->forms->getFormById($formId) : null;
+        $columns = $this->resolveColumns($form);
+
+        // One reusable submission field per field column: setValue() fully resets it, so
+        // there's no need to rebuild the model for every row.
+        $fieldColumns = [];
+        foreach ($columns as $column) {
+            $field = $form?->getFieldById($column['key']);
+            if ($field instanceof BaseInput) {
+                $fieldColumns[$column['key']] = $field->createSubmissionField();
+            }
+        }
+
         $data = [];
         foreach ($records as $record) {
-            $title = "Submission #{$record['id']}";
-            if ($record['statusId']) {
-                $status = FormBuilder::getInstance()->submissionStatuses->getById($record['statusId']);
-                $title = "<span class='status $status->color'></span> $title";
+            $content = $record['content'] ?? [];
+            if (is_string($content)) {
+                $content = json_decode($content, true) ?: [];
             }
-            $data[] = [
-                'id' => $record['id'],
-                'title' => [
-                    'html' => $title,
-                    'url' => UrlHelper::cpUrl('form-builder/submissions/'. $record['formHandle'] .'/' . $record['id']),
-                ],
-                'formName' => $record['formName'],
-                'dateCreated' => $record['dateCreated'] ? (new DateTime($record['dateCreated']))->format('Y-m-d H:i') : null,
-            ];
+
+            $row = ['id' => $record['id'], 'url' => UrlHelper::cpUrl('form-builder/submissions/' . $record['formHandle'] . '/' . $record['id'])];
+            foreach ($columns as $column) {
+                $key = $column['key'];
+                $row[$key] = isset($fieldColumns[$key])
+                    ? $this->_fieldColumnValue($fieldColumns[$key], $content[$key] ?? null)
+                    : $this->_builtInColumnValue($key, $record);
+            }
+            $data[] = $row;
         }
 
         return [
@@ -217,6 +271,48 @@ class Submissions extends Component
                 'to' => (int)$to,
             ],
         ];
+    }
+
+    /**
+     * Builds a built-in (non field) submission table cell.
+     */
+    private function _builtInColumnValue(string $key, array $record): mixed
+    {
+        return match ($key) {
+            FormSettings::COLUMN_TITLE => $this->_submissionTitle($record),
+            FormSettings::COLUMN_FORM_NAME => $record['formName'],
+            FormSettings::COLUMN_DATE_CREATED => $record['dateCreated']
+                ? (new DateTime($record['dateCreated']))->format('Y-m-d H:i')
+                : null,
+            self::COLUMN_VIEW => '<a href="' . $this->_submissionUrl($record) . '">'
+                . Craft::t('form-builder', 'View') . '</a>',
+            default => null,
+        };
+    }
+
+    private function _submissionTitle(array $record): string
+    {
+        $title = "Submission #{$record['id']}";
+        if ($record['statusId']) {
+            $status = FormBuilder::getInstance()->submissionStatuses->getById($record['statusId']);
+            $title = "<span class='status $status->color'></span> $title";
+        }
+        return $title;
+    }
+
+    private function _submissionUrl(array $record): string
+    {
+        return UrlHelper::cpUrl('form-builder/submissions/' . $record['formHandle'] . '/' . $record['id']);
+    }
+
+    /**
+     * Builds a form field cell. Cell values are rendered as HTML by the admin table,
+     * so submitted content is encoded here.
+     */
+    private function _fieldColumnValue(BaseField $submissionField, mixed $value): string
+    {
+        $submissionField->setValue($value);
+        return Html::encode($submissionField->getDisplayValue());
     }
 
     /**

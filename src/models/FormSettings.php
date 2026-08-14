@@ -2,6 +2,7 @@
 
 namespace craftyfm\formbuilder\models;
 
+use Craft;
 use craft\base\Model;
 
 class FormSettings extends Model
@@ -14,7 +15,33 @@ class FormSettings extends Model
     const ACTION_MESSAGE = 'message';
     const ACTION_REDIRECT = 'redirect';
 
+    const COLUMN_TITLE = 'title';
+    const COLUMN_FORM_NAME = 'formName';
+    const COLUMN_DATE_CREATED = 'dateCreated';
+
+    /**
+     * The submission table columns that aren't form fields, and the default selection.
+     * Single source of truth: everything else derives its key list from this.
+     *
+     * @return array<string, string> column key => title
+     */
+    public static function builtInColumns(): array
+    {
+        return [
+            self::COLUMN_TITLE => Craft::t('form-builder', 'Title'),
+            self::COLUMN_FORM_NAME => Craft::t('form-builder', 'Form'),
+            self::COLUMN_DATE_CREATED => Craft::t('form-builder', 'Date Submitted'),
+        ];
+    }
+
     public bool $collectIp = false;
+
+    /**
+     * Ordered submission table column keys. Each entry is a built-in column key
+     * or a form field id. Empty means "not configured" — the defaults are used.
+     * @var string[]
+     */
+    public array $submissionTableColumns = [];
 
 
     // layouts
@@ -59,6 +86,8 @@ class FormSettings extends Model
             ['framework', 'in', 'range' => [self::FRAMEWORK_BOOTSTRAP, self::FRAMEWORK_TAILWIND]],
             // Validate numbers
             ['actionOnSubmit', 'in', 'range' => [self::ACTION_MESSAGE, self::ACTION_REDIRECT]],
+
+            ['submissionTableColumns', 'safe'],
         ];
     }
 }

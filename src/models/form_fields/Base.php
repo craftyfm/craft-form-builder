@@ -29,11 +29,12 @@ abstract class Base extends Model
     {
         return array_merge(parent::fields(), [
             'type' => fn() => $this->getType(),
+            'isSubmissionField' => fn() => static::getIsSubmissionField(),
         ]);
     }
 
     public static function getIsSubmissionField(): bool
     {
-        return self::$isSubmissionField;
+        return static::$isSubmissionField;
     }
 }

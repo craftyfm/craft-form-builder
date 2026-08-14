@@ -1,0 +1,11 @@
+<div class="cfb-tab-content cfb-tab-submission-table cfb:hidden">
+    <h3 class="cfb:text-lg cfb:font-semibold cfb:mb-2">Submission Table Columns</h3>
+    <p class="cfb:font-light cfb:text-xs cfb:mb-4 cfb:text-gray-500">
+        Choose which columns show in this form's submission list. If nothing is selected, the default columns are used.
+    </p>
+
+    {# Rows are built by MainSettingsManager.renderSubmissionTableColumnsField(), which posts
+       them as settings[submissionTableColumns][]. They can't be rendered here: the list has to
+       include fields added in this builder session that aren't saved to the form yet. #}
+    <div id="form-submission-table-columns" class="cfb:flex cfb:flex-col cfb:gap-2"></div>
+</div>
